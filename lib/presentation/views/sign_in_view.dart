@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:slate/presentation/views/home_view.dart';
 
 class SignInView extends StatelessWidget {
   const SignInView({super.key});
@@ -21,9 +22,9 @@ class SignInView extends StatelessWidget {
                   label: const Text('카카오톡으로 로그인'),
                   icon: const Icon(Icons.abc_rounded),
                   onPressed: () {
-                    // Navigator.of(context).push(
-                    //   MaterialPageRoute(builder: (context) => const ),
-                    // )
+                    Navigator.of(context).push(
+                      MaterialPageRoute(builder: (context) => const HomeView()),
+                    );
                   },
                 ),
               ],
