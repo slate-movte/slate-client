@@ -4,16 +4,11 @@ void main() {
   runApp(const Slate());
 }
 
-class Slate extends StatefulWidget {
+class Slate extends StatelessWidget {
   const Slate({super.key});
 
   @override
-  State<Slate> createState() => _SlateState();
-}
-
-class _SlateState extends State<Slate> {
-  @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+    return Placeholder();
   }
 }
