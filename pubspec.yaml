@@ -16,6 +16,7 @@ dependencies:
   dartz: ^0.10.1
   location: ^5.0.1
   get_it: ^7.6.0
+  flutter_screenutil: ^5.8.4
 
 dev_dependencies:
   flutter_test:
