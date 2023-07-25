@@ -1,19 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:slate/presentation/views/home-view.dart';
 
 void main() {
   runApp(const Slate());
 }
 
-class Slate extends StatefulWidget {
+class Slate extends StatelessWidget {
   const Slate({super.key});
 
   @override
-  State<Slate> createState() => _SlateState();
-}
-
-class _SlateState extends State<Slate> {
-  @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+    return ScreenUtilInit(
+      designSize: const Size(393, 852),
+      builder: (context, child) => const MaterialApp(
+        debugShowCheckedModeBanner: false,
+        home: HomeView(),
+      ),
+    );
   }
 }
