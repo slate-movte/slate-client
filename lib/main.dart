@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:slate/presentation/views/home-view.dart';
+import 'package:slate/presentation/views/home_view.dart';
 
 void main() {
   runApp(const Slate());
