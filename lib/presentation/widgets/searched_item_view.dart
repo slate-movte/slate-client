@@ -15,7 +15,27 @@ class ItemMapView extends SearchedItemView {
       child: Column(
         children: [
           ElevatedButton(
-            onPressed: () {},
+            onPressed: () {
+              showModalBottomSheet(
+                context: context,
+                isScrollControlled: true,
+                isDismissible: true,
+                builder: (context) {
+                  return SizedBox(
+                    height: 600,
+                    child: Column(
+                      children: [
+                        Container(
+                          height: 200,
+                          color: Colors.amber,
+                        ),
+                        Text('text area'),
+                      ],
+                    ),
+                  );
+                },
+              );
+            },
             child: Text('modal test'),
           ),
         ],
@@ -31,12 +51,20 @@ class ItemListView extends SearchedItemView {
   Widget build(BuildContext context) {
     return ListView.separated(
       itemBuilder: (context, index) {
-        return ListTile(
-          title: Text('item $index'),
-        );
+        return _movieTile();
       },
       separatorBuilder: (context, index) => Divider(),
       itemCount: 3,
+    );
+  }
+
+  Widget _movieTile(/* some item VO */) {
+    return Container(
+      child: Column(
+        children: [
+          Text('해운대'),
+        ],
+      ),
     );
   }
 }

@@ -22,6 +22,7 @@ class _SearchViewState extends State<SearchView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: true,
       appBar: AppBar(
         title: Hero(
           tag: Key('TEXT_FIELD_KEY'),
