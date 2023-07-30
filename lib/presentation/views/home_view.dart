@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:slate/presentation/views/search_view.dart';
 
 class HomeView extends StatefulWidget {
   const HomeView({super.key});
@@ -34,58 +35,77 @@ class _HomeViewState extends State<HomeView> {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const TextField(
-                  decoration: InputDecoration(
-                    suffixIcon: Icon(Icons.search),
-                    border: OutlineInputBorder(),
-                    labelText: '검색어를 입력해주세요.',
+                Hero(
+                  tag: Key('TEXT_FIELD_KEY'),
+                  child: Material(
+                    child: TextField(
+                      decoration: InputDecoration(
+                        suffixIcon: Icon(Icons.search),
+                        border: OutlineInputBorder(),
+                        labelText: '검색어를 입력해주세요.',
+                      ),
+                      onTap: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => SearchView(),
+                        ),
+                      ),
+                    ),
                   ),
                 ),
-                Row(
-                  children: [
-                    DropdownButton<String>(
-                      value: list.first,
-                      items: list.map<DropdownMenuItem<String>>((String value) {
-                        return DropdownMenuItem<String>(
-                          value: value,
-                          child: Text(value),
-                        );
-                      }).toList(),
-                      onChanged: (String? value) {
-                        setState(() {
-                          dropdownValue = value!;
-                        });
-                      },
+                Hero(
+                  tag: Key('TEXT_FIELD_FILTER_KEY'),
+                  child: Material(
+                    child: Row(
+                      children: [
+                        DropdownButton<String>(
+                          value: list.first,
+                          items: list
+                              .map<DropdownMenuItem<String>>((String value) {
+                            return DropdownMenuItem<String>(
+                              value: value,
+                              child: Text(value),
+                            );
+                          }).toList(),
+                          onChanged: (String? value) {
+                            setState(() {
+                              dropdownValue = value!;
+                            });
+                          },
+                        ),
+                        DropdownButton<String>(
+                          value: list.first,
+                          items: list
+                              .map<DropdownMenuItem<String>>((String value) {
+                            return DropdownMenuItem<String>(
+                              value: value,
+                              child: Text(value),
+                            );
+                          }).toList(),
+                          onChanged: (String? value) {
+                            setState(() {
+                              dropdownValue = value!;
+                            });
+                          },
+                        ),
+                        DropdownButton<String>(
+                          value: list.first,
+                          items: list
+                              .map<DropdownMenuItem<String>>((String value) {
+                            return DropdownMenuItem<String>(
+                              value: value,
+                              child: Text(value),
+                            );
+                          }).toList(),
+                          onChanged: (String? value) {
+                            setState(() {
+                              dropdownValue = value!;
+                            });
+                          },
+                        ),
+                      ],
                     ),
-                    DropdownButton<String>(
-                      value: list.first,
-                      items: list.map<DropdownMenuItem<String>>((String value) {
-                        return DropdownMenuItem<String>(
-                          value: value,
-                          child: Text(value),
-                        );
-                      }).toList(),
-                      onChanged: (String? value) {
-                        setState(() {
-                          dropdownValue = value!;
-                        });
-                      },
-                    ),
-                    DropdownButton<String>(
-                      value: list.first,
-                      items: list.map<DropdownMenuItem<String>>((String value) {
-                        return DropdownMenuItem<String>(
-                          value: value,
-                          child: Text(value),
-                        );
-                      }).toList(),
-                      onChanged: (String? value) {
-                        setState(() {
-                          dropdownValue = value!;
-                        });
-                      },
-                    ),
-                  ],
+                  ),
                 ),
               ],
             ),
