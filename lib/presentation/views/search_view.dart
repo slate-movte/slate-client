@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:slate/presentation/widgets/searched_item_view.dart';
 
 class SearchView extends StatefulWidget {
   const SearchView({super.key});
@@ -13,9 +14,9 @@ class _SearchViewState extends State<SearchView> {
   String dropdownValue = list.first;
   int _selectedIndex = 0;
 
-  final List<Widget> _searchViewOptions = <Widget>[
-    MapBuilder(),
-    SearchedListBuilder(),
+  final List<SearchedItemView> _searchViewOptions = <SearchedItemView>[
+    ItemMapView([]),
+    ItemListView([]),
   ];
 
   @override
@@ -101,45 +102,6 @@ class _SearchViewState extends State<SearchView> {
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       body: _searchViewOptions.elementAt(_selectedIndex),
-    );
-  }
-}
-
-class SearchedListBuilder extends StatelessWidget {
-  const SearchedListBuilder({
-    super.key,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return ListView.separated(
-      itemBuilder: (context, index) {
-        return ListTile(
-          title: Text('item $index'),
-        );
-      },
-      separatorBuilder: (context, index) => Divider(),
-      itemCount: 3,
-    );
-  }
-}
-
-class MapBuilder extends StatelessWidget {
-  const MapBuilder({
-    super.key,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: Column(
-        children: [
-          ElevatedButton(
-            onPressed: () {},
-            child: Text('modal test'),
-          ),
-        ],
-      ),
     );
   }
 }
