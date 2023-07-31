@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:slate/presentation/views/stillcut_info_view.dart';
 
 class MovieInfoView extends StatefulWidget {
   const MovieInfoView({super.key});
@@ -30,6 +31,17 @@ class _MovieInfoViewState extends State<MovieInfoView> {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            ElevatedButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => StillcutInfoView(),
+                  ),
+                );
+              },
+              child: Text('Move to StillcutInfoView'),
+            ),
             Container(
               width: 393.w,
               height: 230.h,
