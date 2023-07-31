@@ -40,6 +40,8 @@ class _HomeViewState extends State<HomeView> {
                   child: Material(
                     child: TextField(
                       decoration: InputDecoration(
+                        // icon: Icon(Icons.search),
+
                         suffixIcon: Icon(Icons.search),
                         border: OutlineInputBorder(),
                         labelText: '검색어를 입력해주세요.',
@@ -58,14 +60,6 @@ class _HomeViewState extends State<HomeView> {
                   child: Material(
                     child: Row(
                       children: [
-                        Text(
-                          'dd',
-                          style: Theme.of(context).textTheme.labelLarge,
-                        ),
-                        // Container(
-                        //   color: Theme.of(context).colorScheme.primary.,
-                        // ),
-
                         DropdownButton<String>(
                           value: list.first,
                           items: list

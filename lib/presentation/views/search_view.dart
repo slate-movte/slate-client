@@ -31,7 +31,6 @@ class _SearchViewState extends State<SearchView> {
               autofocus: true,
               decoration: InputDecoration(
                 suffixIcon: Icon(Icons.search),
-                border: OutlineInputBorder(),
                 labelText: '검색어를 입력해주세요.',
               ),
             ),
