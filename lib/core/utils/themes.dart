@@ -84,6 +84,7 @@ class Themes {
           width: 2.0,
         ),
       ),
+
       // fillColor: scheme.background,
       // focusColor: scheme.background,
       focusedBorder: OutlineInputBorder(
