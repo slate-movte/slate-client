@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:slate/presentation/views/home_view.dart';
 import 'package:slate/presentation/views/sign_up_view.dart';
+import 'package:slate/presentation/widgets/text_board.dart';
 
 class SignInView extends StatelessWidget {
   const SignInView({super.key});
@@ -27,6 +28,12 @@ class SignInView extends StatelessWidget {
                       MaterialPageRoute(builder: (context) => SignUpView()),
                     );
                   },
+                ),
+                TextBoard(
+                  title: '감독',
+                  content: 'ㅇㅇㅇ',
+                  onTrailing: true,
+                  trailing: Text('d'),
                 ),
               ],
             ),
