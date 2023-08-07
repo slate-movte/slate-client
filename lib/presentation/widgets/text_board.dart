@@ -3,10 +3,10 @@ import 'package:flutter/material.dart';
 class TextBoard extends StatelessWidget {
   final String title;
   final String content;
-  bool onTrailing;
-  Widget? trailing;
+  final bool onTrailing;
+  final Widget? trailing;
 
-  TextBoard({
+  const TextBoard({
     super.key,
     required this.title,
     required this.content,
