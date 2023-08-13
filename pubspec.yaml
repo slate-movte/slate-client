@@ -18,6 +18,7 @@ dependencies:
   get_it: ^7.6.0
   flutter_screenutil: ^5.8.4
   carousel_slider: ^4.2.1
+  google_maps_flutter: ^2.4.0
 
 dev_dependencies:
   flutter_test:
