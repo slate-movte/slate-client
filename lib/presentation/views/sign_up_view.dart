@@ -180,12 +180,13 @@ class _SignUpViewState extends State<SignUpView> {
                   ),
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                        padding: EdgeInsets.only(top: 17.h, bottom: 17.h),
-                        backgroundColor: Colors.black12,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(4),
-                        ),
-                        minimumSize: Size(351.w, 48.h)),
+                      padding: EdgeInsets.only(top: 17.h, bottom: 17.h),
+                      backgroundColor: Colors.black12,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(4),
+                      ),
+                      minimumSize: Size(351.w, 48.h),
+                    ),
                     onPressed: () {
                       Navigator.of(context).push(
                         MaterialPageRoute(
