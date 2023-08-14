@@ -25,3 +25,14 @@ class CameraError extends CameraState {
   @override
   List<Object?> get props => [message];
 }
+
+class TakePictureOn extends CameraState {}
+
+class TakePictureDone extends CameraState {
+  final XFile image;
+
+  TakePictureDone({required this.image});
+
+  @override
+  List<Object?> get props => [image];
+}

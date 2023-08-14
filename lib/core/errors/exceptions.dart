@@ -17,3 +17,5 @@ class CacheException implements Exception {}
 class CameraNotFoundException implements CacheException {}
 
 class CameraControlException implements CacheException {}
+
+class TakePictureException implements CacheException {}

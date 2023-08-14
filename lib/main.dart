@@ -30,6 +30,11 @@ class Slate extends StatelessWidget {
               instanceName: BLOC_CAMERA,
             ),
           ),
+          BlocProvider(
+            create: (_) => DI.get<CameraBloc>(
+              instanceName: BLOC_CAMERA,
+            ),
+          ),
         ],
         child: MaterialApp(
           debugShowCheckedModeBanner: false,

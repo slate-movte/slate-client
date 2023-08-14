@@ -5,4 +5,6 @@ import 'package:slate/core/errors/failures.dart';
 abstract class CameraRepository {
   Future<Either<Failure, CameraController>>
       getCameraControllerWithInitialized();
+
+  Future<Either<Failure, XFile>> getPictureImage(CameraController controller);
 }

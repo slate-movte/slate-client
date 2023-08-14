@@ -1,4 +1,4 @@
-import 'package:camera/src/camera_controller.dart';
+import 'package:camera/camera.dart';
 import 'package:dartz/dartz.dart';
 import 'package:slate/core/errors/exceptions.dart';
 import 'package:slate/core/errors/failures.dart';
@@ -20,6 +20,17 @@ class CameraRepositoryImpl implements CameraRepository {
     } on CameraNotFoundException {
       return Left(CameraFailure());
     } on CameraControlException {
+      return Left(CameraFailure());
+    }
+  }
+
+  @override
+  Future<Either<Failure, XFile>> getPictureImage(
+      CameraController controller) async {
+    try {
+      XFile image = await cameraDataSource.getImageAfterTakePicture(controller);
+      return Right(image);
+    } on TakePictureException {
       return Left(CameraFailure());
     }
   }

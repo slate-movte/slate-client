@@ -10,6 +10,7 @@ final DI = GetIt.instance;
 
 const String BLOC_CAMERA = 'BLOC_CAMERA';
 const String USECASE_GET_CAMERA_CONTROLLER = 'USECASE_GET_CAMERA_CONTROLLER';
+const String USECASE_TAKE_PICTURE = 'USECASE_TAKE_PICTURE';
 const String REPO_CAMERA = 'REPO_CAMERA';
 const String DATA_CAMERA = 'DATA_CAMERA';
 const String CORE_CAMERA = 'CORE_CAMERA';
@@ -19,6 +20,7 @@ Future<void> init() async {
   DI.registerLazySingleton<CameraBloc>(
     () => CameraBloc(
       getCameraController: DI(instanceName: USECASE_GET_CAMERA_CONTROLLER),
+      takePicture: DI(instanceName: USECASE_TAKE_PICTURE),
     ),
     instanceName: BLOC_CAMERA,
   );
@@ -29,6 +31,13 @@ Future<void> init() async {
       repository: DI(instanceName: REPO_CAMERA),
     ),
     instanceName: USECASE_GET_CAMERA_CONTROLLER,
+  );
+
+  DI.registerLazySingleton<TakePicture>(
+    () => TakePicture(
+      repository: DI(instanceName: REPO_CAMERA),
+    ),
+    instanceName: USECASE_TAKE_PICTURE,
   );
 
   // repository

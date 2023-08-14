@@ -3,11 +3,10 @@ import 'package:slate/core/errors/exceptions.dart';
 
 abstract class CameraNativeDataSource {
   Future<CameraController> getCameraControllerWithInitialized();
+  Future<XFile> getImageAfterTakePicture(CameraController controller);
 }
 
 class CameraNativeDataSourceImpl implements CameraNativeDataSource {
-  late CameraController controller;
-
   @override
   Future<CameraController> getCameraControllerWithInitialized() async {
     try {
@@ -15,7 +14,7 @@ class CameraNativeDataSourceImpl implements CameraNativeDataSource {
       if (camera.isEmpty) {
         throw CameraNotFoundException();
       }
-      controller = CameraController(
+      CameraController controller = CameraController(
         camera[0],
         ResolutionPreset.max,
         imageFormatGroup: ImageFormatGroup.yuv420,
@@ -26,6 +25,15 @@ class CameraNativeDataSourceImpl implements CameraNativeDataSource {
       return controller;
     } catch (e) {
       throw CameraControlException();
+    }
+  }
+
+  @override
+  Future<XFile> getImageAfterTakePicture(CameraController controller) async {
+    try {
+      return await controller.takePicture();
+    } catch (e) {
+      throw TakePictureException();
     }
   }
 }

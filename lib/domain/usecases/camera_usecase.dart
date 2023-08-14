@@ -17,3 +17,15 @@ class GetCameraController extends CameraUseCase
     return await repository.getCameraControllerWithInitialized();
   }
 }
+
+class TakePicture extends CameraUseCase
+    implements UseCase<XFile, CameraController> {
+  CameraRepository repository;
+
+  TakePicture({required this.repository});
+
+  @override
+  Future<Either<Failure, XFile>> call(CameraController params) async {
+    return await repository.getPictureImage(params);
+  }
+}
