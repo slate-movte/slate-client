@@ -15,11 +15,14 @@ class Themes {
 
     iconButtonTheme: IconButtonThemeData(
       style: IconButton.styleFrom(
-        backgroundColor: ColorOf.primary.light,
+        backgroundColor: ColorOf.point.light,
       ),
     ),
     colorScheme: ColorScheme.light(
-      primary: ColorOf.primary.light,
+      primary: ColorOf.point.light,
+      onPrimary: ColorOf.white.light,
+      background: ColorOf.lightGrey.light,
+      onBackground: ColorOf.black.light,
     ),
     appBarTheme: AppBarTheme(
       backgroundColor: Color(0xFFFFFFFF),
@@ -35,7 +38,7 @@ class Themes {
         elevation: 0,
         fixedSize: Size(double.maxFinite, 48.h),
         textStyle: TextStyle(
-          color: ColorOf.onPrimary.light,
+          color: ColorOf.point.light,
           fontSize: 18,
           fontWeight: FontWeight.w600,
           letterSpacing: 0.36,
@@ -101,8 +104,8 @@ class Themes {
       ),
     ),
     floatingActionButtonTheme: FloatingActionButtonThemeData(
-      backgroundColor: ColorOf.primary.light,
-      foregroundColor: ColorOf.onPrimary.light,
+      // backgroundColor: ColorOf.point.light,
+      // foregroundColor: ColorOf.onPrimary.light,
       iconSize: 30.w,
     ),
     bottomNavigationBarTheme: BottomNavigationBarThemeData(
@@ -115,9 +118,9 @@ class Themes {
 }
 
 enum SizeOf {
-  width(sm: 0, md: 0, lg: 0),
-  height(sm: 0, md: 0, lg: 0),
-  round(sm: 0, md: 0, lg: 0);
+  width(sm: 8, md: 16, lg: 22),
+  height(sm: 12, md: 16, lg: 20),
+  round(sm: 4, md: 4, lg: 4);
 
   const SizeOf({
     required this.sm,
@@ -131,8 +134,12 @@ enum SizeOf {
 }
 
 enum ColorOf {
-  primary(light: Color(0xFFEB4E32)),
-  onPrimary(light: Color(0xFFFFFFFF));
+  point(light: Color(0xFFE10011)),
+  black(light: Color(0xFF282828)),
+  white(light: Color(0xFFFFFFFF)),
+  grey(light: Color(0xFF939393)),
+  lightGrey(light: Color(0xFFEBEBEB)),
+  blue(light: Color(0xFF1162FF));
 
   const ColorOf({required this.light});
 
