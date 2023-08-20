@@ -48,6 +48,8 @@ class _HomeViewState extends State<HomeView> {
                   child: Material(
                     child: TextField(
                       decoration: InputDecoration(
+                        // icon: Icon(Icons.search),
+
                         suffixIcon: Icon(Icons.search),
                         border: OutlineInputBorder(),
                         labelText: '검색어를 입력해주세요.',

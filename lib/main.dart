@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:slate/core/utils/themes.dart';
 import 'package:slate/presentation/views/main_view.dart';
 import 'package:slate/presentation/views/sign_in_view.dart';
 
@@ -14,9 +15,10 @@ class Slate extends StatelessWidget {
   Widget build(BuildContext context) {
     return ScreenUtilInit(
       designSize: const Size(393, 852),
-      builder: (context, child) => const MaterialApp(
+      builder: (context, child) => MaterialApp(
         debugShowCheckedModeBanner: false,
-        home: SignInView(),
+        theme: Themes.lite,
+        home: MainView(),
       ),
     );
   }

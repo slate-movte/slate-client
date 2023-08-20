@@ -10,6 +10,11 @@ class CourseView extends StatefulWidget {
 class _CourseViewState extends State<CourseView> {
   @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+    return Center(
+      child: ElevatedButton(
+        onPressed: () {},
+        child: Text('안녕하세요.'),
+      ),
+    );
   }
 }
