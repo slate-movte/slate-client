@@ -3,16 +3,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class Themes {
   static ThemeData lite = ThemeData(
-    // dropdownMenuTheme: DropdownMenuThemeData(
-    //   textStyle: TextStyle(
-    //     color: Colors.amber,
-    //   ),
-    //   menuStyle: MenuStyle(
-    //     backgroundColor: MaterialStateProperty.all(Colors.red),
-    //     elevation: MaterialStateProperty.all(0),
-    //   ),
-    // ),
-
     iconButtonTheme: IconButtonThemeData(
       style: IconButton.styleFrom(
         backgroundColor: ColorOf.point.light,
@@ -21,12 +11,14 @@ class Themes {
     colorScheme: ColorScheme.light(
       primary: ColorOf.point.light,
       onPrimary: ColorOf.white.light,
+      secondary: ColorOf.black.light,
+      onSecondary: ColorOf.white.light,
       background: ColorOf.lightGrey.light,
       onBackground: ColorOf.black.light,
     ),
     appBarTheme: AppBarTheme(
       backgroundColor: Color(0xFFFFFFFF),
-      foregroundColor: Color(0xFF1C1C1E),
+      foregroundColor: Color.fromARGB(255, 78, 78, 123),
       titleTextStyle: TextStyle(
         color: Color(0xFF000000),
         fontSize: 20.sp,
@@ -53,7 +45,7 @@ class Themes {
     inputDecorationTheme: InputDecorationTheme(
       border: OutlineInputBorder(
         borderSide: BorderSide(
-          color: Color(0xFF282828),
+          color: ColorOf.black.light,
           width: 2.0,
         ),
       ),
@@ -66,8 +58,8 @@ class Themes {
         letterSpacing: 0.28,
       ),
       contentPadding: EdgeInsets.symmetric(
-        vertical: 18,
-        horizontal: 16,
+        vertical: 15.h,
+        horizontal: 17.w,
       ),
       focusedErrorBorder: OutlineInputBorder(
         borderSide: BorderSide(
@@ -87,9 +79,6 @@ class Themes {
           width: 2.0,
         ),
       ),
-
-      // fillColor: scheme.background,
-      // focusColor: scheme.background,
       focusedBorder: OutlineInputBorder(
         borderSide: BorderSide(
           color: Color(0xFF282828),
@@ -104,33 +93,93 @@ class Themes {
       ),
     ),
     floatingActionButtonTheme: FloatingActionButtonThemeData(
-      // backgroundColor: ColorOf.point.light,
-      // foregroundColor: ColorOf.onPrimary.light,
       iconSize: 30.w,
     ),
     bottomNavigationBarTheme: BottomNavigationBarThemeData(
-      selectedIconTheme: IconThemeData(size: 30.sp),
-      unselectedIconTheme: IconThemeData(size: 30.sp),
+      selectedIconTheme: IconThemeData(
+        size: 36.sp,
+        color: ColorOf.black.light,
+      ),
+      unselectedIconTheme: IconThemeData(
+        size: 36.sp,
+        color: ColorOf.grey.light,
+      ),
     ),
-    textTheme: TextTheme(),
+    chipTheme: ChipThemeData(
+      backgroundColor: ColorOf.lightGrey.light,
+      iconTheme: IconThemeData(
+        color: ColorOf.point.light,
+        size: 20.sp,
+      ),
+      shape: RoundedRectangleBorder(),
+      labelStyle: TextStyle(
+        fontSize: 12.sp,
+        fontWeight: FontWeight.normal,
+        color: ColorOf.grey.light,
+      ),
+    ),
+    textTheme: TextTheme(
+      titleLarge: TextStyle(
+        fontSize: 24.sp,
+        fontWeight: FontWeight.bold,
+        color: ColorOf.black.light,
+      ),
+      titleMedium: TextStyle(
+        fontSize: 20.sp,
+        fontWeight: FontWeight.bold,
+        color: ColorOf.black.light,
+      ),
+      titleSmall: TextStyle(
+        fontSize: 16.sp,
+        fontWeight: FontWeight.bold,
+        color: ColorOf.black.light,
+      ),
+      bodyLarge: TextStyle(
+        fontSize: 14.sp,
+        fontWeight: FontWeight.normal,
+        color: ColorOf.black.light,
+      ),
+      bodyMedium: TextStyle(
+        fontSize: 14.sp,
+        fontWeight: FontWeight.normal,
+        color: ColorOf.grey.light,
+      ),
+      bodySmall: TextStyle(
+        fontSize: 14.sp,
+        fontWeight: FontWeight.normal,
+        color: ColorOf.blue.light,
+      ),
+      labelLarge: TextStyle(
+        fontSize: 12.sp,
+        fontWeight: FontWeight.normal,
+        color: ColorOf.grey.light,
+      ),
+      labelMedium: TextStyle(
+        fontSize: 12.sp,
+        fontWeight: FontWeight.normal,
+        color: ColorOf.point.light,
+      ),
+      labelSmall: TextStyle(
+        fontSize: 12.sp,
+        fontWeight: FontWeight.normal,
+        color: ColorOf.blue.light,
+      ),
+    ),
     dividerColor: Color(0xFFE4E4E4),
+    scaffoldBackgroundColor: ColorOf.white.light,
   );
 }
 
-enum SizeOf {
-  width(sm: 8, md: 16, lg: 22),
-  height(sm: 12, md: 16, lg: 20),
-  round(sm: 4, md: 4, lg: 4);
+class SizeOf {
+  static final double w_sm = 8.w;
+  static final double w_md = 16.w;
+  static final double w_lg = 22.w;
 
-  const SizeOf({
-    required this.sm,
-    required this.md,
-    required this.lg,
-  });
+  static final double h_sm = 10.h;
+  static final double h_md = 16.h;
+  static final double h_lg = 20.h;
 
-  final double sm;
-  final double md;
-  final double lg;
+  static final double r = 4.r;
 }
 
 enum ColorOf {

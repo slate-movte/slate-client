@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:slate/presentation/views/movie_info_view.dart';
-
-import '../views/profile_view.dart';
+import 'package:slate/presentation/widgets/searched_item.dart';
 
 abstract class SearchedItemView extends StatelessWidget {
   final List items;
@@ -54,7 +53,7 @@ class ItemListView extends SearchedItemView {
   Widget build(BuildContext context) {
     return ListView.separated(
       itemBuilder: (context, index) {
-        return _movieTile(context);
+        return SearchedItem();
       },
       separatorBuilder: (context, index) => Divider(),
       itemCount: 3,
