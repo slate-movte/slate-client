@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:slate/presentation/views/home_view.dart';
+import 'package:slate/presentation/views/sign_up_view.dart';
 
 class SignInView extends StatelessWidget {
   const SignInView({super.key});
@@ -23,7 +24,7 @@ class SignInView extends StatelessWidget {
                   icon: const Icon(Icons.abc_rounded),
                   onPressed: () {
                     Navigator.of(context).push(
-                      MaterialPageRoute(builder: (context) => const HomeView()),
+                      MaterialPageRoute(builder: (context) => SignUpView()),
                     );
                   },
                 ),

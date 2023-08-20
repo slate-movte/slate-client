@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:slate/presentation/views/profile_view.dart';
 import 'package:slate/presentation/views/search_view.dart';
 
 class HomeView extends StatefulWidget {
@@ -21,7 +22,14 @@ class _HomeViewState extends State<HomeView> {
         title: const Text('SLATE'),
         actions: [
           IconButton(
-            onPressed: () {},
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => ProfileView(),
+                ),
+              );
+            },
             icon: const CircleAvatar(
               child: Icon(Icons.person),
             ),
