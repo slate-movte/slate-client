@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:slate/core/utils/themes.dart';
 import 'package:slate/presentation/views/course_view.dart';
 import 'package:slate/presentation/views/home_view.dart';
 

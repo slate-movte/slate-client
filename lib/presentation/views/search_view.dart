@@ -13,11 +13,6 @@ class SearchView extends StatefulWidget {
 class _SearchViewState extends State<SearchView> {
   bool viewOption = true;
 
-  final List<SearchedItemView> _searchViewOptions = <SearchedItemView>[
-    ItemListView([]),
-    ItemMapView([]),
-  ];
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(

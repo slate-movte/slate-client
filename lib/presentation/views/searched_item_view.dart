@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:slate/presentation/views/item_info_view.dart';
-import 'package:slate/presentation/views/movie_info_view.dart';
+
 import 'package:slate/presentation/widgets/searched_item.dart';
 
 abstract class SearchedItemView extends StatelessWidget {
