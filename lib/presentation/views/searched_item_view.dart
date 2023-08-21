@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:slate/presentation/views/item_info_view.dart';
 import 'package:slate/presentation/views/movie_info_view.dart';
 import 'package:slate/presentation/widgets/searched_item.dart';
 
@@ -53,31 +54,17 @@ class ItemListView extends SearchedItemView {
   Widget build(BuildContext context) {
     return ListView.separated(
       itemBuilder: (context, index) {
-        return SearchedItem();
+        return SearchedItem(
+          function: () => Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => ItemInfoView(),
+            ),
+          ),
+        );
       },
       separatorBuilder: (context, index) => Divider(),
       itemCount: 3,
-    );
-  }
-
-  Widget _movieTile(BuildContext context /* some item VO */) {
-    return Container(
-      child: Column(
-        children: [
-          ElevatedButton(
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => MovieInfoView(),
-                ),
-              );
-            },
-            child: Text('자세히보기'),
-          ),
-          Text('해운대'),
-        ],
-      ),
     );
   }
 }
