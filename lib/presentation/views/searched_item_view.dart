@@ -59,8 +59,8 @@ class ItemListView extends SearchedItemView {
           function: () => Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => ItemInfoView(),
-              // builder: (context) => MovieInfoView(),
+              // builder: (context) => ItemInfoView(),
+              builder: (context) => MovieInfoView(),
             ),
           ),
         );
