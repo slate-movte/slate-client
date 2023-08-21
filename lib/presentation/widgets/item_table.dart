@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:slate/core/utils/themes.dart';
 
-class ItemTableBuilder {
+class ItemSectionBuilder {
   ItemTableRow? address;
   ItemTableRow? phone;
   ItemTableRow? hours;
@@ -10,25 +10,54 @@ class ItemTableBuilder {
   ItemTableGrid? image;
 }
 
-class ItemTable extends StatelessWidget {
-  final String header;
-  final ItemTableRow? address;
-  final ItemTableRow? phone;
-  final ItemTableRow? hours;
-  final ItemTableRow? info;
-  final ItemTableRow? homePage;
-  final ItemTableGrid? image;
+abstract class ItemElement extends StatelessWidget {
+  const ItemElement({super.key});
+}
+
+class ItemSection extends StatelessWidget {
+  final List<ItemElement?> items = [];
+
+  ItemSection({
+    super.key,
+    required ItemSectionBuilder builder,
+  }) {
+    items.addAll([
+      builder.address,
+      builder.phone,
+      builder.info,
+      builder.homePage,
+      builder.image,
+    ]);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      color: ColorOf.lightGrey.light,
+      child: Column(
+        children: items.nonNulls.toList(),
+      ),
+    );
+  }
+}
+
+class ItemTable extends ItemElement {
+  final ItemHeader? header;
+  final List<ItemSection> sections;
+  final List<Widget> _list = [];
 
   ItemTable({
     super.key,
-    required this.header,
-    required ItemTableBuilder builder,
-  })  : address = builder.address,
-        phone = builder.phone,
-        hours = builder.hours,
-        info = builder.info,
-        homePage = builder.homePage,
-        image = builder.image;
+    this.header,
+    this.sections = const [],
+  }) {
+    for (int i = 0; i < sections.length; i++) {
+      _list.add(sections[i]);
+      if (i != sections.length - 1) {
+        _list.add(SizedBox(height: SizeOf.h_md));
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -36,26 +65,9 @@ class ItemTable extends StatelessWidget {
       color: ColorOf.lightGrey.light,
       child: CustomScrollView(
         slivers: [
-          SliverAppBar(
-            automaticallyImplyLeading: false,
-            title: Text(
-              header,
-              style: Theme.of(context).textTheme.titleLarge,
-            ),
-            backgroundColor: ColorOf.lightGrey.light,
-            centerTitle: false,
-            pinned: true,
-          ),
+          header ?? const SizedBox.shrink(),
           SliverList(
-            delegate: SliverChildListDelegate([
-              address ?? const SizedBox(),
-              phone ?? const SizedBox(),
-              hours ?? const SizedBox(),
-              info ?? const SizedBox(),
-              homePage ?? const SizedBox(),
-              SizedBox(height: SizeOf.h_lg),
-              image ?? const SizedBox(),
-            ]),
+            delegate: SliverChildListDelegate(_list),
           )
         ],
       ),
@@ -63,7 +75,27 @@ class ItemTable extends StatelessWidget {
   }
 }
 
-class ItemTableRow extends StatelessWidget {
+class ItemHeader extends StatelessWidget {
+  final Widget header;
+
+  const ItemHeader({
+    super.key,
+    required this.header,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return SliverAppBar(
+      automaticallyImplyLeading: false,
+      title: header,
+      backgroundColor: ColorOf.lightGrey.light,
+      centerTitle: false,
+      pinned: true,
+    );
+  }
+}
+
+class ItemTableRow extends ItemElement {
   final String title;
   final String body;
   final TextStyle? bodyTextStyle;
@@ -110,7 +142,7 @@ class ItemTableRow extends StatelessWidget {
   }
 }
 
-class ItemTableGrid extends StatelessWidget {
+class ItemTableGrid extends ItemElement {
   const ItemTableGrid({super.key});
 
   @override

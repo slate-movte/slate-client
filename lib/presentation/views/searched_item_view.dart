@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:slate/presentation/views/item_info_view.dart';
+import 'package:slate/presentation/views/movie_info_view.dart';
 
 import 'package:slate/presentation/widgets/searched_item.dart';
 
@@ -59,6 +60,7 @@ class ItemListView extends SearchedItemView {
             context,
             MaterialPageRoute(
               builder: (context) => ItemInfoView(),
+              // builder: (context) => MovieInfoView(),
             ),
           ),
         );
