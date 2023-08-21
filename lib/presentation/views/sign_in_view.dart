@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:slate/presentation/views/main_view.dart';
 import 'package:slate/presentation/views/sign_up_view.dart';
 
 class SignInView extends StatelessWidget {
@@ -27,6 +28,26 @@ class SignInView extends StatelessWidget {
                     );
                   },
                 ),
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pushReplacement(
+                      MaterialPageRoute(builder: (context) => MainView()),
+                    );
+                  },
+                  child: Text('비회원으로 둘러보기'),
+                ),
+                // ElevatedButton.icon(
+                //   style: ElevatedButton.styleFrom(
+                //     fixedSize: Size(327.w, 48.h),
+                //   ),
+                //   label: const Text('카카오톡으로 로그인'),
+                //   icon: const Icon(Icons.abc_rounded),
+                //   onPressed: () {
+                //     Navigator.of(context).push(
+                //       MaterialPageRoute(builder: (context) => SignUpView()),
+                //     );
+                //   },
+                // ),
               ],
             ),
           ],

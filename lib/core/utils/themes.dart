@@ -167,6 +167,21 @@ class Themes {
     ),
     dividerColor: Color(0xFFE4E4E4),
     scaffoldBackgroundColor: ColorOf.white.light,
+    textButtonTheme: TextButtonThemeData(
+      style: TextButton.styleFrom(
+        foregroundColor: ColorOf.blue.light,
+        textStyle: TextStyle(
+          color: ColorOf.blue.light,
+          decoration: TextDecoration.underline,
+        ),
+      ),
+    ),
+    checkboxTheme: CheckboxThemeData(
+      side: BorderSide(
+        width: 1.5,
+        color: ColorOf.lightGrey.light,
+      ),
+    ),
   );
 }
 

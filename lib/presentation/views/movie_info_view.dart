@@ -80,7 +80,7 @@ class _MovieInfoViewState extends State<MovieInfoView> {
             ),
           ),
           sections: [
-            ItemSection.movieInfo(
+            ItemSection.onlyPost(
               builder: ItemSectionBuilder()
                 ..posts = [
                   ItemTablePost(

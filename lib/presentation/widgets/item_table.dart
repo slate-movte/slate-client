@@ -33,7 +33,7 @@ class ItemSection extends StatelessWidget {
     ]);
   }
 
-  ItemSection.movieInfo({
+  ItemSection.onlyPost({
     super.key,
     required ItemSectionBuilder builder,
   }) {
@@ -60,12 +60,16 @@ class ItemSection extends StatelessWidget {
 class ItemTable extends ItemElement {
   final ItemHeader? header;
   final List<ItemSection> sections;
+  final ScrollPhysics? physics;
+  final Color? backgroundColor;
 
   final List<Widget> _slivers = [];
 
   ItemTable({
     super.key,
     this.header,
+    this.physics,
+    this.backgroundColor,
     this.sections = const [],
   }) {
     List<Widget> sections = [];
@@ -85,8 +89,11 @@ class ItemTable extends ItemElement {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: ColorOf.lightGrey.light,
-      child: CustomScrollView(slivers: _slivers),
+      color: backgroundColor ?? ColorOf.lightGrey.light,
+      child: CustomScrollView(
+        physics: physics,
+        slivers: _slivers,
+      ),
     );
   }
 }
@@ -124,12 +131,14 @@ class ItemTablePost extends ItemElement {
   final String content;
   final bool textBody;
   final Widget body;
+  final TextStyle? titleStyle;
 
   const ItemTablePost({
     super.key,
     required this.title,
     this.content = '',
     this.textBody = true,
+    this.titleStyle,
     this.body = const SizedBox.shrink(),
   });
 
@@ -143,7 +152,7 @@ class ItemTablePost extends ItemElement {
         children: [
           Text(
             title,
-            style: Theme.of(context).textTheme.titleMedium,
+            style: titleStyle ?? Theme.of(context).textTheme.titleMedium,
           ),
           SizedBox(height: SizeOf.h_sm),
           textBody
