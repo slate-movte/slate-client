@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:slate/core/utils/themes.dart';
+import 'package:slate/presentation/views/main_view.dart';
 import 'package:slate/presentation/widgets/item_table.dart';
 
 class SignUpView extends StatefulWidget {
@@ -134,7 +135,11 @@ class _SignUpViewState extends State<SignUpView> {
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: SizeOf.w_lg),
                 child: ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.of(context).pushReplacement(
+                      MaterialPageRoute(builder: (context) => MainView()),
+                    );
+                  },
                   child: Text('시작하기'),
                 ),
               ),

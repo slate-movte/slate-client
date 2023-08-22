@@ -16,18 +16,9 @@ class _MovieInfoViewState extends State<MovieInfoView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          '해운대',
-          style: TextStyle(color: Colors.black),
-        ),
-        leading: IconButton(
-            onPressed: () {
-              Navigator.pop(context); //뒤로가기
-            },
-            color: Colors.black,
-            icon: Icon(Icons.arrow_back_ios)),
-        backgroundColor: Colors.transparent,
-        elevation: 0.0,
+        title: Text('해운대'),
+        centerTitle: true,
+        elevation: 0,
       ),
       floatingActionButton: FloatingActionButton(
         backgroundColor: ColorOf.point.light,
@@ -37,6 +28,8 @@ class _MovieInfoViewState extends State<MovieInfoView> {
       body: Center(
         child: ItemTable(
           header: ItemHeader(
+            backgroundColor: ColorOf.white.light,
+            forceElevated: true,
             height: 230.h + 56.6.h + 16.h,
             flexibleSpace: FlexibleSpaceBar(
               title: Column(
@@ -74,7 +67,7 @@ class _MovieInfoViewState extends State<MovieInfoView> {
                         ),
                       ],
                     ),
-                  )
+                  ),
                 ],
               ),
             ),

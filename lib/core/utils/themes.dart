@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class Themes {
   static ThemeData lite = ThemeData(
+    fontFamily: 'Pretendard',
     iconButtonTheme: IconButtonThemeData(
       style: IconButton.styleFrom(
         backgroundColor: ColorOf.point.light,
@@ -20,6 +21,7 @@ class Themes {
       backgroundColor: Color(0xFFFFFFFF),
       foregroundColor: Color.fromARGB(255, 78, 78, 123),
       titleTextStyle: TextStyle(
+        fontFamily: 'Pretendard',
         color: Color(0xFF000000),
         fontSize: 20.sp,
         fontWeight: FontWeight.w600,
@@ -30,6 +32,7 @@ class Themes {
         elevation: 0,
         fixedSize: Size(double.maxFinite, 48.h),
         textStyle: TextStyle(
+          fontFamily: 'Pretendard',
           color: ColorOf.point.light,
           fontSize: 18,
           fontWeight: FontWeight.w600,
@@ -52,6 +55,7 @@ class Themes {
       floatingLabelBehavior: FloatingLabelBehavior.never,
       suffixIconColor: Color(0xFF282828),
       labelStyle: TextStyle(
+        fontFamily: 'Pretendard',
         color: Color(0xFF929292),
         fontSize: 14.sp,
         fontWeight: FontWeight.w400,
@@ -113,6 +117,7 @@ class Themes {
       ),
       shape: RoundedRectangleBorder(),
       labelStyle: TextStyle(
+        fontFamily: 'Pretendard',
         fontSize: 12.sp,
         fontWeight: FontWeight.normal,
         color: ColorOf.grey.light,

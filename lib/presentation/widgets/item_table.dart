@@ -11,6 +11,11 @@ class ItemSectionBuilder {
   ItemTableRow? homePage;
   ItemTableGrid? image;
   List<ItemTablePost>? posts;
+
+  @override
+  String toString() {
+    return 'address : $address, phone: $phone, hours: $hours, info: $info, homePage: $homePage, post: ${(posts ?? []).toList()}';
+  }
 }
 
 abstract class ItemElement extends StatelessWidget {
@@ -26,9 +31,11 @@ class ItemSection extends StatelessWidget {
     required ItemSectionBuilder builder,
     this.padding,
   }) {
+    // log(builder.toString());
     items.addAll([
       builder.address,
       builder.phone,
+      builder.hours,
       builder.info,
       builder.homePage,
       builder.image,
@@ -107,6 +114,8 @@ class ItemHeader extends StatelessWidget {
   final Widget? flexibleSpace;
   final double? height;
   final Color? backgroundColor;
+  final List<Widget>? actions;
+  final bool forceElevated;
 
   const ItemHeader({
     super.key,
@@ -114,6 +123,8 @@ class ItemHeader extends StatelessWidget {
     this.flexibleSpace,
     this.height,
     this.backgroundColor,
+    this.actions,
+    this.forceElevated = false,
   }) : assert(flexibleSpace == null || height != null,
             'height must have a value if flexibleSpace provided');
 
@@ -129,6 +140,9 @@ class ItemHeader extends StatelessWidget {
       expandedHeight: height,
       flexibleSpace: flexibleSpace,
       titleSpacing: SizeOf.w_lg,
+      actions: actions,
+      elevation: 1,
+      forceElevated: forceElevated,
     );
   }
 }

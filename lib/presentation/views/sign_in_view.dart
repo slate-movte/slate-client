@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:slate/core/utils/assets.dart';
+import 'package:slate/core/utils/themes.dart';
 import 'package:slate/presentation/views/main_view.dart';
 import 'package:slate/presentation/views/sign_up_view.dart';
 
@@ -13,21 +15,27 @@ class SignInView extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Text('SLATE'),
+            Image.asset(
+              Images.APP_LOGO.path,
+              width: 212.w,
+              height: 85.h,
+            ),
+            SizedBox(height: 60.h),
             Column(
               children: [
-                ElevatedButton.icon(
-                  style: ElevatedButton.styleFrom(
-                    fixedSize: Size(327.w, 48.h),
-                  ),
-                  label: const Text('카카오톡으로 로그인'),
-                  icon: const Icon(Icons.abc_rounded),
-                  onPressed: () {
+                InkWell(
+                  onTap: () {
                     Navigator.of(context).push(
                       MaterialPageRoute(builder: (context) => SignUpView()),
                     );
                   },
+                  child: Image.asset(
+                    Images.KAKAO_OAUTH.path,
+                    width: 327.w,
+                    height: 48.h,
+                  ),
                 ),
+                SizedBox(height: SizeOf.h_sm),
                 TextButton(
                   onPressed: () {
                     Navigator.of(context).pushReplacement(
@@ -36,18 +44,6 @@ class SignInView extends StatelessWidget {
                   },
                   child: Text('비회원으로 둘러보기'),
                 ),
-                // ElevatedButton.icon(
-                //   style: ElevatedButton.styleFrom(
-                //     fixedSize: Size(327.w, 48.h),
-                //   ),
-                //   label: const Text('카카오톡으로 로그인'),
-                //   icon: const Icon(Icons.abc_rounded),
-                //   onPressed: () {
-                //     Navigator.of(context).push(
-                //       MaterialPageRoute(builder: (context) => SignUpView()),
-                //     );
-                //   },
-                // ),
               ],
             ),
           ],

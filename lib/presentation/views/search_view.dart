@@ -43,7 +43,7 @@ class _SearchViewState extends State<SearchView> {
           child: const SizedBox(),
         ),
       ),
-      body: ItemListView([]),
+      body: ItemListView(items: []),
     );
   }
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:slate/core/utils/assets.dart';
 import 'package:slate/core/utils/themes.dart';
 import 'package:slate/presentation/views/profile_view.dart';
 import 'package:slate/presentation/views/search_view.dart';
@@ -16,16 +17,23 @@ class _HomeViewState extends State<HomeView> {
   bool viewOption = true;
 
   final List<SearchedItemView> _searchViewOptions = <SearchedItemView>[
-    ItemListView([]),
-    ItemMapView([]),
+    ItemMapView(items: [], bottomSheetHeight: 430.h),
+    ItemListView(items: []),
   ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         centerTitle: false,
-        title: const Text('SLATE'),
+        titleSpacing: SizeOf.w_lg,
+        title: Image.asset(
+          Images.APP_LOGO.path,
+          fit: BoxFit.contain,
+          height: 48.h,
+        ),
+        toolbarHeight: 80.h,
         actions: [
           IconButton(
             onPressed: () {
@@ -77,21 +85,27 @@ class _HomeViewState extends State<HomeView> {
           ),
         ),
       ),
-      floatingActionButton: ActionChip(
-        avatar: Icon(viewOption ? Icons.map : Icons.list),
-        label: Text(viewOption ? '지도로 보기' : '목록보기'),
-        backgroundColor: ColorOf.white.light,
-        labelStyle: Theme.of(context).textTheme.bodyLarge,
-        shape: StadiumBorder(),
-        elevation: 0.6,
-        onPressed: () {
-          setState(() {
-            viewOption = !viewOption;
-          });
-        },
+      body: Stack(
+        children: [
+          _searchViewOptions.elementAt(viewOption ? 0 : 1),
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: ActionChip(
+              avatar: Icon(viewOption ? Icons.list : Icons.map),
+              label: Text(viewOption ? '목록보기' : '지도로 보기'),
+              backgroundColor: ColorOf.white.light,
+              labelStyle: Theme.of(context).textTheme.bodyLarge,
+              shape: StadiumBorder(),
+              elevation: 0.6,
+              onPressed: () {
+                setState(() {
+                  viewOption = !viewOption;
+                });
+              },
+            ),
+          ),
+        ],
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      body: _searchViewOptions.elementAt(viewOption ? 0 : 1),
     );
   }
 }
