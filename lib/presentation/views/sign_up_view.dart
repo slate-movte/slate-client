@@ -21,19 +21,15 @@ class _SignUpViewState extends State<SignUpView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('회원가입'),
+        title: const Text('회원가입'),
         elevation: 0,
       ),
       body: SafeArea(
         child: Center(
           child: Column(
             children: [
-              Spacer(),
+              const Spacer(),
               Badge(
-                child: CircleAvatar(
-                  radius: 56,
-                  backgroundColor: ColorOf.grey.light,
-                ),
                 label: Icon(
                   Icons.camera_alt,
                   color: ColorOf.white.light,
@@ -43,12 +39,16 @@ class _SignUpViewState extends State<SignUpView> {
                 padding: EdgeInsets.symmetric(horizontal: 7.w),
                 backgroundColor: ColorOf.point.light,
                 offset: const Offset(0, 0),
+                child: CircleAvatar(
+                  radius: 56.r,
+                  backgroundColor: ColorOf.grey.light,
+                ),
               ),
-              Spacer(),
+              const Spacer(),
               SizedBox(
                 height: 300.h,
                 child: ItemTable(
-                  physics: NeverScrollableScrollPhysics(),
+                  physics: const NeverScrollableScrollPhysics(),
                   backgroundColor: ColorOf.white.light,
                   sections: [
                     ItemSection.onlyPost(
@@ -60,7 +60,7 @@ class _SignUpViewState extends State<SignUpView> {
                             textBody: false,
                             body: TextFormField(
                               decoration: InputDecoration(
-                                border: OutlineInputBorder(),
+                                border: const OutlineInputBorder(),
                                 enabledBorder: OutlineInputBorder(
                                   borderSide: BorderSide(
                                       color: ColorOf.lightGrey.light),
@@ -92,7 +92,7 @@ class _SignUpViewState extends State<SignUpView> {
                                   SizeOf.r,
                                 ),
                               ),
-                              child: SingleChildScrollView(
+                              child: const SingleChildScrollView(
                                 child: Text(
                                   "제1조(개인정보의 처리목적) \n① 슬레이트는 다음의 목적을 위하여 개인정보를 처리합니다. 처리하고 있는 개인정보는 다음의 목적 이외의 용도로는 이용되지 않으며, 이용 목적이 변경되는 경우에는 개인정보보호법 제18조에 따라 별도의 동의를 받는 등 필요한 조치를 이행할 예정입니다.",
                                 ),
@@ -137,10 +137,10 @@ class _SignUpViewState extends State<SignUpView> {
                 child: ElevatedButton(
                   onPressed: () {
                     Navigator.of(context).pushReplacement(
-                      MaterialPageRoute(builder: (context) => MainView()),
+                      MaterialPageRoute(builder: (context) => const MainView()),
                     );
                   },
-                  child: Text('시작하기'),
+                  child: const Text('시작하기'),
                 ),
               ),
             ],

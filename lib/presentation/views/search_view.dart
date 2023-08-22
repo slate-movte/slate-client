@@ -19,7 +19,7 @@ class _SearchViewState extends State<SearchView> {
       resizeToAvoidBottomInset: true,
       appBar: AppBar(
         title: Hero(
-          tag: Key('TEXT_FIELD_KEY'),
+          tag: const Key('TEXT_FIELD_KEY'),
           child: Container(
             color: Colors.amber,
             child: Material(
@@ -29,7 +29,7 @@ class _SearchViewState extends State<SearchView> {
                 child: TextField(
                   autofocus: true,
                   style: Theme.of(context).textTheme.bodyLarge,
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     suffixIcon: Icon(Icons.search),
                     labelText: '검색어를 입력해주세요.',
                   ),
@@ -43,7 +43,7 @@ class _SearchViewState extends State<SearchView> {
           child: const SizedBox(),
         ),
       ),
-      body: ItemListView(items: []),
+      body: const ItemListView(items: []),
     );
   }
 }

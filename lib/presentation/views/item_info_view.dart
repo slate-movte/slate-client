@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:slate/presentation/views/searched_item_view.dart';
-import 'package:slate/presentation/widgets/item_table.dart';
 
 class ItemInfoView extends StatefulWidget {
   const ItemInfoView({super.key});
@@ -14,9 +13,9 @@ class _ItemInfoViewState extends State<ItemInfoView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('수훈식당'),
+        title: const Text('수훈식당'),
       ),
-      body: ItemMapView(
+      body: const ItemMapView(
         items: [],
         initBottomSheet: true,
       ),

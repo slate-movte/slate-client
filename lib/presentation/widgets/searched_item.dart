@@ -54,7 +54,7 @@ class SearchedItem extends StatelessWidget {
                   SizedBox(
                     height: SizeOf.h_sm,
                   ),
-                  Row(
+                  const Row(
                     children: [
                       Chip(
                         label: Text('수훈 비빔밥'),

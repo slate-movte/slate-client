@@ -82,7 +82,7 @@ class _ItemMapViewState extends State<ItemMapView> {
               ItemSection(
                 padding: EdgeInsets.zero,
                 builder: ItemSectionBuilder()
-                  ..address = ItemTableRow(
+                  ..address = const ItemTableRow(
                     title: '주소',
                     body: '부산 수영구 광안로 61번가길 32 2층',
                   )
@@ -91,7 +91,7 @@ class _ItemMapViewState extends State<ItemMapView> {
                     body: '0507-1367-1753',
                     bodyTextStyle: Theme.of(context).textTheme.bodySmall,
                   )
-                  ..hours = ItemTableRow(
+                  ..hours = const ItemTableRow(
                     title: '영업시간',
                     body: '''월요일 09:00~21:00
 화요일 09:00~21:00
@@ -101,7 +101,7 @@ class _ItemMapViewState extends State<ItemMapView> {
 토요일 09:00~21:00
 일요일 정기휴무''',
                   )
-                  ..info = ItemTableRow(
+                  ..info = const ItemTableRow(
                     title: '식당정보',
                     body: '수훈비빔밥과 수훈쌈밥이 맛있는 부산 맛집!',
                   )
@@ -112,7 +112,7 @@ class _ItemMapViewState extends State<ItemMapView> {
                   ),
               ),
               ItemSection(
-                builder: ItemSectionBuilder()..image = ItemTableGrid(),
+                builder: ItemSectionBuilder()..image = const ItemTableGrid(),
               ),
             ],
           ),
@@ -138,13 +138,14 @@ class _ItemListViewState extends State<ItemListView> {
           function: () => Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) =>
-                  index % 2 == 0 ? ItemInfoView() : MovieInfoView(), // example
+              builder: (context) => index % 2 == 0
+                  ? const ItemInfoView()
+                  : const MovieInfoView(), // example
             ),
           ),
         );
       },
-      separatorBuilder: (context, index) => Divider(),
+      separatorBuilder: (context, index) => const Divider(),
       itemCount: 3,
     );
   }

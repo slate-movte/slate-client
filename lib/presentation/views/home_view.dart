@@ -17,8 +17,8 @@ class _HomeViewState extends State<HomeView> {
   bool viewOption = true;
 
   final List<SearchedItemView> _searchViewOptions = <SearchedItemView>[
-    ItemMapView(items: [], bottomSheetHeight: 430.h),
-    ItemListView(items: []),
+    ItemMapView(items: const [], bottomSheetHeight: 430.h),
+    const ItemListView(items: []),
   ];
 
   @override
@@ -35,18 +35,21 @@ class _HomeViewState extends State<HomeView> {
         ),
         toolbarHeight: 80.h,
         actions: [
-          IconButton(
-            onPressed: () {
+          InkWell(
+            onTap: () {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => ProfileView(),
+                  builder: (context) => const ProfileView(),
                 ),
               );
             },
-            icon: IconButton(
-              onPressed: () {},
-              icon: Icon(Icons.person),
+            child: Padding(
+              padding: EdgeInsets.only(right: SizeOf.w_lg),
+              child: CircleAvatar(
+                radius: 26,
+                backgroundColor: ColorOf.grey.light,
+              ),
             ),
           ),
         ],
@@ -62,11 +65,11 @@ class _HomeViewState extends State<HomeView> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Hero(
-                  tag: Key('TEXT_FIELD_KEY'),
+                  tag: const Key('TEXT_FIELD_KEY'),
                   child: Material(
                     child: TextField(
                       style: Theme.of(context).textTheme.bodyLarge,
-                      decoration: InputDecoration(
+                      decoration: const InputDecoration(
                         suffixIcon: Icon(Icons.search),
                         border: OutlineInputBorder(),
                         labelText: '검색어를 입력해주세요.',
@@ -74,7 +77,7 @@ class _HomeViewState extends State<HomeView> {
                       onTap: () => Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => SearchView(),
+                          builder: (context) => const SearchView(),
                         ),
                       ),
                     ),
@@ -95,7 +98,7 @@ class _HomeViewState extends State<HomeView> {
               label: Text(viewOption ? '목록보기' : '지도로 보기'),
               backgroundColor: ColorOf.white.light,
               labelStyle: Theme.of(context).textTheme.bodyLarge,
-              shape: StadiumBorder(),
+              shape: const StadiumBorder(),
               elevation: 0.6,
               onPressed: () {
                 setState(() {

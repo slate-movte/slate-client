@@ -26,7 +26,8 @@ class SignInView extends StatelessWidget {
                 InkWell(
                   onTap: () {
                     Navigator.of(context).push(
-                      MaterialPageRoute(builder: (context) => SignUpView()),
+                      MaterialPageRoute(
+                          builder: (context) => const SignUpView()),
                     );
                   },
                   child: Image.asset(
@@ -39,10 +40,10 @@ class SignInView extends StatelessWidget {
                 TextButton(
                   onPressed: () {
                     Navigator.of(context).pushReplacement(
-                      MaterialPageRoute(builder: (context) => MainView()),
+                      MaterialPageRoute(builder: (context) => const MainView()),
                     );
                   },
-                  child: Text('비회원으로 둘러보기'),
+                  child: const Text('비회원으로 둘러보기'),
                 ),
               ],
             ),

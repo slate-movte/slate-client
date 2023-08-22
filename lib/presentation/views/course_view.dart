@@ -13,7 +13,7 @@ class _CourseViewState extends State<CourseView> {
     return Center(
       child: ElevatedButton(
         onPressed: () {},
-        child: Text('안녕하세요.'),
+        child: const Text('안녕하세요.'),
       ),
     );
   }

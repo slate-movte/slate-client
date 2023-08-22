@@ -1,3 +1,5 @@
+// ignore_for_file: non_constant_identifier_names
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -18,13 +20,25 @@ class Themes {
       onBackground: ColorOf.black.light,
     ),
     appBarTheme: AppBarTheme(
-      backgroundColor: Color(0xFFFFFFFF),
-      foregroundColor: Color.fromARGB(255, 78, 78, 123),
+      backgroundColor: const Color(0xFFFFFFFF),
+      foregroundColor: const Color.fromARGB(255, 78, 78, 123),
       titleTextStyle: TextStyle(
         fontFamily: 'Pretendard',
-        color: Color(0xFF000000),
+        color: const Color(0xFF000000),
         fontSize: 20.sp,
         fontWeight: FontWeight.w600,
+      ),
+    ),
+    outlinedButtonTheme: OutlinedButtonThemeData(
+      style: OutlinedButton.styleFrom(
+        fixedSize: Size(double.maxFinite, 48.h),
+        foregroundColor: ColorOf.black.light,
+        textStyle: TextStyle(
+          fontFamily: 'Pretendard',
+          fontSize: 18.sp,
+          color: ColorOf.black.light,
+          fontWeight: FontWeight.w500,
+        ),
       ),
     ),
     elevatedButtonTheme: ElevatedButtonThemeData(
@@ -53,10 +67,10 @@ class Themes {
         ),
       ),
       floatingLabelBehavior: FloatingLabelBehavior.never,
-      suffixIconColor: Color(0xFF282828),
+      suffixIconColor: const Color(0xFF282828),
       labelStyle: TextStyle(
         fontFamily: 'Pretendard',
-        color: Color(0xFF929292),
+        color: const Color(0xFF929292),
         fontSize: 14.sp,
         fontWeight: FontWeight.w400,
         letterSpacing: 0.28,
@@ -65,31 +79,31 @@ class Themes {
         vertical: 15.h,
         horizontal: 17.w,
       ),
-      focusedErrorBorder: OutlineInputBorder(
+      focusedErrorBorder: const OutlineInputBorder(
         borderSide: BorderSide(
           color: Color(0xFF282828),
           width: 2.0,
         ),
       ),
-      disabledBorder: OutlineInputBorder(
+      disabledBorder: const OutlineInputBorder(
         borderSide: BorderSide(
           color: Color(0xFF282828),
           width: 2.0,
         ),
       ),
-      errorBorder: OutlineInputBorder(
+      errorBorder: const OutlineInputBorder(
         borderSide: BorderSide(
           color: Color(0xFF282828),
           width: 2.0,
         ),
       ),
-      focusedBorder: OutlineInputBorder(
+      focusedBorder: const OutlineInputBorder(
         borderSide: BorderSide(
           color: Color(0xFF282828),
           width: 2.0,
         ),
       ),
-      enabledBorder: OutlineInputBorder(
+      enabledBorder: const OutlineInputBorder(
         borderSide: BorderSide(
           color: Color(0xFF282828),
           width: 2.0,
@@ -115,7 +129,7 @@ class Themes {
         color: ColorOf.point.light,
         size: 20.sp,
       ),
-      shape: RoundedRectangleBorder(),
+      shape: const RoundedRectangleBorder(),
       labelStyle: TextStyle(
         fontFamily: 'Pretendard',
         fontSize: 12.sp,
@@ -170,7 +184,7 @@ class Themes {
         color: ColorOf.blue.light,
       ),
     ),
-    dividerColor: Color(0xFFE4E4E4),
+    dividerColor: const Color(0xFFE4E4E4),
     scaffoldBackgroundColor: ColorOf.white.light,
     textButtonTheme: TextButtonThemeData(
       style: TextButton.styleFrom(
