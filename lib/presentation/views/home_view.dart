@@ -36,8 +36,9 @@ class _HomeViewState extends State<HomeView> {
                 ),
               );
             },
-            icon: const CircleAvatar(
-              child: Icon(Icons.person),
+            icon: IconButton(
+              onPressed: () {},
+              icon: Icon(Icons.person),
             ),
           ),
         ],

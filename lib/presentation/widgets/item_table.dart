@@ -18,11 +18,13 @@ abstract class ItemElement extends StatelessWidget {
 }
 
 class ItemSection extends StatelessWidget {
+  final EdgeInsetsGeometry? padding;
   final List<ItemElement?> items = [];
 
   ItemSection({
     super.key,
     required ItemSectionBuilder builder,
+    this.padding,
   }) {
     items.addAll([
       builder.address,
@@ -36,6 +38,7 @@ class ItemSection extends StatelessWidget {
   ItemSection.onlyPost({
     super.key,
     required ItemSectionBuilder builder,
+    this.padding,
   }) {
     items.addAll(
       builder.posts ?? [],
@@ -46,10 +49,11 @@ class ItemSection extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       color: ColorOf.white.light,
-      padding: EdgeInsets.symmetric(
-        horizontal: SizeOf.w_lg,
-        vertical: SizeOf.h_lg,
-      ),
+      padding: padding ??
+          EdgeInsets.symmetric(
+            horizontal: SizeOf.w_lg,
+            vertical: SizeOf.h_lg,
+          ),
       child: Column(
         children: items.nonNulls.toList(),
       ),
@@ -102,12 +106,14 @@ class ItemHeader extends StatelessWidget {
   final Widget? header;
   final Widget? flexibleSpace;
   final double? height;
+  final Color? backgroundColor;
 
   const ItemHeader({
     super.key,
     this.header,
     this.flexibleSpace,
     this.height,
+    this.backgroundColor,
   }) : assert(flexibleSpace == null || height != null,
             'height must have a value if flexibleSpace provided');
 
@@ -116,12 +122,13 @@ class ItemHeader extends StatelessWidget {
     return SliverAppBar(
       automaticallyImplyLeading: false,
       title: header,
-      backgroundColor: ColorOf.white.light,
+      backgroundColor: backgroundColor ?? ColorOf.lightGrey.light,
       centerTitle: false,
       pinned: true,
       collapsedHeight: height,
       expandedHeight: height,
       flexibleSpace: flexibleSpace,
+      titleSpacing: SizeOf.w_lg,
     );
   }
 }
@@ -182,8 +189,11 @@ class ItemTableRow extends ItemElement {
   @override
   Widget build(BuildContext context) {
     return Container(
+      padding: EdgeInsets.symmetric(
+        horizontal: SizeOf.w_lg,
+        vertical: SizeOf.h_sm,
+      ),
       decoration: BoxDecoration(
-        // color: ColorOf.white.light,
         border: Border(
           top: BorderSide(
             color: ColorOf.lightGrey.light,
