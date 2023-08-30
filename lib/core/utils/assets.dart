@@ -2,7 +2,8 @@
 
 enum Images {
   APP_LOGO(path: 'lib/assets/images/slate_logo.png'),
-  KAKAO_OAUTH(path: 'lib/assets/images/kakao_login_large_wide.png');
+  KAKAO_OAUTH(path: 'lib/assets/images/kakao_login_large_wide.png'),
+  TEST(path: 'lib/assets/images/test_m.png');
 
   const Images({required this.path});
 

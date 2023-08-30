@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:slate/core/utils/assets.dart';
 import 'package:slate/core/utils/themes.dart';
 import 'package:slate/presentation/widgets/item_table.dart';
 
@@ -14,11 +15,6 @@ class _MovieInfoViewState extends State<MovieInfoView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('해운대'),
-        centerTitle: true,
-        elevation: 0,
-      ),
       floatingActionButton: FloatingActionButton(
         backgroundColor: ColorOf.point.light,
         child: const Icon(Icons.camera_alt_outlined),
@@ -27,47 +23,111 @@ class _MovieInfoViewState extends State<MovieInfoView> {
       body: Center(
         child: ItemTable(
           header: ItemHeader(
-            backgroundColor: ColorOf.white.light,
+            actions: [
+              Padding(
+                padding: EdgeInsets.only(right: SizeOf.w_md),
+                child: IconButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  icon: Icon(
+                    Icons.close,
+                    size: 30,
+                    color: ColorOf.white.light,
+                  ),
+                ),
+              ),
+            ],
             forceElevated: true,
-            height: 230.h + 56.6.h + 16.h,
-            flexibleSpace: FlexibleSpaceBar(
-              title: Column(
-                children: [
-                  Placeholder(
-                    child: SizedBox(
-                      height: 230.h,
-                      width: double.infinity,
-                    ),
+            collapsedHeight: 160.h,
+            expandedHeight: 328.h,
+            flexibleSpace: Container(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment(0.00, -1.00),
+                  end: Alignment(0, 1),
+                  colors: [Colors.black.withOpacity(0.9), Colors.black],
+                ),
+              ),
+              child: FlexibleSpaceBar(
+                titlePadding: EdgeInsets.symmetric(
+                    horizontal: SizeOf.w_lg, vertical: SizeOf.h_lg),
+                expandedTitleScale: 1,
+                centerTitle: false,
+                title: LayoutBuilder(
+                  builder: (context, constraints) {
+                    return FittedBox(
+                      alignment: Alignment.centerLeft,
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          Image.asset(
+                            Images.TEST.path,
+                            width: 100.w,
+                            height: 144.h,
+                          ),
+                          Padding(
+                            padding: EdgeInsets.only(left: SizeOf.w_md),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Padding(
+                                  padding: EdgeInsets.only(bottom: 5.h),
+                                  child: Text(
+                                    '해운대',
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .titleSmall!
+                                        .apply(
+                                          color: ColorOf.white.light,
+                                        ),
+                                  ),
+                                ),
+                                Padding(
+                                  padding: EdgeInsets.only(bottom: 3.h),
+                                  child: Text(
+                                    'Haeundae',
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .titleSmall!
+                                        .apply(
+                                          color: ColorOf.white.light,
+                                        ),
+                                  ),
+                                ),
+                                Text(
+                                  '2009.07.22 개봉 | 129분',
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .titleSmall!
+                                      .apply(
+                                        color: ColorOf.white.light,
+                                      ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+                  },
+                ),
+                background: ShaderMask(
+                  shaderCallback: (bound) {
+                    return LinearGradient(
+                      begin: Alignment(0.00, -1.00),
+                      end: Alignment(0, 1),
+                      colors: [Colors.black.withOpacity(0.5), Colors.black],
+                    ).createShader(bound);
+                  },
+                  blendMode: BlendMode.colorBurn,
+                  child: Image.asset(
+                    Images.TEST.path,
+                    fit: BoxFit.fitWidth,
+                    alignment: Alignment.topCenter,
                   ),
-                  const Center(
-                    child: SizedBox(
-                      width: 100,
-                      height: 20,
-                      child: Placeholder(),
-                    ),
-                  ),
-                  Container(
-                    height: 35.h,
-                    padding: EdgeInsets.symmetric(horizontal: SizeOf.w_lg),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [
-                        Text(
-                          '2009.07.22 개봉',
-                          style: Theme.of(context).textTheme.bodyMedium,
-                        ),
-                        Text(
-                          ' | ',
-                          style: Theme.of(context).textTheme.labelLarge,
-                        ),
-                        Text(
-                          '129분',
-                          style: Theme.of(context).textTheme.bodyMedium,
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
+                ),
               ),
             ),
           ),
@@ -92,7 +152,10 @@ class _MovieInfoViewState extends State<MovieInfoView> {
                 ],
             ),
             ItemSection(
-              builder: ItemSectionBuilder()..image = const ItemTableGrid(),
+              builder: ItemSectionBuilder()
+                ..image = const ItemTableGrid(
+                  title: '스틸컷',
+                ),
             ),
           ],
         ),

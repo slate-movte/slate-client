@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:slate/core/utils/assets.dart';
 import 'package:slate/core/utils/themes.dart';
 
 class ItemSectionBuilder {
@@ -110,32 +112,36 @@ class ItemTable extends ItemElement {
 class ItemHeader extends StatelessWidget {
   final Widget? header;
   final Widget? flexibleSpace;
-  final double? height;
+  final double? collapsedHeight;
+  final double? expandedHeight;
   final Color? backgroundColor;
   final List<Widget>? actions;
   final bool forceElevated;
+  final bool automaticallyImplyLeading;
 
   const ItemHeader({
     super.key,
     this.header,
     this.flexibleSpace,
-    this.height,
-    this.backgroundColor,
+    this.collapsedHeight,
+    this.expandedHeight,
+    this.backgroundColor = const Color.fromARGB(255, 235, 235, 235),
     this.actions,
     this.forceElevated = false,
-  }) : assert(flexibleSpace == null || height != null,
+    this.automaticallyImplyLeading = false,
+  }) : assert(flexibleSpace == null || collapsedHeight != null,
             'height must have a value if flexibleSpace provided');
 
   @override
   Widget build(BuildContext context) {
     return SliverAppBar(
-      automaticallyImplyLeading: false,
+      automaticallyImplyLeading: automaticallyImplyLeading,
       title: header,
-      backgroundColor: backgroundColor ?? ColorOf.lightGrey.light,
+      backgroundColor: backgroundColor,
       centerTitle: false,
       pinned: true,
-      collapsedHeight: height,
-      expandedHeight: height,
+      collapsedHeight: collapsedHeight,
+      expandedHeight: expandedHeight,
       flexibleSpace: flexibleSpace,
       titleSpacing: SizeOf.w_lg,
       actions: actions,
@@ -231,23 +237,45 @@ class ItemTableRow extends ItemElement {
 }
 
 class ItemTableGrid extends ItemElement {
-  const ItemTableGrid({super.key});
+  final String? title;
+  final TextStyle? titleStyle;
+
+  const ItemTableGrid({
+    super.key,
+    this.title,
+    this.titleStyle,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return GridView.count(
-      physics: const NeverScrollableScrollPhysics(),
-      shrinkWrap: true,
-      crossAxisCount: 3,
-      childAspectRatio: 1 / 1,
-      mainAxisSpacing: SizeOf.w_sm / 4,
-      crossAxisSpacing: SizeOf.w_sm / 4,
-      children: List.generate(11, (index) {
-        return Container(
-          color: Colors.lightGreen,
-          child: Text(' Item : $index'),
-        );
-      }),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        title != null
+            ? Padding(
+                padding: EdgeInsets.only(bottom: SizeOf.h_md),
+                child: Text(
+                  title!,
+                  style: titleStyle ?? Theme.of(context).textTheme.titleMedium,
+                ),
+              )
+            : const SizedBox.shrink(),
+        GridView.count(
+          physics: const NeverScrollableScrollPhysics(),
+          shrinkWrap: true,
+          padding: EdgeInsets.zero,
+          crossAxisCount: 3,
+          childAspectRatio: 1 / 1,
+          mainAxisSpacing: SizeOf.w_sm / 4,
+          crossAxisSpacing: SizeOf.w_sm / 4,
+          children: List.generate(11, (index) {
+            return Container(
+              color: Colors.lightGreen,
+              child: Text(' Item : $index'),
+            );
+          }),
+        ),
+      ],
     );
   }
 }
