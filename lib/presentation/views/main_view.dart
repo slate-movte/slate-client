@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:slate/presentation/views/course_view.dart';
 import 'package:slate/presentation/views/home_view.dart';
 
@@ -33,7 +34,7 @@ class _MainViewState extends State<MainView> {
         child: _viewList.elementAt(_selectedIndex),
       ),
       bottomNavigationBar: Container(
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
           color: Colors.white,
           boxShadow: [
             BoxShadow(
@@ -48,8 +49,11 @@ class _MainViewState extends State<MainView> {
           showSelectedLabels: false,
           showUnselectedLabels: false,
           items: <BottomNavigationBarItem>[
-            const BottomNavigationBarItem(
-              icon: Icon(Icons.home),
+            BottomNavigationBarItem(
+              icon: Icon(
+                Icons.home,
+                size: 36.h,
+              ),
               label: 'Home',
             ),
             BottomNavigationBarItem(
@@ -60,8 +64,11 @@ class _MainViewState extends State<MainView> {
               ),
               label: '',
             ),
-            const BottomNavigationBarItem(
-              icon: Icon(Icons.map_outlined),
+            BottomNavigationBarItem(
+              icon: Icon(
+                Icons.map_outlined,
+                size: 36.h,
+              ),
               label: 'Course',
             ),
           ],
