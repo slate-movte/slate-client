@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:slate/presentation/widgets/searched_item_view.dart';
+import 'package:slate/core/utils/themes.dart';
+import 'package:slate/presentation/views/searched_item_view.dart';
 
 class SearchView extends StatefulWidget {
   const SearchView({super.key});
@@ -10,14 +11,7 @@ class SearchView extends StatefulWidget {
 }
 
 class _SearchViewState extends State<SearchView> {
-  static List<String> list = <String>['One', 'Two', 'Three', 'Four'];
-  String dropdownValue = list.first;
-  int _selectedIndex = 0;
-
-  final List<SearchedItemView> _searchViewOptions = <SearchedItemView>[
-    ItemMapView([]),
-    ItemListView([]),
-  ];
+  bool viewOption = true;
 
   @override
   Widget build(BuildContext context) {
@@ -25,84 +19,31 @@ class _SearchViewState extends State<SearchView> {
       resizeToAvoidBottomInset: true,
       appBar: AppBar(
         title: Hero(
-          tag: Key('TEXT_FIELD_KEY'),
-          child: Material(
-            child: TextField(
-              autofocus: true,
-              decoration: InputDecoration(
-                suffixIcon: Icon(Icons.search),
-                border: OutlineInputBorder(),
-                labelText: '검색어를 입력해주세요.',
+          tag: const Key('TEXT_FIELD_KEY'),
+          child: Container(
+            color: Colors.amber,
+            child: Material(
+              child: SizedBox(
+                height: 48.h,
+                width: 314.w,
+                child: TextField(
+                  autofocus: true,
+                  style: Theme.of(context).textTheme.bodyLarge,
+                  decoration: const InputDecoration(
+                    suffixIcon: Icon(Icons.search),
+                    labelText: '검색어를 입력해주세요.',
+                  ),
+                ),
               ),
             ),
           ),
         ),
         bottom: PreferredSize(
-          preferredSize: Size(double.infinity, 50.h),
-          child: Hero(
-            tag: Key('TEXT_FIELD_FILTER_KEY'),
-            child: Material(
-              child: Row(
-                children: [
-                  DropdownButton<String>(
-                    value: list.first,
-                    items: list.map<DropdownMenuItem<String>>((String value) {
-                      return DropdownMenuItem<String>(
-                        value: value,
-                        child: Text(value),
-                      );
-                    }).toList(),
-                    onChanged: (String? value) {
-                      setState(() {
-                        dropdownValue = value!;
-                      });
-                    },
-                  ),
-                  DropdownButton<String>(
-                    value: list.first,
-                    items: list.map<DropdownMenuItem<String>>((String value) {
-                      return DropdownMenuItem<String>(
-                        value: value,
-                        child: Text(value),
-                      );
-                    }).toList(),
-                    onChanged: (String? value) {
-                      setState(() {
-                        dropdownValue = value!;
-                      });
-                    },
-                  ),
-                  DropdownButton<String>(
-                    value: list.first,
-                    items: list.map<DropdownMenuItem<String>>((String value) {
-                      return DropdownMenuItem<String>(
-                        value: value,
-                        child: Text(value),
-                      );
-                    }).toList(),
-                    onChanged: (String? value) {
-                      setState(() {
-                        dropdownValue = value!;
-                      });
-                    },
-                  ),
-                ],
-              ),
-            ),
-          ),
+          preferredSize: Size(double.infinity, SizeOf.h_sm),
+          child: const SizedBox(),
         ),
       ),
-      floatingActionButton: FloatingActionButton.extended(
-        icon: Icon(Icons.list),
-        label: Text('목록보기'),
-        onPressed: () {
-          setState(() {
-            _selectedIndex = 1;
-          });
-        },
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      body: _searchViewOptions.elementAt(_selectedIndex),
+      body: const ItemListView(items: []),
     );
   }
 }

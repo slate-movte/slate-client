@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:slate/presentation/bloc/camera_bloc.dart';
+import 'package:slate/core/utils/themes.dart';
 import 'package:slate/presentation/views/sign_in_view.dart';
 
 import 'injection.dart';
