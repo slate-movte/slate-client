@@ -26,14 +26,7 @@ class CameraBloc extends Bloc<CameraEvent, CameraState> {
     final result = await getCameraController(NoParams());
     result.fold(
       (failure) {
-        switch (failure.runtimeType) {
-          case CameraControlException:
-            emit(CameraError(message: 'Camera Not Found'));
-          case CameraNotFoundException:
-            emit(CameraError(message: 'Camera Controller is not working'));
-          default:
-            emit(CameraError(message: 'Camera Error'));
-        }
+        emit(CameraError(message: '다시 시도해주세요.'));
       },
       (result) {
         emit(CameraOn(controller: result));
@@ -45,7 +38,6 @@ class CameraBloc extends Bloc<CameraEvent, CameraState> {
     TakePictureEvent event,
     Emitter<CameraState> emit,
   ) async {
-    emit(TakePictureOn());
     final result = await takePicture(event.controller);
     result.fold(
       (failure) {

@@ -107,105 +107,13 @@ class _SignUpViewState extends State<SignUpView> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Padding(
-                    padding: EdgeInsets.only(left: 5.w),
-                    child: Text(
-                      "약관동의",
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w700,
-                        //color: Color(282828)
-                      ),
-                    ),
-                  ),
-                  SizedBox(
-                    height: 8.h,
-                  ),
-                  Container(
-                      width: 350.w,
-                      height: 139.h,
-                      padding: EdgeInsets.only(
-                          top: 17.h, left: 16.w, right: 16.w, bottom: 17.h),
-                      decoration: BoxDecoration(
-                        border: Border.all(color: Colors.black12),
-                        borderRadius: BorderRadius.circular(4),
-                      ),
-                      child: SingleChildScrollView(
-                        child: Text(
-                          "제1조(개인정보의 처리목적) \n① 슬레이트는 다음의 목적을 위하여 개인정보를 처리합니다. 처리하고 있는 개인정보는 다음의 목적 이외의 용도로는 이용되지 않으며, 이용 목적이 변경되는 경우에는 개인정보보호법 제18조에 따라 별도의 동의를 받는 등 필요한 조치를 이행할 예정입니다.",
-                          style: TextStyle(fontSize: 14),
-                        ),
-                      )),
-                  SizedBox(
-                    height: 8.h,
-                  ),
-                  //동의 체크
-                  Container(
-                    child: Row(
-                      children: [
-                        Checkbox(
-                          value: isChecked,
-                          activeColor: Colors.deepOrangeAccent,
-                          side: BorderSide(width: 1.5, color: Colors.black12),
-                          onChanged: (value) {
-                            setState(() {
-                              isChecked = value!;
-                            });
-                          },
-                        ),
-                        Text(
-                          "동의합니다.",
-                          style: TextStyle(fontSize: 12),
-                        )
-                      ],
-                    ),
-                  ),
-                  SizedBox(
-                    height: 110.h,
-                  ),
-                  Container(
-                    alignment: Alignment.center,
-                    child: Text(
-                      validMsg,
-                      style: TextStyle(color: Colors.deepOrangeAccent),
-                    ),
-                  ),
-                  SizedBox(
-                    height: 12.h,
-                  ),
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      padding: EdgeInsets.only(top: 17.h, bottom: 17.h),
-                      backgroundColor: Colors.black12,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(4),
-                      ),
-                      minimumSize: Size(351.w, 48.h),
-                    ),
-                    onPressed: () {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (context) => const HomeView(),
-                        ),
-                      );
-                      // if (isChecked == false && nickName == "") {
-                      //   setState(() {
-                      //     validMsg = "닉네임을 입력해주세요.";
-                      //   });
-                      // } else if (isChecked == true && nickName == "") {
-                      //   setState(() {
-                      //     validMsg = "닉네임을 입력해주세요.";
-                      //   });
-                      // } else if (isChecked == false && nickName != "") {
-                      //   setState(() {
-                      //     validMsg = "약관에 동의해주세요.";
-                      //   });
-                      // } else {
-                      //   setState(() {
-                      //     validMsg = "";
-                      //   });
-                      // }
-                      print(isChecked);
+                  Checkbox(
+                    value: isChecked,
+                    activeColor: ColorOf.black.light,
+                    onChanged: (value) {
+                      setState(() {
+                        isChecked = value!;
+                      });
                     },
                   ),
                   Text(

@@ -38,6 +38,7 @@ class Slate extends StatelessWidget {
           ),
         ],
         child: MaterialApp(
+          theme: Themes.lite,
           debugShowCheckedModeBanner: false,
           home: SignInView(),
         ),

@@ -138,6 +138,11 @@ class Themes {
       ),
     ),
     textTheme: TextTheme(
+      headlineSmall: TextStyle(
+        fontSize: 12.sp,
+        fontWeight: FontWeight.w600,
+        color: ColorOf.black.light,
+      ),
       titleLarge: TextStyle(
         fontSize: 24.sp,
         fontWeight: FontWeight.bold,
