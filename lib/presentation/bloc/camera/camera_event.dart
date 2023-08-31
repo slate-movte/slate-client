@@ -11,7 +11,7 @@ class CameraOnEvent extends CameraEvent {}
 class CameraOffEvent extends CameraEvent {}
 
 class TakePictureEvent extends CameraEvent {
-  CameraController controller;
+  final CameraController controller;
 
   TakePictureEvent({required this.controller});
 

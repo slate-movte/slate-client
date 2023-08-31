@@ -1,10 +1,9 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:slate/core/errors/exceptions.dart';
 import 'package:slate/core/errors/failures.dart';
 import 'package:slate/core/usecases/usecase.dart';
 import 'package:slate/domain/usecases/camera_usecase.dart';
-import 'package:slate/presentation/bloc/camera_event.dart';
-import 'package:slate/presentation/bloc/camera_state.dart';
+import 'package:slate/presentation/bloc/camera/camera_event.dart';
+import 'package:slate/presentation/bloc/camera/camera_state.dart';
 
 class CameraBloc extends Bloc<CameraEvent, CameraState> {
   GetCameraController getCameraController;

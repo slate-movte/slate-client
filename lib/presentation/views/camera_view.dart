@@ -5,9 +5,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:slate/core/utils/assets.dart';
 import 'package:slate/core/utils/themes.dart';
-import 'package:slate/presentation/bloc/camera_bloc.dart';
-import 'package:slate/presentation/bloc/camera_event.dart';
-import 'package:slate/presentation/bloc/camera_state.dart';
+import 'package:slate/presentation/bloc/camera/camera_bloc.dart';
+import 'package:slate/presentation/bloc/camera/camera_event.dart';
+import 'package:slate/presentation/bloc/camera/camera_state.dart';
 import 'package:slate/presentation/views/display_picture_view.dart';
 import 'package:slate/presentation/widgets/item_table.dart';
 
