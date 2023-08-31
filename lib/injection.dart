@@ -4,7 +4,7 @@ import 'package:slate/data/repositories/camera_repository.dart';
 import 'package:slate/data/sources/native/camera_native_data_source.dart';
 import 'package:slate/domain/repositories/camera_repository.dart';
 import 'package:slate/domain/usecases/camera_usecase.dart';
-import 'package:slate/presentation/bloc/camera_bloc.dart';
+import 'package:slate/presentation/bloc/camera/camera_bloc.dart';
 
 final DI = GetIt.instance;
 
