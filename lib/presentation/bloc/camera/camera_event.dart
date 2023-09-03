@@ -8,6 +8,8 @@ class CameraEvent extends Equatable {
 
 class CameraOnEvent extends CameraEvent {}
 
+class DirectionChangeEvent extends CameraEvent {}
+
 class CameraOffEvent extends CameraEvent {}
 
 class TakePictureEvent extends CameraEvent {
@@ -17,4 +19,13 @@ class TakePictureEvent extends CameraEvent {
 
   @override
   List<Object?> get props => [controller];
+}
+
+class SavePictureEvent extends CameraEvent {
+  final XFile image;
+
+  SavePictureEvent({required this.image});
+
+  @override
+  List<Object?> get props => [image];
 }

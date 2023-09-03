@@ -35,8 +35,8 @@ class AccommoInfoSearchEvent extends SearchEvent {
   AccommoInfoSearchEvent({required this.id});
 }
 
-class AttractionSearchEvent extends SearchEvent {
+class AttractionInfoSearchEvent extends SearchEvent {
   final int id;
 
-  AttractionSearchEvent({required this.id});
+  AttractionInfoSearchEvent({required this.id});
 }

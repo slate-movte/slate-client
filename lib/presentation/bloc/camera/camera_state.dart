@@ -36,3 +36,7 @@ class TakePictureDone extends CameraState {
   @override
   List<Object?> get props => [image];
 }
+
+class SavePictureOn extends CameraState {}
+
+class SavePictureDone extends CameraState {}

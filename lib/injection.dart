@@ -1,6 +1,6 @@
 import 'package:camera/camera.dart';
 import 'package:get_it/get_it.dart';
-import 'package:slate/data/repositories/camera_repository.dart';
+import 'package:slate/data/repositories/camera_repository_impl.dart';
 import 'package:slate/data/sources/native/camera_native_data_source.dart';
 import 'package:slate/domain/repositories/camera_repository.dart';
 import 'package:slate/domain/usecases/camera_usecase.dart';
@@ -10,7 +10,10 @@ final DI = GetIt.instance;
 
 const String BLOC_CAMERA = 'BLOC_CAMERA';
 const String USECASE_GET_CAMERA_CONTROLLER = 'USECASE_GET_CAMERA_CONTROLLER';
+const String USECASE_CHANGE_CAMERA_DIRECTION =
+    'USECASE_CHANGE_CAMERA_DIRECTION';
 const String USECASE_TAKE_PICTURE = 'USECASE_TAKE_PICTURE';
+const String USECASE_SAVE_PICTURE = 'USECASE_SAVE_PICTURE';
 const String REPO_CAMERA = 'REPO_CAMERA';
 const String DATA_CAMERA = 'DATA_CAMERA';
 const String CORE_CAMERA = 'CORE_CAMERA';
@@ -20,12 +23,28 @@ Future<void> init() async {
   DI.registerLazySingleton<CameraBloc>(
     () => CameraBloc(
       getCameraController: DI(instanceName: USECASE_GET_CAMERA_CONTROLLER),
+      changeCameraDirection: DI(instanceName: USECASE_CHANGE_CAMERA_DIRECTION),
       takePicture: DI(instanceName: USECASE_TAKE_PICTURE),
+      savePicture: DI(instanceName: USECASE_SAVE_PICTURE),
     ),
     instanceName: BLOC_CAMERA,
   );
 
   // usecase
+  DI.registerLazySingleton<SavePicture>(
+    () => SavePicture(
+      repository: DI(instanceName: REPO_CAMERA),
+    ),
+    instanceName: USECASE_SAVE_PICTURE,
+  );
+
+  DI.registerLazySingleton<ChangeCameraDirection>(
+    () => ChangeCameraDirection(
+      repository: DI(instanceName: REPO_CAMERA),
+    ),
+    instanceName: USECASE_CHANGE_CAMERA_DIRECTION,
+  );
+
   DI.registerLazySingleton<GetCameraController>(
     () => GetCameraController(
       repository: DI(instanceName: REPO_CAMERA),

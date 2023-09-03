@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import 'package:slate/domain/entities/accommodation.dart';
+import 'package:slate/domain/entities/accommo.dart';
 import 'package:slate/domain/entities/attraction.dart';
 import 'package:slate/domain/entities/movie.dart';
 import 'package:slate/domain/entities/restaurant.dart';
@@ -53,7 +53,7 @@ class RestaurantDataLoaded extends SearchState {
 }
 
 class AccommoDataLoaded extends SearchState {
-  final Accommodation accommodation;
+  final Accommo accommodation;
 
   AccommoDataLoaded({required this.accommodation});
 
@@ -68,4 +68,13 @@ class AttractionDataLoaded extends SearchState {
 
   @override
   List<Object?> get props => [attraction];
+}
+
+class SearchError extends SearchState {
+  final String message;
+
+  SearchError({required this.message});
+
+  @override
+  List<Object?> get props => [message];
 }

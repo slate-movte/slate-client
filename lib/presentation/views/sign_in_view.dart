@@ -4,7 +4,6 @@ import 'package:slate/core/utils/assets.dart';
 import 'package:slate/core/utils/themes.dart';
 import 'package:slate/presentation/views/main_view.dart';
 import 'package:slate/presentation/views/sign_up_view.dart';
-import 'package:slate/presentation/views/camera_view.dart';
 
 class SignInView extends StatelessWidget {
   const SignInView({super.key});

@@ -53,11 +53,13 @@ class _CameraViewState extends State<CameraView> {
                 .push(
                   MaterialPageRoute(
                     builder: (context) => DisplayPictureView(
-                      imagePath: state.image.path,
+                      image: state.image,
                     ),
                   ),
                 )
-                .then((_) => context.read<CameraBloc>().add(CameraOnEvent()));
+                .then(
+                  (_) => context.read<CameraBloc>().add(CameraOnEvent()),
+                );
           }
         },
         builder: (context, state) {
@@ -162,7 +164,11 @@ class _CameraViewState extends State<CameraView> {
                         ),
                         FloatingActionButton(
                           heroTag: null,
-                          onPressed: () {},
+                          onPressed: () {
+                            context
+                                .read<CameraBloc>()
+                                .add(DirectionChangeEvent());
+                          },
                           child: Icon(
                             Icons.flip_camera_android,
                             color: ColorOf.black.light,
