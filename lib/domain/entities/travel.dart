@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:slate/core/utils/enums.dart';
-import 'package:slate/domain/entities/location.dart';
+import 'package:slate/domain/entities/position.dart';
 
 abstract class Travel extends Equatable {
   final int id;
@@ -10,7 +10,7 @@ abstract class Travel extends Equatable {
   final String? homepage;
   final String? overview;
   final TravelType type;
-  final Location location;
+  final Position location;
 
   const Travel({
     required this.id,

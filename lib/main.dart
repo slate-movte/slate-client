@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:slate/core/caches/slate_auth.dart';
 import 'package:slate/core/utils/themes.dart';
 import 'package:slate/presentation/bloc/camera/camera_bloc.dart';
+import 'package:slate/presentation/bloc/map/map_bloc.dart';
 import 'package:slate/presentation/views/sign_in_view.dart';
 import 'injection.dart';
 
@@ -43,6 +44,11 @@ class Slate extends StatelessWidget {
           BlocProvider(
             create: (_) => DI.get<CameraBloc>(
               instanceName: BLOC_CAMERA,
+            ),
+          ),
+          BlocProvider(
+            create: (_) => DI.get<MapBloc>(
+              instanceName: BLOC_MAP,
             ),
           ),
         ],

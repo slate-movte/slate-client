@@ -17,8 +17,10 @@ class _HomeViewState extends State<HomeView> {
   bool viewOption = true;
 
   final List<SearchedItemView> _searchViewOptions = <SearchedItemView>[
-    ItemMapView(items: const [], bottomSheetHeight: 430.h),
-    const ItemListView(items: []),
+    ItemMapView(
+      bottomSheetHeight: 430.h,
+    ),
+    const ItemListView(),
   ];
 
   @override

@@ -1,41 +1,36 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:slate/core/utils/enums.dart';
 import 'package:slate/core/utils/themes.dart';
-import 'package:slate/presentation/bloc/marker_bloc.dart';
-import 'package:slate/presentation/bloc/marker_event.dart';
+import 'package:slate/injection.dart';
+import 'package:slate/presentation/bloc/map/map_bloc.dart';
+import 'package:slate/presentation/bloc/map/map_event.dart';
+import 'package:slate/presentation/bloc/map/map_state.dart';
 import 'package:slate/presentation/views/item_info_view.dart';
 import 'package:slate/presentation/views/movie_info_view.dart';
 import 'package:slate/presentation/widgets/item_table.dart';
 
 import 'package:slate/presentation/widgets/searched_item.dart';
 
-import '../bloc/location_bloc.dart';
-import '../bloc/location_event.dart';
-import '../bloc/location_state.dart';
-import '../bloc/marker_state.dart';
-
 bool openedBottomSheet = false;
 
 abstract class SearchedItemView extends StatefulWidget {
-  final List items;
-
-  const SearchedItemView({super.key, required this.items});
+  const SearchedItemView({super.key});
 }
 
 class ItemMapView extends SearchedItemView {
   final bool initBottomSheet;
   final double? bottomSheetHeight;
-  final String? latlng;
 
   const ItemMapView({
     super.key,
-    required super.items,
     this.initBottomSheet = false,
     this.bottomSheetHeight,
-    this.latlng,
   });
 
   @override
@@ -45,6 +40,7 @@ class ItemMapView extends SearchedItemView {
 class _ItemMapViewState extends State<ItemMapView> {
   @override
   void initState() {
+    context.read<MapBloc>().add(InitializeMapEvent());
     if (widget.initBottomSheet) {
       SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
         openBottomSheet(context);
@@ -53,192 +49,140 @@ class _ItemMapViewState extends State<ItemMapView> {
     super.initState();
   }
 
-  late GoogleMapController mapController;
+  final Completer<GoogleMapController> _controller =
+      Completer<GoogleMapController>();
 
-  late LatLng currentPosition;
-
-  //초기 마커 더미 데이터 -> 만약 bloc 잘 작동되면 position이 변경되면서 마커 3개가 등장해야 함.
-  Set<Marker> markerList = {
-    Marker(
-        markerId: const MarkerId("전주식당"),
-        position: const LatLng(38.6313962, 127.0767797)),
-    Marker(
-      markerId: const MarkerId("행복숙소"),
-      position: const LatLng(38.63089, 127.0796858),
-    )
-  };
+  late CameraPosition _position;
+  Set<Marker> _markers = {};
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        floatingActionButton: FloatingActionButton.small(
-          heroTag: null,
-          onPressed: () {
-            context.read<LocationBloc>().add(UpdateLocationEvent());
-          },
-          child: Icon(
-            Icons.my_location,
-            color: Colors.deepOrange,
-          ),
-          backgroundColor: Colors.white,
+      floatingActionButton: FloatingActionButton.small(
+        heroTag: null,
+        onPressed: () async {
+          context.read<MapBloc>().add(Move2UserLocationEvent());
+        },
+        child: Icon(
+          Icons.my_location,
+          color: ColorOf.point.light,
         ),
-        floatingActionButtonLocation: FloatingActionButtonLocation.startFloat,
-        body: Stack(
-          children: [
-            Positioned(
-              top: 0,
-              left: 0,
-              right: 0,
-              height: openedBottomSheet
-                  ? MediaQuery.of(context).size.height -
-                      (widget.bottomSheetHeight ?? 550.h)
-                  : 600.h, //기본 높이를 double.infinity로 하면 오류
-              child: BlocBuilder<LocationBloc, LocationState>(
-                  builder: (context, state) {
-                if (state is LocationLoadingState) {
-                  return GoogleMap(
-                      initialCameraPosition:
-                          CameraPosition(target: currentPosition, zoom: 14),
-                      onMapCreated: (GoogleMapController controller) {
-                        mapController = controller;
-                      },
-                      myLocationEnabled: true,
-                      myLocationButtonEnabled: false,
-                      markers: markerList);
-                } else if (state is LocationLoadedState) {
-                  if (state.locationData == LatLng(35.171585, 129.127796)) {
-                    return GoogleMap(
-                        initialCameraPosition: CameraPosition(
-                            target: LatLng(state.locationData.latitude,
-                                state.locationData.longitude),
-                            zoom: 14),
-                        onMapCreated: (GoogleMapController controller) {
-                          mapController = controller;
-                          currentPosition = state.locationData;
-                        },
-                        myLocationEnabled: true,
-                        myLocationButtonEnabled: false,
-                        markers: markerList);
-                  } else {
-                    mapController.animateCamera(CameraUpdate.newLatLngZoom(
-                        LatLng(state.locationData.latitude,
-                            state.locationData.longitude),
-                        14));
-                  }
-                }
-                BlocBuilder<MarkerBloc, MarkerState>(
-                    builder: (markcontext, markstate) {
-                  print("마커 작동 테스트1");
-                  if (markstate is MarkerLoadedState) {
-                    print("마커 작동 테스트2");
-                    setState(() {
-                      markerList = markstate.markerData;
-                      print("업데이트 마커 정보:" + markerList.toString());
-                    });
-                  }
-                  return GoogleMap(
-                      initialCameraPosition:
-                          CameraPosition(target: currentPosition, zoom: 14),
-                      onMapCreated: (GoogleMapController controller) {
-                        mapController = controller;
-                      },
-                      myLocationEnabled: true,
-                      myLocationButtonEnabled: false,
-                      markers: markerList);
+        backgroundColor: Colors.white,
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+      body: Stack(
+        children: [
+          BlocConsumer<MapBloc, MapState>(
+            listener: (context, state) async {
+              if (state is MapInitialized) {
+                setState(() {
+                  _position = state.cameraPosition;
                 });
+              } else if (state is CameraMoved) {
+                GoogleMapController controller = await _controller.future;
+                await controller.animateCamera(
+                  CameraUpdate.newCameraPosition(state.cameraPosition),
+                );
+              } else if (state is MarkerLoaded) {
+                setState(() {
+                  _markers = state.markers;
+                });
+              }
+            },
+            builder: (context, state) {
+              if (state is MapLoading) {
+                return Center(
+                  child: CircularProgressIndicator(),
+                );
+              } else if (state is MapError) {
+                return Center(
+                  child: Text('ERROR'),
+                );
+              } else {
                 return GoogleMap(
-                    initialCameraPosition:
-                        CameraPosition(target: currentPosition, zoom: 14),
-                    onMapCreated: (GoogleMapController controller) {
-                      mapController = controller;
-                    },
-                    myLocationEnabled: true,
-                    myLocationButtonEnabled: false,
-                    markers: markerList);
-              }),
-            ),
-            Center(
-              child: IconButton(
-                onPressed: () async {
-                  setState(() {
-                    openedBottomSheet = true;
-                  });
-                  await openBottomSheet(context);
-                },
-                icon: Icon(
-                  Icons.pin_drop_outlined,
-                  color: ColorOf.white.light,
-                ),
-              ),
-            ),
-            Align(
-              alignment: Alignment.topLeft,
-              child: SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  child: Visibility(
-                    visible: openedBottomSheet ? false : true,
-                    child: Row(
-                      children: [
-                        (
-                          '영화 촬영지',
-                          AssetImage('lib/assets/images/film.png'),
-                          12.w,
-                          14.h,
-                          'MOVIE_LOCATION'
-                        ),
-                        (
-                          '식당',
-                          AssetImage('lib/assets/images/food.png'),
-                          14.w,
-                          14.h,
-                          'RESTAURANT'
-                        ),
-                        (
-                          '관광지',
-                          AssetImage('lib/assets/images/flag.png'),
-                          14.w,
-                          12.h,
-                          'ATTRACTION'
-                        ),
-                        (
-                          '숙박',
-                          AssetImage('lib/assets/images/building.png'),
-                          12.w,
-                          14.h,
-                          'ACCOMMODATION'
-                        ),
-                      ]
-                          .map(
-                            (element) => Padding(
-                              padding: EdgeInsets.symmetric(
-                                horizontal: SizeOf.w_sm / 2,
-                                vertical: SizeOf.h_sm,
-                              ),
-                              child: ActionChip(
-                                avatar: Image(
-                                    image: element.$2,
-                                    width: element.$3,
-                                    height: element.$4),
-                                label: Text(element.$1),
-                                backgroundColor: ColorOf.white.light,
-                                labelStyle:
-                                    Theme.of(context).textTheme.bodyLarge,
-                                shape: const StadiumBorder(),
-                                elevation: 0.6,
-                                onPressed: () {
-                                  context.read<MarkerBloc>().add(
-                                      MarkerLoadedEvent(
-                                          markerType: element.$5));
-                                },
-                              ),
+                  initialCameraPosition: _position,
+                  myLocationButtonEnabled: false,
+                  myLocationEnabled: true,
+                  onMapCreated: (controller) async {
+                    _controller.complete(controller);
+                  },
+                  markers: _markers,
+                  cameraTargetBounds: CameraTargetBounds(
+                    DI(instanceName: CORE_LATLNG_BOUNDS),
+                  ),
+                  minMaxZoomPreference: const MinMaxZoomPreference(11, null),
+                );
+              }
+            },
+          ),
+          Align(
+            alignment: Alignment.topLeft,
+            child: SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Visibility(
+                  visible: openedBottomSheet ? false : true,
+                  child: Row(
+                    children: [
+                      (
+                        '영화 촬영지',
+                        AssetImage('lib/assets/images/film.png'),
+                        12.w,
+                        14.h,
+                        TravelType.MOVIE_LOCATION,
+                      ),
+                      (
+                        '식당',
+                        AssetImage('lib/assets/images/food.png'),
+                        14.w,
+                        14.h,
+                        TravelType.RESTAURANT,
+                      ),
+                      (
+                        '관광지',
+                        AssetImage('lib/assets/images/flag.png'),
+                        14.w,
+                        12.h,
+                        TravelType.ATTRACTION,
+                      ),
+                      (
+                        '숙박',
+                        AssetImage('lib/assets/images/building.png'),
+                        12.w,
+                        14.h,
+                        TravelType.ACCOMMODATION,
+                      ),
+                    ]
+                        .map(
+                          (element) => Padding(
+                            padding: EdgeInsets.symmetric(
+                              horizontal: SizeOf.w_sm / 2,
+                              vertical: SizeOf.h_sm,
                             ),
-                          )
-                          .toList(),
-                    ),
-                  )),
-            ),
-          ],
-        ));
+                            child: ActionChip(
+                              avatar: Image(
+                                  image: element.$2,
+                                  width: element.$3,
+                                  height: element.$4),
+                              label: Text(element.$1),
+                              backgroundColor: ColorOf.white.light,
+                              labelStyle: Theme.of(context).textTheme.bodyLarge,
+                              shape: const StadiumBorder(),
+                              elevation: 0.6,
+                              onPressed: () {
+                                context.read<MapBloc>().add(
+                                      GetMarkersEvent(type: element.$5),
+                                    );
+                              },
+                            ),
+                          ),
+                        )
+                        .toList(),
+                  ),
+                )),
+          ),
+        ],
+      ),
+    );
   }
 
   Future openBottomSheet(BuildContext context) async {
@@ -314,7 +258,7 @@ class _ItemMapViewState extends State<ItemMapView> {
 }
 
 class ItemListView extends SearchedItemView {
-  const ItemListView({super.key, required super.items});
+  const ItemListView({super.key});
 
   @override
   State<ItemListView> createState() => _ItemListViewState();

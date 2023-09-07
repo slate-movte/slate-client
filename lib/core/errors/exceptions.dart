@@ -16,7 +16,7 @@ class CacheException implements Exception {}
 
 class PermissionException implements Exception {}
 
-class LocationNotLoadedException implements PermissionException{}
+class LocationNotLoadedException implements PermissionException {}
 
 class CameraNotFoundException implements CacheException {}
 
@@ -27,3 +27,7 @@ class TakePictureException implements CacheException {}
 class SavePictureException implements CacheException {}
 
 class KakaoOAuthException implements CacheException {}
+
+class LocationException implements Exception {}
+
+class MapException implements Exception {}

@@ -16,9 +16,7 @@ class _ItemInfoViewState extends State<ItemInfoView> {
         title: const Text('수훈식당'),
       ),
       body: const ItemMapView(
-        items: [],
         initBottomSheet: true,
-        latlng: '위도, 경도',
       ),
     );
   }
