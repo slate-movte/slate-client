@@ -14,7 +14,19 @@ class GetCameraController extends CameraUseCase
 
   @override
   Future<Either<Failure, CameraController>> call(NoParams params) async {
-    return await repository.getCameraControllerWithInitialized();
+    return await repository.getCameraController();
+  }
+}
+
+class ChangeCameraDirection extends CameraUseCase
+    implements UseCase<CameraController, NoParams> {
+  CameraRepository repository;
+
+  ChangeCameraDirection({required this.repository});
+
+  @override
+  Future<Either<Failure, CameraController>> call(NoParams params) async {
+    return await repository.getCameraController(changeDirection: true);
   }
 }
 
@@ -27,5 +39,16 @@ class TakePicture extends CameraUseCase
   @override
   Future<Either<Failure, XFile>> call(CameraController params) async {
     return await repository.getPictureImage(params);
+  }
+}
+
+class SavePicture extends CameraUseCase implements UseCase<Void, XFile> {
+  CameraRepository repository;
+
+  SavePicture({required this.repository});
+
+  @override
+  Future<Either<Failure, Void>> call(XFile params) async {
+    return await repository.savePicture2Gallery(params);
   }
 }

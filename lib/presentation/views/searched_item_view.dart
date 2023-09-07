@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:slate/core/utils/themes.dart';
 import 'package:slate/presentation/views/item_info_view.dart';
@@ -17,12 +18,14 @@ abstract class SearchedItemView extends StatefulWidget {
 class ItemMapView extends SearchedItemView {
   final bool initBottomSheet;
   final double? bottomSheetHeight;
+  final String? latlng;
 
   const ItemMapView({
     super.key,
     required super.items,
     this.initBottomSheet = false,
     this.bottomSheetHeight,
+    this.latlng,
   });
 
   @override
@@ -44,14 +47,56 @@ class _ItemMapViewState extends State<ItemMapView> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: ColorOf.black.light,
-      body: Center(
-        child: IconButton(
-          onPressed: () async => await openBottomSheet(context),
-          icon: Icon(
-            Icons.pin_drop_outlined,
-            color: ColorOf.white.light,
+      floatingActionButton: widget.latlng == null
+          ? FloatingActionButton.small(
+              heroTag: null,
+              onPressed: () {},
+              child: Icon(
+                Icons.my_location_outlined,
+                color: ColorOf.point.light,
+              ),
+              backgroundColor: ColorOf.white.light,
+            )
+          : null,
+      floatingActionButtonLocation: FloatingActionButtonLocation.startFloat,
+      body: Stack(
+        children: [
+          Visibility(
+            visible: widget.latlng == null,
+            child: Align(
+              alignment: Alignment.topLeft,
+              child: SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  children: [
+                    ('영화 촬영지', Icons.movie),
+                    ('식당', Icons.restaurant),
+                    ('관광지', Icons.coffee),
+                    ('숙박', Icons.hotel),
+                  ]
+                      .map(
+                        (element) => Padding(
+                          padding: EdgeInsets.symmetric(
+                            horizontal: SizeOf.w_sm / 2,
+                            vertical: SizeOf.h_sm,
+                          ),
+                          child: ActionChip(
+                            avatar: Icon(element.$2),
+                            label: Text(element.$1),
+                            backgroundColor: ColorOf.white.light,
+                            labelStyle: Theme.of(context).textTheme.bodyLarge,
+                            shape: const StadiumBorder(),
+                            elevation: 0.6,
+                            onPressed: () {},
+                          ),
+                        ),
+                      )
+                      .toList(),
+                ),
+              ),
+            ),
           ),
-        ),
+        ],
       ),
     );
   }
