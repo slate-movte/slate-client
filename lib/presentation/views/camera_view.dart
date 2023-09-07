@@ -5,9 +5,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:slate/core/utils/assets.dart';
 import 'package:slate/core/utils/themes.dart';
-import 'package:slate/presentation/bloc/camera_bloc.dart';
-import 'package:slate/presentation/bloc/camera_event.dart';
-import 'package:slate/presentation/bloc/camera_state.dart';
+import 'package:slate/presentation/bloc/camera/camera_bloc.dart';
+import 'package:slate/presentation/bloc/camera/camera_event.dart';
+import 'package:slate/presentation/bloc/camera/camera_state.dart';
 import 'package:slate/presentation/views/display_picture_view.dart';
 import 'package:slate/presentation/widgets/item_table.dart';
 
@@ -53,11 +53,13 @@ class _CameraViewState extends State<CameraView> {
                 .push(
                   MaterialPageRoute(
                     builder: (context) => DisplayPictureView(
-                      imagePath: state.image.path,
+                      image: state.image,
                     ),
                   ),
                 )
-                .then((_) => context.read<CameraBloc>().add(CameraOnEvent()));
+                .then(
+                  (_) => context.read<CameraBloc>().add(CameraOnEvent()),
+                );
           }
         },
         builder: (context, state) {
@@ -162,7 +164,11 @@ class _CameraViewState extends State<CameraView> {
                         ),
                         FloatingActionButton(
                           heroTag: null,
-                          onPressed: () {},
+                          onPressed: () {
+                            context
+                                .read<CameraBloc>()
+                                .add(DirectionChangeEvent());
+                          },
                           child: Icon(
                             Icons.flip_camera_android,
                             color: ColorOf.black.light,

@@ -1,13 +1,12 @@
-import 'package:camera/camera.dart';
 import 'package:get_it/get_it.dart';
-import 'package:slate/data/repositories/camera_repository.dart';
+import 'package:slate/data/repositories/camera_repository_impl.dart';
 import 'package:slate/data/sources/native/camera_native_data_source.dart';
 import 'package:slate/domain/repositories/camera_repository.dart';
 import 'package:slate/domain/usecases/camera_usecase.dart';
 import 'package:slate/domain/usecases/marker_usecase.dart';
-import 'package:slate/presentation/bloc/camera_bloc.dart';
 import 'package:slate/presentation/bloc/location_bloc.dart';
 import 'package:slate/presentation/bloc/marker_bloc.dart';
+import 'package:slate/presentation/bloc/camera/camera_bloc.dart';
 
 import 'data/repositories/location_repository.dart';
 import 'data/repositories/marker_repository.dart';
@@ -21,7 +20,10 @@ final DI = GetIt.instance;
 
 const String BLOC_CAMERA = 'BLOC_CAMERA';
 const String USECASE_GET_CAMERA_CONTROLLER = 'USECASE_GET_CAMERA_CONTROLLER';
+const String USECASE_CHANGE_CAMERA_DIRECTION =
+    'USECASE_CHANGE_CAMERA_DIRECTION';
 const String USECASE_TAKE_PICTURE = 'USECASE_TAKE_PICTURE';
+const String USECASE_SAVE_PICTURE = 'USECASE_SAVE_PICTURE';
 const String REPO_CAMERA = 'REPO_CAMERA';
 const String DATA_CAMERA = 'DATA_CAMERA';
 const String CORE_CAMERA = 'CORE_CAMERA';
@@ -39,86 +41,94 @@ const String DATA_MARKER = 'DATA_MARKER';
 Future<void> init() async {
   // bloc
   DI.registerLazySingleton<CameraBloc>(
-        () => CameraBloc(
+    () => CameraBloc(
       getCameraController: DI(instanceName: USECASE_GET_CAMERA_CONTROLLER),
+      changeCameraDirection: DI(instanceName: USECASE_CHANGE_CAMERA_DIRECTION),
       takePicture: DI(instanceName: USECASE_TAKE_PICTURE),
+      savePicture: DI(instanceName: USECASE_SAVE_PICTURE),
     ),
     instanceName: BLOC_CAMERA,
   );
 
   DI.registerLazySingleton<LocationBloc>(
-        () => LocationBloc(
+    () => LocationBloc(
       getLocation: DI(instanceName: USECASE_GET_LOCATION),
     ),
     instanceName: BLOC_LOCATION,
   );
 
   DI.registerLazySingleton(
-          () => MarkerBloc(
-          getMarker: DI(instanceName: USECASE_GET_MARKER)
-      ),
-      instanceName: BLOC_MARKER
-  );
+      () => MarkerBloc(getMarker: DI(instanceName: USECASE_GET_MARKER)),
+      instanceName: BLOC_MARKER);
 
   // usecase
+  DI.registerLazySingleton<SavePicture>(
+    () => SavePicture(
+      repository: DI(instanceName: REPO_CAMERA),
+    ),
+    instanceName: USECASE_SAVE_PICTURE,
+  );
+
+  DI.registerLazySingleton<ChangeCameraDirection>(
+    () => ChangeCameraDirection(
+      repository: DI(instanceName: REPO_CAMERA),
+    ),
+    instanceName: USECASE_CHANGE_CAMERA_DIRECTION,
+  );
+
   DI.registerLazySingleton<GetCameraController>(
-        () => GetCameraController(
+    () => GetCameraController(
       repository: DI(instanceName: REPO_CAMERA),
     ),
     instanceName: USECASE_GET_CAMERA_CONTROLLER,
   );
 
   DI.registerLazySingleton<TakePicture>(
-        () => TakePicture(
+    () => TakePicture(
       repository: DI(instanceName: REPO_CAMERA),
     ),
     instanceName: USECASE_TAKE_PICTURE,
   );
 
   DI.registerLazySingleton<GetLocation>(
-          () => GetLocation(repository: DI(instanceName: REPO_LOCATION)),
-      instanceName: USECASE_GET_LOCATION
-  );
+      () => GetLocation(repository: DI(instanceName: REPO_LOCATION)),
+      instanceName: USECASE_GET_LOCATION);
 
   DI.registerLazySingleton<GetMarker>(
-        () => GetMarkerInfo(repository: DI(instanceName: REPO_MARKER)),
+    () => GetMarkerInfo(repository: DI(instanceName: REPO_MARKER)),
     instanceName: USECASE_GET_MARKER,
   );
 
   // repository
   DI.registerLazySingleton<CameraRepository>(
-        () => CameraRepositoryImpl(
+    () => CameraRepositoryImpl(
       cameraDataSource: DI(instanceName: DATA_CAMERA),
     ),
     instanceName: REPO_CAMERA,
   );
 
   DI.registerLazySingleton<LocationRepository>(
-          () => LocRepositoryImplementation(
-        locDataSource: DI(instanceName: DATA_LOCATION)
-      ),
-      instanceName: REPO_LOCATION
-  );
+      () => LocRepositoryImplementation(
+          locDataSource: DI(instanceName: DATA_LOCATION)),
+      instanceName: REPO_LOCATION);
 
   DI.registerLazySingleton<MarkerRepository>(
-          () => MarkerRepositoryImplementation(markerDataSource: DI(instanceName: DATA_MARKER), locationRemoteDataSource: DI(instanceName: DATA_LOCATION)),
-      instanceName: REPO_MARKER
-  );
+      () => MarkerRepositoryImplementation(
+          markerDataSource: DI(instanceName: DATA_MARKER),
+          locationRemoteDataSource: DI(instanceName: DATA_LOCATION)),
+      instanceName: REPO_MARKER);
 
   // datasource
   DI.registerLazySingleton<CameraNativeDataSource>(
-        () => CameraNativeDataSourceImpl(),
+    () => CameraNativeDataSourceImpl(),
     instanceName: DATA_CAMERA,
   );
 
   DI.registerLazySingleton<LocationRemoteDataSource>(
-          () => LocationRemoteDataSourceImplementation(),
-      instanceName: DATA_LOCATION
-  );
+      () => LocationRemoteDataSourceImplementation(),
+      instanceName: DATA_LOCATION);
 
   DI.registerLazySingleton<MarkerRemoteDataSource>(
-          () => MarkerRemoteDataSourceImplementation(),
-      instanceName: DATA_MARKER
-  );
-
+      () => MarkerRemoteDataSourceImplementation(),
+      instanceName: DATA_MARKER);
 }
