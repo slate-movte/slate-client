@@ -7,6 +7,12 @@ abstract class Failure extends Equatable {
 
 class CameraFailure extends Failure {}
 
+class ServerFailure extends Failure {}
+
+class PermissionFailure extends Failure {}
+
 class SearchFailure extends Failure {}
 
 class AuthFailure extends Failure {}
+
+class MapFailure extends Failure {}

@@ -4,8 +4,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:slate/core/caches/slate_auth.dart';
 import 'package:slate/core/utils/themes.dart';
 import 'package:slate/presentation/bloc/camera/camera_bloc.dart';
+import 'package:slate/presentation/bloc/map/map_bloc.dart';
 import 'package:slate/presentation/views/sign_in_view.dart';
-
 import 'injection.dart';
 
 Future<void> main() async {
@@ -28,6 +28,7 @@ Future<void> main() async {
 
   // final camera = await availableCameras();
   // log(camera.toString());
+
   runApp(const Slate());
 }
 
@@ -43,6 +44,11 @@ class Slate extends StatelessWidget {
           BlocProvider(
             create: (_) => DI.get<CameraBloc>(
               instanceName: BLOC_CAMERA,
+            ),
+          ),
+          BlocProvider(
+            create: (_) => DI.get<MapBloc>(
+              instanceName: BLOC_MAP,
             ),
           ),
         ],

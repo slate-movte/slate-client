@@ -2,4 +2,11 @@ enum TravelType {
   RESTAURANT,
   ACCOMMODATION,
   ATTRACTION,
+  MOVIE_LOCATION,
 }
+
+// enum MarkerType {
+//   RESTAURANT,
+//   ACCOMMODATION,
+//   ATTRACTION,
+// }

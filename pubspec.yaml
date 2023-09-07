@@ -14,16 +14,17 @@ dependencies:
   permission_handler: ^10.4.3
   equatable: ^2.0.5
   dartz: ^0.10.1
-  location: ^5.0.1
   get_it: ^7.6.0
   flutter_screenutil: ^5.8.4
   carousel_slider: ^4.2.1
   camera: ^0.10.5+3
   path_provider: ^2.1.0
   path: ^1.8.3
-  image_gallery_saver: ^2.0.3
+  google_maps_flutter: ^2.5.0
   image_picker: ^1.0.4
   kakao_flutter_sdk: ^1.5.0
+  image_gallery_saver: ^2.0.3
+  geolocator: ^10.0.1
 
 dev_dependencies:
   flutter_test:

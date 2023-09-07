@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:slate/domain/entities/map_item.dart';
 import 'package:slate/presentation/views/searched_item_view.dart';
 
 class ItemInfoView extends StatefulWidget {
-  const ItemInfoView({super.key});
+  final MapItem item;
+
+  const ItemInfoView({super.key, required this.item});
 
   @override
   State<ItemInfoView> createState() => _ItemInfoViewState();
@@ -14,11 +17,11 @@ class _ItemInfoViewState extends State<ItemInfoView> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('수훈식당'),
+        centerTitle: false,
       ),
-      body: const ItemMapView(
-        items: [],
+      body: ItemMapView(
         initBottomSheet: true,
-        latlng: '위도, 경도',
+        item: widget.item,
       ),
     );
   }
