@@ -1,4 +1,4 @@
-import 'package:kakao_flutter_sdk/kakao_flutter_sdk_talk.dart';
+import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
 
 abstract class AuthNativeDateSource {
   Future<int> getKakaoUserId();
