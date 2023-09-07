@@ -9,33 +9,39 @@ import 'package:slate/presentation/bloc/location_event.dart';
 import 'package:slate/presentation/bloc/location_state.dart';
 import '../../core/usecases/usecase.dart';
 import '../../domain/usecases/location_usecase.dart';
+import '../../domain/usecases/marker_usecase.dart';
+import 'marker_event.dart';
+import 'marker_state.dart';
 
-class LocationBloc extends Bloc<LocationEvent, LocationState> {
-  GetLocation getLocation;
+class MarkerBloc extends Bloc<MarkerEvent, MarkerState> {
+  GetMarker getMarker;
 
-  LocationBloc({
-    required this.getLocation
-  }) : super(LocationLoadedState(locationData: LatLng(35.171585, 129.127796))) {
-    on<UpdateLocationEvent>(_updateLocation);
+  MarkerBloc({
+    required this.getMarker
+  }) : super(MarkerLoadedState(markerData: {} )) {
+    on<MarkerLoadedEvent>(_getMarker);
   }
 
-  Future _updateLocation(
-        UpdateLocationEvent event,
-        Emitter<LocationState> emit,
+  Future _getMarker(
+      MarkerLoadedEvent event,
+      Emitter<MarkerState> emit,
       ) async {
 
-    emit(LocationLoadingState());
+    emit(MarkerLoadingState());
+    String markerType = event.markerType;
 
-    final result = await getLocation(NoParams());
+    final result = await getMarker(markerType);
 
     result.fold(
-        (failure){
+            (failure){
           if(failure is ServerFailure){
-            emit(LocationErrorState(message: 'Get Location Error'));
+            emit(MarkerErrorState(message: 'Get Marker Error'));
           }
         },
-        (result){
-          emit(LocationLoadedState(locationData: result));
+            (result){
+              print("Bloc 마커 정보: " + result.toString());
+          emit(MarkerLoadedState(markerData: result));
+
         }
     );
   }
