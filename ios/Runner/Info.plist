@@ -51,5 +51,11 @@
 	<string>Explanation on why the camera access is needed.</string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>Explanation on why the microphone access is needed.</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>User location information consent is required to verify the current user's location on the map and the surrounding tourist attraction data.</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>User location information consent is required to verify the current user's location on the map and the surrounding tourist attraction data.</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>User location information consent is required to verify the current user's location on the map and the surrounding tourist attraction data.</string>
 </dict>
 </plist>
