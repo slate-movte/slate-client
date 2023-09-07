@@ -78,10 +78,10 @@
 	<key>NSMicrophoneUsageDescription</key>
 	<string>Explanation on why the microphone access is needed.</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-	<string>User location information consent is required to verify the current user's location on the map and the surrounding tourist attraction data.</string>
+	<string>App would like to use your current location to display it on the app, also for directions and estimation of your travel times. It is secure and private. 세이프라이트는 사용자 위치정보를 기반으로 보행자 이동경로 및 예측시간에 사용하기 위해 위치정보를 필요로합니다.</string>
 	<key>NSLocationAlwaysUsageDescription</key>
-	<string>User location information consent is required to verify the current user's location on the map and the surrounding tourist attraction data.</string>
+	<string>App would like to use your current location to display it on the app, also for directions and estimation of your travel times. It is secure and private.세이프라이트는 사용자 위치정보를 기반으로 보행자 이동경로 및 예측시간에 사용하기 위해 위치정보를 필요로합니다.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>User location information consent is required to verify the current user's location on the map and the surrounding tourist attraction data.</string>
+	<string>App would like to use your current location to display it on the app, also for directions and estimation of your travel times. It is secure and private. 세이프라이트는 사용자 위치정보를 기반으로 보행자 이동경로 및 예측시간에 사용하기 위해 위치정보를 필요로합니다.</string>
 </dict>
 </plist>
