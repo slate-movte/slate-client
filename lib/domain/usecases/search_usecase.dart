@@ -1,10 +1,10 @@
 import 'package:dartz/dartz.dart';
 import 'package:slate/core/errors/failures.dart';
 import 'package:slate/core/usecases/usecase.dart';
-import 'package:slate/domain/entities/accommo.dart';
-import 'package:slate/domain/entities/attraction.dart';
+
 import 'package:slate/domain/entities/movie.dart';
-import 'package:slate/domain/entities/restaurant.dart';
+import 'package:slate/domain/entities/travel.dart';
+
 import 'package:slate/domain/repositories/search_repository.dart';
 
 abstract class SearchUseCase {
@@ -44,11 +44,12 @@ class RestaurantInfoSearch extends SearchUseCase
   }
 }
 
-class AccommoInfoSearch extends SearchUseCase implements UseCase<Accommo, int> {
+class AccommoInfoSearch extends SearchUseCase
+    implements UseCase<Accommodation, int> {
   AccommoInfoSearch({required super.repository});
 
   @override
-  Future<Either<Failure, Accommo>> call(int params) async {
+  Future<Either<Failure, Accommodation>> call(int params) async {
     return await super.repository.getAccommoInfo(params);
   }
 }

@@ -1,7 +1,5 @@
-import 'package:slate/data/models/accommo_model.dart';
-import 'package:slate/data/models/attraction_model.dart';
 import 'package:slate/data/models/movie_model.dart';
-import 'package:slate/data/models/restaurant_model.dart';
+import 'package:slate/data/models/travel_model.dart';
 
 abstract class SearchApiRemoteDataSource {
   Future<List> getSearchResultsWithKeyword(
@@ -12,12 +10,12 @@ abstract class SearchApiRemoteDataSource {
   Future<MovieModel> getMovieInfoWithId(int id);
   Future<RestaurantModel> getRestaurantInfoWithId(int id);
   Future<AttractionModel> getAttractionInfoWithId(int id);
-  Future<AccomoModel> getAccommoInfoWithId(int id);
+  Future<AccommodationModel> getAccommoInfoWithId(int id);
 }
 
 class SearchApiRemoteDataSourceImpl implements SearchApiRemoteDataSource {
   @override
-  Future<AccomoModel> getAccommoInfoWithId(int id) {
+  Future<AccommodationModel> getAccommoInfoWithId(int id) {
     throw UnimplementedError();
   }
 

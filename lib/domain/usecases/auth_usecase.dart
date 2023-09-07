@@ -12,6 +12,14 @@ class SignInWithKakaoOAuth2 extends AuthUseCase
   }
 }
 
+class CheckKakaoOAuthState extends AuthUseCase
+    implements UseCase<bool, NoParams> {
+  @override
+  Future<Either<Failure, bool>> call(NoParams params) {
+    throw UnimplementedError();
+  }
+}
+
 class SignUpWithKakaoOAuth2 {}
 
 class SignOut {}

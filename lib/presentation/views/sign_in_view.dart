@@ -6,6 +6,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:kakao_flutter_sdk/kakao_flutter_sdk_talk.dart';
 import 'package:slate/core/utils/assets.dart';
 import 'package:slate/core/utils/themes.dart';
+import 'package:slate/presentation/views/main_view.dart';
 
 class SignInView extends StatelessWidget {
   const SignInView({super.key});
@@ -94,10 +95,10 @@ class SignInView extends StatelessWidget {
                 SizedBox(height: SizeOf.h_sm),
                 TextButton(
                   onPressed: () async {
-                    // Navigator.of(context).pushReplacement(
-                    //   MaterialPageRoute(builder: (context) => const MainView()),
-                    // );
-                    await UserApi.instance.logout();
+                    Navigator.of(context).pushReplacement(
+                      MaterialPageRoute(builder: (context) => const MainView()),
+                    );
+                    // await UserApi.instance.logout();
                     // await UserApi.instance.unlink();
                   },
                   child: const Text('비회원으로 둘러보기'),

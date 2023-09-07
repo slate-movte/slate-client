@@ -21,3 +21,5 @@ class CameraControlException implements CacheException {}
 class TakePictureException implements CacheException {}
 
 class SavePictureException implements CacheException {}
+
+class KakaoOAuthException implements CacheException {}

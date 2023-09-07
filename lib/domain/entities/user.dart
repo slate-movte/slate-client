@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 
-class Attraction extends Equatable {
+class User extends Equatable {
   @override
   List<Object?> get props => throw UnimplementedError();
 }

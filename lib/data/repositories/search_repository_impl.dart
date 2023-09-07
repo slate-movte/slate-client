@@ -1,10 +1,10 @@
 import 'package:dartz/dartz.dart';
 import 'package:slate/core/errors/failures.dart';
 import 'package:slate/data/sources/remote/search_api_remote_data_source.dart';
-import 'package:slate/domain/entities/accommo.dart';
-import 'package:slate/domain/entities/attraction.dart';
+
 import 'package:slate/domain/entities/movie.dart';
-import 'package:slate/domain/entities/restaurant.dart';
+import 'package:slate/domain/entities/travel.dart';
+
 import 'package:slate/domain/repositories/search_repository.dart';
 
 class SearchRepositoryImpl implements SearchRepository {
@@ -13,9 +13,9 @@ class SearchRepositoryImpl implements SearchRepository {
   SearchRepositoryImpl({required this.dataSource});
 
   @override
-  Future<Either<Failure, Accommo>> getAccommoInfo(int id) async {
+  Future<Either<Failure, Accommodation>> getAccommoInfo(int id) async {
     try {
-      Accommo result = await dataSource.getAccommoInfoWithId(id);
+      Accommodation result = await dataSource.getAccommoInfoWithId(id);
       return Right(result);
     } on Exception {
       return Left(SearchFailure());

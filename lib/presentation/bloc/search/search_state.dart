@@ -1,8 +1,7 @@
 import 'package:equatable/equatable.dart';
-import 'package:slate/domain/entities/accommo.dart';
-import 'package:slate/domain/entities/attraction.dart';
+
 import 'package:slate/domain/entities/movie.dart';
-import 'package:slate/domain/entities/restaurant.dart';
+import 'package:slate/domain/entities/travel.dart';
 
 class SearchState extends Equatable {
   @override
@@ -53,7 +52,7 @@ class RestaurantDataLoaded extends SearchState {
 }
 
 class AccommoDataLoaded extends SearchState {
-  final Accommo accommodation;
+  final Accommodation accommodation;
 
   AccommoDataLoaded({required this.accommodation});
 

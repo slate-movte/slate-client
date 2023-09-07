@@ -1,9 +1,7 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:kakao_flutter_sdk/kakao_flutter_sdk_talk.dart';
+import 'package:slate/core/caches/slate_auth.dart';
 import 'package:slate/core/utils/themes.dart';
 import 'package:slate/presentation/bloc/camera/camera_bloc.dart';
 import 'package:slate/presentation/views/sign_in_view.dart';
@@ -12,16 +10,16 @@ import 'injection.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  KakaoSdk.init(nativeAppKey: '95c71c63e60de73eca63343269998377');
+  // KakaoSdk.init(nativeAppKey: '95c71c63e60de73eca63343269998377');
   // UserApi.instance.signup();
   // UserApi.instance.accessTokenInfo();
   // UserApi.instance.logout();
-  try {
-    AccessTokenInfo info = await UserApi.instance.accessTokenInfo();
-    log(info.toString());
-  } catch (e) {
-    log('로그인한 상태 아님XXXXXX');
-  }
+  // try {
+  //   AccessTokenInfo info = await UserApi.instance.accessTokenInfo();
+  //   log(info.toString());
+  // } catch (e) {
+  //   log('로그인한 상태 아님XXXXXX');
+  // }
 
   // User user = await UserApi.instance.me();
   // log(user.toString());
@@ -47,16 +45,16 @@ class Slate extends StatelessWidget {
               instanceName: BLOC_CAMERA,
             ),
           ),
-          BlocProvider(
-            create: (_) => DI.get<CameraBloc>(
-              instanceName: BLOC_CAMERA,
-            ),
-          ),
         ],
         child: MaterialApp(
           theme: Themes.lite,
           debugShowCheckedModeBanner: false,
-          home: SignInView(),
+          home: StreamBuilder(
+            stream: SlateAuth().authStateChanges(),
+            builder: (context, snapshot) {
+              return SignInView();
+            },
+          ),
         ),
       ),
     );
