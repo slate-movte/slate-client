@@ -18,6 +18,8 @@ import 'package:slate/presentation/widgets/item_table.dart';
 
 import 'package:slate/presentation/widgets/searched_item.dart';
 
+import '../../core/utils/assets.dart';
+
 abstract class SearchedItemView extends StatefulWidget {
   const SearchedItemView({super.key});
 }
@@ -135,7 +137,7 @@ class _ItemMapViewState extends State<ItemMapView> {
             },
           ),
           Align(
-            alignment: Alignment.bottomRight,
+            alignment: Alignment.bottomLeft,
             child: Padding(
               padding: EdgeInsets.symmetric(
                 horizontal: SizeOf.w_md,
@@ -164,28 +166,28 @@ class _ItemMapViewState extends State<ItemMapView> {
                     children: [
                       (
                         '영화 촬영지',
-                        AssetImage('lib/assets/images/film.png'),
+                        AssetImage(Images.FILM_ICON.path),
                         12.w,
                         14.h,
                         TravelType.MOVIE_LOCATION,
                       ),
                       (
                         '식당',
-                        AssetImage('lib/assets/images/food.png'),
+                        AssetImage(Images.FOOD_ICON.path),
                         14.w,
                         14.h,
                         TravelType.RESTAURANT,
                       ),
                       (
                         '관광지',
-                        AssetImage('lib/assets/images/flag.png'),
+                        AssetImage(Images.SITE_ICON.path),
                         14.w,
                         12.h,
                         TravelType.ATTRACTION,
                       ),
                       (
                         '숙박',
-                        AssetImage('lib/assets/images/building.png'),
+                        AssetImage(Images.ACCOM_ICON.path),
                         12.w,
                         14.h,
                         TravelType.ACCOMMODATION,
