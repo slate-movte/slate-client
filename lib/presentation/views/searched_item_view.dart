@@ -7,6 +7,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:slate/core/utils/enums.dart';
 import 'package:slate/core/utils/themes.dart';
+import 'package:slate/domain/entities/map_item.dart';
 import 'package:slate/injection.dart';
 import 'package:slate/presentation/bloc/map/map_bloc.dart';
 import 'package:slate/presentation/bloc/map/map_event.dart';
@@ -17,8 +18,6 @@ import 'package:slate/presentation/widgets/item_table.dart';
 
 import 'package:slate/presentation/widgets/searched_item.dart';
 
-bool openedBottomSheet = false;
-
 abstract class SearchedItemView extends StatefulWidget {
   const SearchedItemView({super.key});
 }
@@ -26,11 +25,13 @@ abstract class SearchedItemView extends StatefulWidget {
 class ItemMapView extends SearchedItemView {
   final bool initBottomSheet;
   final double? bottomSheetHeight;
+  final MapItem? item;
 
   const ItemMapView({
     super.key,
     this.initBottomSheet = false,
     this.bottomSheetHeight,
+    this.item,
   });
 
   @override
@@ -40,11 +41,15 @@ class ItemMapView extends SearchedItemView {
 class _ItemMapViewState extends State<ItemMapView> {
   @override
   void initState() {
-    context.read<MapBloc>().add(InitializeMapEvent());
-    if (widget.initBottomSheet) {
+    if (widget.initBottomSheet && widget.item != null) {
+      context
+          .read<MapBloc>()
+          .add(InitializeMapEvent(latLng: widget.item!.position));
       SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
         openBottomSheet(context);
       });
+    } else {
+      context.read<MapBloc>().add(InitializeMapEvent());
     }
     super.initState();
   }
@@ -52,24 +57,15 @@ class _ItemMapViewState extends State<ItemMapView> {
   final Completer<GoogleMapController> _controller =
       Completer<GoogleMapController>();
 
-  late CameraPosition _position;
-  Set<Marker> _markers = {};
+  CameraPosition _position = const CameraPosition(
+    target: LatLng(35.171585, 129.127796),
+    zoom: 15,
+  );
+  final Set<Marker> _markers = {};
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButton: FloatingActionButton.small(
-        heroTag: null,
-        onPressed: () async {
-          context.read<MapBloc>().add(Move2UserLocationEvent());
-        },
-        child: Icon(
-          Icons.my_location,
-          color: ColorOf.point.light,
-        ),
-        backgroundColor: Colors.white,
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       body: Stack(
         children: [
           BlocConsumer<MapBloc, MapState>(
@@ -77,6 +73,15 @@ class _ItemMapViewState extends State<ItemMapView> {
               if (state is MapInitialized) {
                 setState(() {
                   _position = state.cameraPosition;
+                  if (widget.item != null) {
+                    _markers.add(Marker(
+                      markerId: widget.item!.markerId,
+                      position: widget.item!.position,
+                      onTap: () {
+                        openBottomSheet(context);
+                      },
+                    ));
+                  }
                 });
               } else if (state is CameraMoved) {
                 GoogleMapController controller = await _controller.future;
@@ -84,8 +89,22 @@ class _ItemMapViewState extends State<ItemMapView> {
                   CameraUpdate.newCameraPosition(state.cameraPosition),
                 );
               } else if (state is MarkerLoaded) {
+                _markers.clear();
+
                 setState(() {
-                  _markers = state.markers;
+                  state.markers.forEach(
+                    (item) {
+                      _markers.add(
+                        Marker(
+                          markerId: item.markerId,
+                          position: item.position,
+                          onTap: () {
+                            openModalDailog(context, item);
+                          },
+                        ),
+                      );
+                    },
+                  );
                 });
               }
             },
@@ -116,11 +135,31 @@ class _ItemMapViewState extends State<ItemMapView> {
             },
           ),
           Align(
-            alignment: Alignment.topLeft,
-            child: SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: Visibility(
-                  visible: openedBottomSheet ? false : true,
+            alignment: Alignment.bottomRight,
+            child: Padding(
+              padding: EdgeInsets.symmetric(
+                horizontal: SizeOf.w_md,
+                vertical: SizeOf.h_md,
+              ),
+              child: FloatingActionButton.small(
+                heroTag: null,
+                onPressed: () async {
+                  context.read<MapBloc>().add(Move2UserLocationEvent());
+                },
+                child: Icon(
+                  Icons.my_location,
+                  color: ColorOf.point.light,
+                ),
+                backgroundColor: Colors.white,
+              ),
+            ),
+          ),
+          Visibility(
+            visible: widget.item == null,
+            child: Align(
+              alignment: Alignment.topLeft,
+              child: SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
                   child: Row(
                     children: [
                       (
@@ -160,9 +199,10 @@ class _ItemMapViewState extends State<ItemMapView> {
                             ),
                             child: ActionChip(
                               avatar: Image(
-                                  image: element.$2,
-                                  width: element.$3,
-                                  height: element.$4),
+                                image: element.$2,
+                                width: element.$3,
+                                height: element.$4,
+                              ),
                               label: Text(element.$1),
                               backgroundColor: ColorOf.white.light,
                               labelStyle: Theme.of(context).textTheme.bodyLarge,
@@ -177,10 +217,31 @@ class _ItemMapViewState extends State<ItemMapView> {
                           ),
                         )
                         .toList(),
-                  ),
-                )),
+                  )),
+            ),
           ),
         ],
+      ),
+    );
+  }
+
+  Future openModalDailog(BuildContext context, MapItem item) async {
+    showBottomSheet(
+      context: context,
+      builder: (context) => SizedBox(
+        height: 200.h,
+        child: SearchedItem(
+          function: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => item.type == TravelType.MOVIE_LOCATION
+                    ? const MovieInfoView()
+                    : ItemInfoView(item: item),
+              ),
+            );
+          },
+        ),
       ),
     );
   }
@@ -190,9 +251,6 @@ class _ItemMapViewState extends State<ItemMapView> {
       elevation: 1,
       context: context,
       builder: (context) {
-        //하단시트 올라가면 카메라 움직이게 하려는 의도였지만 CameraUpdate로는 초기화 에러 발생.
-        //mapController.animateCamera(CameraUpdate.newLatLngZoom(LatLng(37.6313962, 127.0767797), 14));
-
         return SizedBox(
           height: widget.bottomSheetHeight ?? 550.h,
           child: ItemTable(
@@ -205,9 +263,6 @@ class _ItemMapViewState extends State<ItemMapView> {
                 IconButton(
                   onPressed: () {
                     Navigator.pop(context);
-                    setState(() {
-                      openedBottomSheet = false;
-                    });
                   },
                   icon: const Icon(Icons.close),
                 )
@@ -271,14 +326,18 @@ class _ItemListViewState extends State<ItemListView> {
       itemBuilder: (context, index) {
         return SearchedItem(
           function: () {
-            setState(() {
-              openedBottomSheet = true;
-            });
             Navigator.push(
               context,
               MaterialPageRoute(
                 builder: (context) => index % 2 == 0
-                    ? const ItemInfoView()
+                    ? ItemInfoView(
+                        item: MapItem(
+                          markerId: MarkerId('1'),
+                          type: TravelType.ACCOMMODATION,
+                          title: 'd',
+                          position: LatLng(90, 10),
+                        ),
+                      )
                     : const MovieInfoView(), // example
               ),
             );

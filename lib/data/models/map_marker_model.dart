@@ -1,7 +1,7 @@
-import 'package:slate/domain/entities/map_marker.dart';
+import 'package:slate/domain/entities/map_item.dart';
 
-class MapMarkerModel extends MapMarker {
-  MapMarkerModel({
+class MapItemModel extends MapItem {
+  const MapItemModel({
     required super.markerId,
     required super.type,
     required super.title,

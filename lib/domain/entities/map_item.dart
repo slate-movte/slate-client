@@ -2,15 +2,17 @@ import 'package:equatable/equatable.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:slate/core/utils/enums.dart';
 
-class MapMarker extends Marker with EquatableMixin {
+class MapItem extends Equatable {
+  final MarkerId markerId;
   final TravelType type;
   final String title;
+  final LatLng position;
 
-  MapMarker({
-    required super.markerId,
+  const MapItem({
+    required this.markerId,
     required this.type,
     required this.title,
-    required super.position,
+    required this.position,
   });
 
   @override

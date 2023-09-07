@@ -5,7 +5,7 @@ import 'package:slate/core/errors/failures.dart';
 import 'package:slate/core/utils/enums.dart';
 import 'package:slate/data/sources/remote/location_remote_data_source.dart';
 import 'package:slate/data/sources/remote/map_remote_data_source.dart';
-import 'package:slate/domain/entities/map_marker.dart';
+import 'package:slate/domain/entities/map_item.dart';
 import 'package:slate/domain/repositories/map_repository.dart';
 
 class MapRepositoryImpl implements MapRepository {
@@ -32,7 +32,7 @@ class MapRepositoryImpl implements MapRepository {
   }
 
   @override
-  Future<Either<Failure, Set<MapMarker>>> getMarkersWithType(
+  Future<Either<Failure, Set<MapItem>>> getMarkersWithType(
     TravelType type,
     LatLng? latLng,
   ) async {
