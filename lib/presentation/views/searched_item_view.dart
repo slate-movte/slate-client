@@ -167,29 +167,21 @@ class _ItemMapViewState extends State<ItemMapView> {
                       (
                         '영화 촬영지',
                         AssetImage(Images.FILM_ICON.path),
-                        12.w,
-                        14.h,
                         TravelType.MOVIE_LOCATION,
                       ),
                       (
                         '식당',
                         AssetImage(Images.FOOD_ICON.path),
-                        14.w,
-                        14.h,
                         TravelType.RESTAURANT,
                       ),
                       (
                         '관광지',
                         AssetImage(Images.SITE_ICON.path),
-                        14.w,
-                        12.h,
                         TravelType.ATTRACTION,
                       ),
                       (
                         '숙박',
                         AssetImage(Images.ACCOM_ICON.path),
-                        12.w,
-                        14.h,
                         TravelType.ACCOMMODATION,
                       ),
                     ]
@@ -202,8 +194,6 @@ class _ItemMapViewState extends State<ItemMapView> {
                             child: ActionChip(
                               avatar: Image(
                                 image: element.$2,
-                                width: element.$3,
-                                height: element.$4,
                               ),
                               label: Text(element.$1),
                               backgroundColor: ColorOf.white.light,
@@ -212,7 +202,7 @@ class _ItemMapViewState extends State<ItemMapView> {
                               elevation: 0.6,
                               onPressed: () {
                                 context.read<MapBloc>().add(
-                                      GetMarkersEvent(type: element.$5),
+                                      GetMarkersEvent(type: element.$3),
                                     );
                               },
                             ),
