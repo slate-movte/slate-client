@@ -135,7 +135,7 @@ class _CameraViewState extends State<CameraView> {
                 SafeArea(
                   child: Container(
                     padding: EdgeInsets.symmetric(horizontal: SizeOf.w_lg),
-                    height: 200.h,
+                    height: 140.h,
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
