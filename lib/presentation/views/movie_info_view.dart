@@ -141,7 +141,7 @@ class _MovieInfoViewState extends State<MovieInfoView> {
                 ..posts = [
                   const ItemTablePost(
                     title: '감독',
-                    content: 'ddd',
+                    content: '윤제균',
                   ),
                   const ItemTablePost(
                     title: '출연',
