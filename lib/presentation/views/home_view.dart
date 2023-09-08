@@ -14,14 +14,14 @@ class HomeView extends StatefulWidget {
 }
 
 class _HomeViewState extends State<HomeView> {
-  bool viewOption = true;
+  // bool viewOption = true;
 
-  final List<SearchedItemView> _searchViewOptions = <SearchedItemView>[
-    ItemMapView(
-      bottomSheetHeight: 430.h,
-    ),
-    const ItemListView(),
-  ];
+  // final List<SearchedItemView> _searchViewOptions = <SearchedItemView>[
+  //   ItemMapView(
+  //     bottomSheetHeight: 430.h,
+  //   ),
+  //   const ItemListView(),
+  // ];
 
   @override
   Widget build(BuildContext context) {
@@ -33,9 +33,9 @@ class _HomeViewState extends State<HomeView> {
         title: Image.asset(
           Images.APP_LOGO.path,
           fit: BoxFit.contain,
-          height: 40.h,
+          height: 32.h,
         ),
-        toolbarHeight: 80.h,
+        // toolbarHeight: 80.h,
         actions: [
           InkWell(
             onTap: () {
@@ -47,7 +47,7 @@ class _HomeViewState extends State<HomeView> {
               );
             },
             child: Padding(
-              padding: EdgeInsets.only(right: SizeOf.w_lg),
+              padding: EdgeInsets.only(right: SizeOf.w_md),
               child: CircleAvatar(
                 radius: 26.r,
                 backgroundColor: ColorOf.grey.light,
@@ -91,27 +91,30 @@ class _HomeViewState extends State<HomeView> {
           ),
         ),
       ),
-      body: Stack(
-        children: [
-          _searchViewOptions.elementAt(viewOption ? 0 : 1),
-          Align(
-            alignment: Alignment.bottomCenter,
-            child: ActionChip(
-              avatar: Icon(viewOption ? Icons.list : Icons.map),
-              label: Text(viewOption ? '목록보기' : '지도로 보기'),
-              backgroundColor: ColorOf.white.light,
-              labelStyle: Theme.of(context).textTheme.bodyLarge,
-              shape: const StadiumBorder(),
-              elevation: 0.6,
-              onPressed: () {
-                setState(() {
-                  viewOption = !viewOption;
-                });
-              },
-            ),
-          ),
-        ],
+      body: ItemMapView(
+        bottomSheetHeight: 430.h,
       ),
+      // body: Stack(
+      //   children: [
+      //     _searchViewOptions.elementAt(viewOption ? 0 : 1),
+      //     Align(
+      //       alignment: Alignment.bottomCenter,
+      //       child: ActionChip(
+      //         avatar: Icon(viewOption ? Icons.list : Icons.map),
+      //         label: Text(viewOption ? '목록보기' : '지도로 보기'),
+      //         backgroundColor: ColorOf.white.light,
+      //         labelStyle: Theme.of(context).textTheme.bodyLarge,
+      //         shape: const StadiumBorder(),
+      //         elevation: 0.6,
+      //         onPressed: () {
+      //           setState(() {
+      //             viewOption = !viewOption;
+      //           });
+      //         },
+      //       ),
+      //     ),
+      //   ],
+      // ),
     );
   }
 }

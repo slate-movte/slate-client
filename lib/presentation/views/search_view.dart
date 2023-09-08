@@ -12,6 +12,7 @@ class SearchView extends StatefulWidget {
 
 class _SearchViewState extends State<SearchView> {
   bool viewOption = true;
+  TextEditingController controller = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -27,6 +28,10 @@ class _SearchViewState extends State<SearchView> {
                 height: 48.h,
                 width: 314.w,
                 child: TextField(
+                  onEditingComplete: () {
+                    FocusScope.of(context).unfocus();
+                  },
+                  controller: controller,
                   autofocus: true,
                   style: Theme.of(context).textTheme.bodyLarge,
                   decoration: const InputDecoration(

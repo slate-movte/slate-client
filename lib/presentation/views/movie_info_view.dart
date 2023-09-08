@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:slate/core/utils/assets.dart';
 import 'package:slate/core/utils/themes.dart';
+import 'package:slate/presentation/views/camera_view.dart';
 import 'package:slate/presentation/widgets/item_table.dart';
 
 class MovieInfoView extends StatefulWidget {
@@ -18,7 +19,10 @@ class _MovieInfoViewState extends State<MovieInfoView> {
       floatingActionButton: FloatingActionButton(
         backgroundColor: ColorOf.point.light,
         child: const Icon(Icons.camera_alt_outlined),
-        onPressed: () {},
+        onPressed: () {
+          Navigator.push(
+              context, MaterialPageRoute(builder: (context) => CameraView()));
+        },
       ),
       body: Center(
         child: ItemTable(

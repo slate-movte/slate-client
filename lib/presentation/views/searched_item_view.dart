@@ -41,6 +41,8 @@ class ItemMapView extends SearchedItemView {
 }
 
 class _ItemMapViewState extends State<ItemMapView> {
+  TravelType onTapedTag = TravelType.MOVIE_LOCATION;
+
   @override
   void initState() {
     if (widget.initBottomSheet && widget.item != null) {
@@ -83,6 +85,10 @@ class _ItemMapViewState extends State<ItemMapView> {
                         openBottomSheet(context);
                       },
                     ));
+                  } else {
+                    context
+                        .read<MapBloc>()
+                        .add(GetMarkersEvent(type: TravelType.MOVIE_LOCATION));
                   }
                 });
               } else if (state is CameraMoved) {
@@ -211,10 +217,30 @@ class _ItemMapViewState extends State<ItemMapView> {
                                     );
                               },
                             ),
+                            label: Text(element.$1),
+                            side: onTapedTag == element.$5
+                                ? BorderSide(
+                                    color: ColorOf.point.light,
+                                  )
+                                : null,
+                            backgroundColor: ColorOf.white.light,
+                            labelStyle: Theme.of(context).textTheme.bodyLarge,
+                            shape: const StadiumBorder(),
+                            elevation: 0.6,
+                            onPressed: () {
+                              setState(() {
+                                onTapedTag = element.$5;
+                              });
+                              context.read<MapBloc>().add(
+                                    GetMarkersEvent(type: element.$5),
+                                  );
+                            },
                           ),
-                        )
-                        .toList(),
-                  )),
+                        ),
+                      )
+                      .toList(),
+                ),
+              ),
             ),
           ),
         ],
@@ -225,9 +251,15 @@ class _ItemMapViewState extends State<ItemMapView> {
   Future openModalDailog(BuildContext context, MapItem item) async {
     showBottomSheet(
       context: context,
-      builder: (context) => SizedBox(
+      builder: (context) => Container(
+        color: ColorOf.white.light,
         height: 200.h,
         child: SearchedItem(
+          title: '수훈식당',
+          type: TravelType.RESTAURANT,
+          subTitle: '부산 수영구 광안로61번가길 32 2층',
+          tag: ['수훈비빔밥', '수훈쌈밥'],
+          phone: '0507-1367-1753',
           function: () {
             Navigator.push(
               context,
@@ -317,16 +349,61 @@ class ItemListView extends SearchedItemView {
 }
 
 class _ItemListViewState extends State<ItemListView> {
+  List<Map<String, dynamic>> items = [
+    {
+      'title': '해운대',
+      'type': TravelType.MOVIE_LOCATION,
+      'movie': '개봉일 2009.07.22',
+      'actors': '설경구, 하지원, 박중훈, 엄정화',
+      'subTitle': null,
+      'phone': null,
+      'tags': [],
+    },
+    {
+      'title': '수훈식당',
+      'type': TravelType.RESTAURANT,
+      'subTitle': '부산 수영구 광안로61번가길 32 2층',
+      'tags': <String>['수훈비빔밥', '수훈쌈밥'],
+      'phone': '0507-1367-1753',
+      'movie': null,
+      'actors': null,
+    },
+    {
+      'title': '토요코인호텔 부산서면',
+      'type': TravelType.ACCOMMODATION,
+      'subTitle': '부산 부산진구 서전로 39',
+      'phone': '051-638-1045',
+      'movie': null,
+      'actors': null,
+      'tags': [],
+    },
+    {
+      'title': '서면 먹자골목',
+      'type': TravelType.ATTRACTION,
+      'subTitle': '부산 부산진구 부전동',
+      'movie': null,
+      'actors': null,
+      'phone': null,
+      'tags': [],
+    },
+  ];
+
   @override
   Widget build(BuildContext context) {
     return ListView.separated(
       itemBuilder: (context, index) {
         return SearchedItem(
+          type: items[index]['type'],
+          title: items[index]['title'],
+          subTitle: items[index]['subTitle'],
+          phone: items[index]['phone'],
+          movieInfo: items[index]['movie'],
+          actors: items[index]['actors'],
           function: () {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => index % 2 == 0
+                builder: (context) => index % 2 == 1
                     ? ItemInfoView(
                         item: MapItem(
                           markerId: MarkerId('1'),
@@ -342,7 +419,7 @@ class _ItemListViewState extends State<ItemListView> {
         );
       },
       separatorBuilder: (context, index) => const Divider(),
-      itemCount: 3,
+      itemCount: 4,
     );
   }
 }
