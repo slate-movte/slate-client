@@ -1,11 +1,42 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:slate/core/utils/enums.dart';
 import 'package:slate/core/utils/themes.dart';
 
 class SearchedItem extends StatelessWidget {
+  TravelType type;
+  String title;
+  String? movieInfo;
+  String? subTitle;
+  String? phone;
+  List<String> tag;
+  String? actors;
   final Function()? function;
 
-  const SearchedItem({super.key, this.function});
+  SearchedItem({
+    super.key,
+    this.function,
+    required this.type,
+    required this.title,
+    this.actors,
+    this.movieInfo,
+    this.subTitle,
+    this.phone,
+    this.tag = const ['수훈비빔밥', '수훈쌈밥'],
+  });
+
+  String _typeConvertor() {
+    switch (type) {
+      case TravelType.RESTAURANT:
+        return '음식점';
+      case TravelType.ACCOMMODATION:
+        return '숙소';
+      case TravelType.ATTRACTION:
+        return '관광지';
+      case TravelType.MOVIE_LOCATION:
+        return '영화';
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -17,7 +48,7 @@ class SearchedItem extends StatelessWidget {
           vertical: SizeOf.h_lg,
         ),
         child: Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Flexible(
               child: Column(
@@ -26,7 +57,7 @@ class SearchedItem extends StatelessWidget {
                   Row(
                     children: [
                       Text(
-                        '수훈식당',
+                        title,
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                         style: Theme.of(context).textTheme.titleSmall,
@@ -35,7 +66,7 @@ class SearchedItem extends StatelessWidget {
                         width: SizeOf.w_sm,
                       ),
                       Text(
-                        '음식점',
+                        _typeConvertor(),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                         style: Theme.of(context).textTheme.bodyMedium,
@@ -45,55 +76,87 @@ class SearchedItem extends StatelessWidget {
                   SizedBox(
                     height: SizeOf.h_sm,
                   ),
-                  Text(
-                    '부산 수영구 광안로 61번가길 32 2층',
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: Theme.of(context).textTheme.bodyLarge,
+                  Visibility(
+                    visible: subTitle != null,
+                    child: Text(
+                      subTitle ?? '',
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: Theme.of(context).textTheme.bodyLarge,
+                    ),
+                  ),
+                  Visibility(
+                    visible: movieInfo != null,
+                    child: Text(
+                      movieInfo ?? '',
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: Theme.of(context).textTheme.labelLarge,
+                    ),
                   ),
                   SizedBox(
                     height: SizeOf.h_sm,
                   ),
-                  const Row(
-                    children: [
-                      Chip(
-                        label: Text('수훈 비빔밥'),
-                        labelPadding: EdgeInsets.all(0),
-                        visualDensity: VisualDensity(
-                          horizontal: 0.0,
-                          vertical: -4,
+                  Visibility(
+                    visible: actors != null,
+                    child: Text(
+                      actors ?? '',
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: Theme.of(context).textTheme.labelLarge,
+                    ),
+                  ),
+                  Visibility(
+                    visible: type == TravelType.RESTAURANT,
+                    child: Row(
+                      children: tag
+                          .map(
+                            (tag) => Padding(
+                              padding: EdgeInsets.only(right: SizeOf.w_sm),
+                              child: Chip(
+                                label: Text(tag),
+                                labelPadding: EdgeInsets.all(0),
+                                visualDensity: VisualDensity(
+                                  horizontal: 0.0,
+                                  vertical: -4,
+                                ),
+                              ),
+                            ),
+                          )
+                          .toList(),
+                    ),
+                  ),
+                  SizedBox(
+                    height: SizeOf.h_sm,
+                  ),
+                  Visibility(
+                    visible: phone != null,
+                    child: Row(
+                      children: [
+                        Icon(
+                          Icons.phone,
+                          size: 16.sp,
+                          color: ColorOf.grey.light,
                         ),
-                      ),
-                    ],
-                  ),
-                  SizedBox(
-                    height: SizeOf.h_sm,
-                  ),
-                  Row(
-                    children: [
-                      Icon(
-                        Icons.phone,
-                        size: 16.sp,
-                        color: ColorOf.grey.light,
-                      ),
-                      SizedBox(
-                        width: SizeOf.w_sm,
-                      ),
-                      Text(
-                        '0507-1367-1753',
-                        style: Theme.of(context).textTheme.bodySmall,
-                      ),
-                    ],
+                        SizedBox(
+                          width: SizeOf.w_sm,
+                        ),
+                        Text(
+                          phone ?? '',
+                          style: Theme.of(context).textTheme.bodySmall,
+                        ),
+                      ],
+                    ),
                   )
                 ],
               ),
             ),
-            Placeholder(
-              child: SizedBox(
-                height: 83.h,
-                width: 83.w,
-              ),
-            ),
+            // Placeholder(
+            //   child: SizedBox(
+            //     height: 83.h,
+            //     width: 83.w,
+            //   ),
+            // ),
           ],
         ),
       ),

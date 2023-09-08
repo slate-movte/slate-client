@@ -103,30 +103,30 @@ class _CameraViewState extends State<CameraView> {
                               ),
                             ),
                           ),
-                          Align(
-                            alignment: Alignment.bottomCenter,
-                            child: Padding(
-                              padding: EdgeInsets.only(bottom: SizeOf.h_md),
-                              child: Opacity(
-                                opacity: 0.7,
-                                child: ActionChip(
-                                  label: const Text('스틸컷 찾기'),
-                                  backgroundColor: ColorOf.white.light,
-                                  labelStyle:
-                                      Theme.of(context).textTheme.bodyLarge,
-                                  shape: const StadiumBorder(),
-                                  padding: EdgeInsets.symmetric(
-                                    horizontal: SizeOf.w_md,
-                                    vertical: SizeOf.h_sm,
-                                  ),
-                                  elevation: 0,
-                                  onPressed: () {
-                                    openBottomSheet(context);
-                                  },
-                                ),
-                              ),
-                            ),
-                          ),
+                          // Align(
+                          //   alignment: Alignment.bottomCenter,
+                          //   child: Padding(
+                          //     padding: EdgeInsets.only(bottom: SizeOf.h_md),
+                          //     child: Opacity(
+                          //       opacity: 0.7,
+                          //       child: ActionChip(
+                          //         label: const Text('스틸컷 찾기'),
+                          //         backgroundColor: ColorOf.white.light,
+                          //         labelStyle:
+                          //             Theme.of(context).textTheme.bodyLarge,
+                          //         shape: const StadiumBorder(),
+                          //         padding: EdgeInsets.symmetric(
+                          //           horizontal: SizeOf.w_md,
+                          //           vertical: SizeOf.h_sm,
+                          //         ),
+                          //         elevation: 0,
+                          //         onPressed: () {
+                          //           openBottomSheet(context);
+                          //         },
+                          //       ),
+                          //     ),
+                          //   ),
+                          // ),
                         ],
                       ),
                     ),
