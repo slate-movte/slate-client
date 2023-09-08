@@ -90,14 +90,14 @@ class MapRemoteDataSourceImpl implements MapRemoteDataSource {
             MapItemModel(
               markerId: MarkerId('6'),
               type: type,
-              title: '부산영화촬영 스튜디오',
-              position: LatLng(35.163216, 129.138574),
+              title: '영화진흥위원회',
+              position: LatLng(35.171809, 129.125496),
             ),
             MapItemModel(
               markerId: MarkerId('7'),
               type: type,
-              title: '수영만 요트경기장',
-              position: LatLng(35.160928, 129.141780),
+              title: '영화의 전당',
+              position: LatLng(35.171660, 129.128028),
             ),
           });
           break;

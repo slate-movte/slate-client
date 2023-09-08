@@ -155,12 +155,12 @@ class _MovieInfoViewState extends State<MovieInfoView> {
                   ),
                 ],
             ),
-            ItemSection(
-              builder: ItemSectionBuilder()
-                ..image = const ItemTableGrid(
-                  title: '스틸컷',
-                ),
-            ),
+            // ItemSection(
+            //   builder: ItemSectionBuilder()
+            //     ..image = const ItemTableGrid(
+            //       title: '스틸컷',
+            //     ),
+            // ),
           ],
         ),
       ),
