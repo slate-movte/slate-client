@@ -33,7 +33,7 @@ class _HomeViewState extends State<HomeView> {
         title: Image.asset(
           Images.APP_LOGO.path,
           fit: BoxFit.contain,
-          height: 48.h,
+          height: 40.h,
         ),
         toolbarHeight: 80.h,
         actions: [
@@ -49,8 +49,9 @@ class _HomeViewState extends State<HomeView> {
             child: Padding(
               padding: EdgeInsets.only(right: SizeOf.w_lg),
               child: CircleAvatar(
-                radius: 26,
+                radius: 26.r,
                 backgroundColor: ColorOf.grey.light,
+                backgroundImage: AssetImage(Images.DEFAULT_PROFILE.path),
               ),
             ),
           ),

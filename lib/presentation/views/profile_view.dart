@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-
+import 'package:slate/core/utils/assets.dart';
 import '../../core/utils/themes.dart';
 
 class ProfileView extends StatelessWidget {
@@ -36,6 +36,7 @@ class ProfileView extends StatelessWidget {
                       child: CircleAvatar(
                         radius: 56.r,
                         backgroundColor: ColorOf.grey.light,
+                        backgroundImage: AssetImage(Images.DEFAULT_PROFILE.path),
                       ),
                     ),
                     Padding(
