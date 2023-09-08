@@ -62,7 +62,9 @@ class CameraNativeDataSourceImpl implements CameraNativeDataSource {
         camera,
         ResolutionPreset.max,
         imageFormatGroup: ImageFormatGroup.yuv420,
-      )..setFlashMode(FlashMode.off);
+      );
+
+      await controller!.setFlashMode(FlashMode.off);
 
       await controller!.initialize();
       return controller!;
