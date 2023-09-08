@@ -9,6 +9,7 @@ abstract class CameraNativeDataSource {
   Future<CameraController> getCameraControllerWithInitialized(
     bool changeDirection,
   );
+  Future<void> disposeCamera();
   Future<XFile> getImageAfterTakePicture(CameraController controller);
   Future<void> saveXFileImage2LocalGallery(XFile xFile);
 }
@@ -56,11 +57,13 @@ class CameraNativeDataSourceImpl implements CameraNativeDataSource {
       CameraDescription camera = cameras!.firstWhere(
         (camera) => camera.lensDirection == direction,
       );
+
       controller = CameraController(
         camera,
         ResolutionPreset.max,
         imageFormatGroup: ImageFormatGroup.yuv420,
-      );
+      )..setFlashMode(FlashMode.off);
+
       await controller!.initialize();
       return controller!;
     } catch (e) {
@@ -84,6 +87,16 @@ class CameraNativeDataSourceImpl implements CameraNativeDataSource {
       await ImageGallerySaver.saveImage(imageBytes);
     } catch (e) {
       throw SavePictureException();
+    }
+  }
+
+  @override
+  Future<void> disposeCamera() async {
+    try {
+      await controller!.dispose();
+      controller == null;
+    } catch (e) {
+      throw CameraControlException();
     }
   }
 }

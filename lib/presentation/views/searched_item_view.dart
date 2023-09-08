@@ -107,7 +107,9 @@ class _ItemMapViewState extends State<ItemMapView> {
                           markerId: item.markerId,
                           position: item.position,
                           onTap: () {
-                            openModalDailog(context, item);
+                            widget.initBottomSheet
+                                ? openBottomSheet(context)
+                                : openModalDailog(context, item);
                           },
                         ),
                       );
@@ -315,9 +317,9 @@ class _ItemMapViewState extends State<ItemMapView> {
                     bodyTextStyle: Theme.of(context).textTheme.bodySmall,
                   ),
               ),
-              ItemSection(
-                builder: ItemSectionBuilder()..image = const ItemTableGrid(),
-              ),
+              // ItemSection(
+              //   builder: ItemSectionBuilder()..image = const ItemTableGrid(),
+              // ),
             ],
           ),
         );

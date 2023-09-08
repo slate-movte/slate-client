@@ -11,4 +11,6 @@ abstract class CameraRepository {
   Future<Either<Failure, XFile>> getPictureImage(CameraController controller);
 
   Future<Either<Failure, Void>> savePicture2Gallery(XFile image);
+
+  Future<Either<Failure, Void>> disposeCamera();
 }

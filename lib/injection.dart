@@ -26,6 +26,7 @@ const String USECASE_TAKE_PICTURE = 'USECASE_TAKE_PICTURE';
 const String USECASE_SAVE_PICTURE = 'USECASE_SAVE_PICTURE';
 const String USECASE_GET_MARKER_WITH_TYPE = 'USECASE_GET_MARKER_WITH_TYPE';
 const String USECASE_GET_CAMERA_POSITION = 'USECASE_GET_CAMERA_POSITION';
+const String USECASE_DISPOSE_CAMERA = 'USECASE_DISPOSE_CAMERA';
 
 // repo
 const String REPO_CAMERA = 'REPO_CAMERA';
@@ -43,11 +44,12 @@ Future<void> init() async {
   // bloc
   DI.registerLazySingleton<CameraBloc>(
     () => CameraBloc(
-      getCameraController: DI(instanceName: USECASE_GET_CAMERA_CONTROLLER),
-      changeCameraDirection: DI(instanceName: USECASE_CHANGE_CAMERA_DIRECTION),
-      takePicture: DI(instanceName: USECASE_TAKE_PICTURE),
-      savePicture: DI(instanceName: USECASE_SAVE_PICTURE),
-    ),
+        getCameraController: DI(instanceName: USECASE_GET_CAMERA_CONTROLLER),
+        changeCameraDirection:
+            DI(instanceName: USECASE_CHANGE_CAMERA_DIRECTION),
+        takePicture: DI(instanceName: USECASE_TAKE_PICTURE),
+        savePicture: DI(instanceName: USECASE_SAVE_PICTURE),
+        disposeCamera: DI(instanceName: USECASE_DISPOSE_CAMERA)),
     instanceName: BLOC_CAMERA,
   );
 
@@ -60,6 +62,13 @@ Future<void> init() async {
   );
 
   // usecase
+  DI.registerLazySingleton<DisposeCamera>(
+    () => DisposeCamera(
+      repository: DI(instanceName: REPO_CAMERA),
+    ),
+    instanceName: USECASE_DISPOSE_CAMERA,
+  );
+
   DI.registerLazySingleton<GetMarkersWithType>(
     () => GetMarkersWithType(
       repository: DI(instanceName: REPO_MAP),

@@ -52,3 +52,14 @@ class SavePicture extends CameraUseCase implements UseCase<Void, XFile> {
     return await repository.savePicture2Gallery(params);
   }
 }
+
+class DisposeCamera extends CameraUseCase implements UseCase<Void, NoParams> {
+  CameraRepository repository;
+
+  DisposeCamera({required this.repository});
+
+  @override
+  Future<Either<Failure, Void>> call(NoParams params) async {
+    return await repository.disposeCamera();
+  }
+}

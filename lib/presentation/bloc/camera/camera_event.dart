@@ -1,5 +1,6 @@
 import 'package:camera/camera.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter/material.dart';
 
 class CameraEvent extends Equatable {
   @override
@@ -28,4 +29,10 @@ class SavePictureEvent extends CameraEvent {
 
   @override
   List<Object?> get props => [image];
+}
+
+class DisposeEvent extends CameraEvent {
+  final BuildContext context;
+
+  DisposeEvent({required this.context});
 }

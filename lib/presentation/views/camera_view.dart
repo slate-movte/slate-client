@@ -31,6 +31,13 @@ class _CameraViewState extends State<CameraView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        // automaticallyImplyLeading: false,
+        // leading: IconButton(
+        //   onPressed: () {
+        //     context.read<CameraBloc>().add(DisposeEvent(context: context));
+        //   },
+        //   icon: Icon(Icons.arrow_back_ios),
+        // ),
         title: Text('촬영하기'),
         actions: [
           IconButton(

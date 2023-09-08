@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:slate/core/errors/failures.dart';
 import 'package:slate/core/usecases/usecase.dart';
@@ -10,17 +11,20 @@ class CameraBloc extends Bloc<CameraEvent, CameraState> {
   ChangeCameraDirection changeCameraDirection;
   TakePicture takePicture;
   SavePicture savePicture;
+  DisposeCamera disposeCamera;
 
   CameraBloc({
     required this.getCameraController,
     required this.changeCameraDirection,
     required this.takePicture,
     required this.savePicture,
+    required this.disposeCamera,
   }) : super(CameraGetReady()) {
     on<CameraOnEvent>(_cameraOnEvent);
     on<DirectionChangeEvent>(_directionChangeEvent);
     on<TakePictureEvent>(_takePictureEvent);
     on<SavePictureEvent>(_savePictureEvent);
+    on<DisposeEvent>(_disposeEvent);
   }
 
   Future _cameraOnEvent(
@@ -84,5 +88,21 @@ class CameraBloc extends Bloc<CameraEvent, CameraState> {
     }, (success) {
       emit(SavePictureDone());
     });
+  }
+
+  Future _disposeEvent(
+    DisposeEvent event,
+    Emitter<CameraState> state,
+  ) async {
+    final result = await disposeCamera(NoParams());
+
+    result.fold(
+      (failure) {
+        emit(CameraError(message: '카메라 종료 실패'));
+      },
+      (success) {
+        Navigator.pop(event.context);
+      },
+    );
   }
 }

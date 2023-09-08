@@ -49,4 +49,14 @@ class CameraRepositoryImpl implements CameraRepository {
       return Left(CameraFailure());
     }
   }
+
+  @override
+  Future<Either<Failure, Void>> disposeCamera() async {
+    try {
+      await cameraDataSource.disposeCamera();
+      return Right(Void());
+    } on CameraControlException {
+      return Left(CameraFailure());
+    }
+  }
 }
