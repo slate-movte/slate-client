@@ -167,49 +167,55 @@ class _ItemMapViewState extends State<ItemMapView> {
             child: Align(
               alignment: Alignment.topLeft,
               child: SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: Row(
-                  children: [
-                    (
-                      '영화 촬영지',
-                      AssetImage(Images.FILM_ICON.path),
-                      12.w,
-                      14.h,
-                      TravelType.MOVIE_LOCATION,
-                    ),
-                    (
-                      '식당',
-                      AssetImage(Images.FOOD_ICON.path),
-                      14.w,
-                      14.h,
-                      TravelType.RESTAURANT,
-                    ),
-                    (
-                      '관광지',
-                      AssetImage(Images.SITE_ICON.path),
-                      14.w,
-                      12.h,
-                      TravelType.ATTRACTION,
-                    ),
-                    (
-                      '숙박',
-                      AssetImage(Images.ACCOM_ICON.path),
-                      12.w,
-                      14.h,
-                      TravelType.ACCOMMODATION,
-                    ),
-                  ]
-                      .map(
-                        (element) => Padding(
-                          padding: EdgeInsets.symmetric(
-                            horizontal: SizeOf.w_sm / 2,
-                            vertical: SizeOf.h_sm,
-                          ),
-                          child: ActionChip(
-                            avatar: Image(
-                              image: element.$2,
-                              width: element.$3,
-                              height: element.$4,
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                    children: [
+                      (
+                        '영화 촬영지',
+                        AssetImage(Images.FILM_ICON.path),
+                        13.h,
+                        TravelType.MOVIE_LOCATION,
+                      ),
+                      (
+                        '식당',
+                        AssetImage(Images.FOOD_ICON.path),
+                        13.h,
+                        TravelType.RESTAURANT,
+                      ),
+                      (
+                        '관광지',
+                        AssetImage(Images.SITE_ICON.path),
+                        13.h,
+                        TravelType.ATTRACTION,
+                      ),
+                      (
+                        '숙박',
+                        AssetImage(Images.ACCOM_ICON.path),
+                        13.h,
+                        TravelType.ACCOMMODATION,
+                      ),
+                    ]
+                        .map(
+                          (element) => Padding(
+                            padding: EdgeInsets.symmetric(
+                              horizontal: SizeOf.w_sm / 2,
+                              vertical: SizeOf.h_sm,
+                            ),
+                            child: ActionChip(
+                              avatar: Image(
+                                image: element.$2,
+                                width: element.$3,
+                              ),
+                              label: Text(element.$1),
+                              backgroundColor: ColorOf.white.light,
+                              labelStyle: Theme.of(context).textTheme.bodyLarge,
+                              shape: const StadiumBorder(),
+                              elevation: 0.6,
+                              onPressed: () {
+                                context.read<MapBloc>().add(
+                                      GetMarkersEvent(type: element.$4),
+                                    );
+                              },
                             ),
                             label: Text(element.$1),
                             side: onTapedTag == element.$5
