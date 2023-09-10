@@ -37,7 +37,8 @@ class ProfileView extends StatelessWidget {
                       child: CircleAvatar(
                         radius: 56.r,
                         backgroundColor: ColorOf.grey.light,
-                        backgroundImage: AssetImage(Images.DEFAULT_PROFILE.path),
+                        backgroundImage:
+                            AssetImage(Images.DEFAULT_PROFILE.path),
                       ),
                     ),
                     Padding(
@@ -66,45 +67,46 @@ class ProfileView extends StatelessWidget {
                     // ),
                     OutlinedButton(
                       onPressed: () {
-                        Navigator.push(
+                        Navigator.pushAndRemoveUntil(
                           context,
                           MaterialPageRoute(
                             builder: (context) => const SignInView(),
                           ),
+                          (route) => false,
                         );
                       },
                       child: const Text('로그아웃'),
                     ),
-                    OutlinedButton(
-                      onPressed: () {
-                        showDialog(context: context,
-                            barrierDismissible: false,
-                            builder: (BuildContext context) {
-                              return AlertDialog(
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(10.r),
-                                ),
-                                backgroundColor: Colors.white,
-                                title: Column(
-                                  children: [
-                                    Padding(
-                                      padding: EdgeInsets.only(bottom: 40.h),
-                                      child: Text("비회원은 탈퇴가 불가능합니다.", style: Theme.of(context).textTheme.titleMedium),
-                                    ),
-                                    OutlinedButton(
-                                      onPressed: () {
-                                        Navigator.pop(context, 'OK');
-                                      },
-                                      child: const Text('확인'),
-                                    ),
-                                  ],
-                                )
-                              );
-                          }
-                        );
-                      },
-                      child: const Text('회원 탈퇴'),
-                    ),
+                    // OutlinedButton(
+                    //   onPressed: () {
+                    //     showDialog(context: context,
+                    //         barrierDismissible: false,
+                    //         builder: (BuildContext context) {
+                    //           return AlertDialog(
+                    //             shape: RoundedRectangleBorder(
+                    //               borderRadius: BorderRadius.circular(10.r),
+                    //             ),
+                    //             backgroundColor: Colors.white,
+                    //             title: Column(
+                    //               children: [
+                    //                 Padding(
+                    //                   padding: EdgeInsets.only(bottom: 40.h),
+                    //                   child: Text("비회원은 탈퇴가 불가능합니다.", style: Theme.of(context).textTheme.titleMedium),
+                    //                 ),
+                    //                 OutlinedButton(
+                    //                   onPressed: () {
+                    //                     Navigator.pop(context, 'OK');
+                    //                   },
+                    //                   child: const Text('확인'),
+                    //                 ),
+                    //               ],
+                    //             )
+                    //           );
+                    //       }
+                    //     );
+                    //   },
+                    //   child: const Text('회원 탈퇴'),
+                    // ),
                   ],
                 ),
               ),

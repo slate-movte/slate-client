@@ -65,12 +65,12 @@ class DisplayPictureView extends StatelessWidget {
                       .add(SavePictureEvent(image: image));
                 },
               ),
-              Divider(),
-              ListTile(
-                leading: Icon(Icons.ios_share_outlined),
-                title: Text('공유하기'),
-                subtitle: Text('외부로 사진 공유'),
-              ),
+              // Divider(),
+              // ListTile(
+              //   leading: Icon(Icons.ios_share_outlined),
+              //   title: Text('공유하기'),
+              //   subtitle: Text('외부로 사진 공유'),
+              // ),
             ],
           ),
         ),

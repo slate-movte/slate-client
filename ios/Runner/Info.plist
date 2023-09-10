@@ -42,12 +42,6 @@
 		</array>
 		<key>LSRequiresIPhoneOS</key>
 		<true/>
-		<key>NSCameraUsageDescription</key>
-		<string>Explanation on why the camera access is needed.</string>
-		<key>NSMicrophoneUsageDescription</key>
-		<string>Explanation on why the microphone access is needed.</string>
-		<key>NSPhotoLibraryUsageDescription</key>
-		<string></string>
 		<key>UIApplicationSupportsIndirectInputEvents</key>
 		<true/>
 		<key>UILaunchStoryboardName</key>
@@ -74,9 +68,11 @@
 		<key>UIApplicationSupportsIndirectInputEvents</key>
 		<true/>
 		<key>NSCameraUsageDescription</key>
-		<string>App require camera access for movie data-based snapshotting. 슬레이트는 영화 데이터 기반의 스냅샷 촬영 기능을 위해 카메라 접근을 필요로합니다.</string>
+		<string>App require camera access for movie data-based snapshotting. It is secure and private. 슬레이트는 영화 데이터 기반의 스냅샷 촬영 기능을 위해 카메라 접근을 필요로합니다.</string>
 		<key>NSMicrophoneUsageDescription</key>
-		<string>Slates require microphone access for movie data-based snapshotting. 슬레이트는 영화 데이터 기반의 스냅샷 촬영 기능을 위해 마이크 접근을 필요로합니다.</string>
+		<string>Slates require microphone access for movie data-based snapshotting. It is secure and private. 슬레이트는 영화 데이터 기반의 스냅샷 촬영 기능을 위해 마이크 접근을 필요로합니다.</string>
+		<key>NSPhotoLibraryUsageDescription</key>
+		<string>Slates require Photo Library access for movie data-based snapshotting. It is secure and private. 슬레이트는 영화 데이터 기반의 스냅샷 촬영 기능을 위해 갤러리 접근을 필요로합니다.</string>
 		<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
 		<string>App requires location information to output map data and provide movie/tourism information based on user location information. It is secure and private. 슬레이트는 사용자 위치정보를 기반으로 지도 데이터 출력 및 영화/관광 정보 제공을 위해 위치정보를 필요로합니다.</string>
 		<key>NSLocationAlwaysUsageDescription</key>
