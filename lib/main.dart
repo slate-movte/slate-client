@@ -51,6 +51,7 @@ class Slate extends StatelessWidget {
               instanceName: BLOC_MAP,
             ),
           ),
+          // BlocProvider(create: (_) => Di.)
         ],
         child: MaterialApp(
           theme: Themes.lite,

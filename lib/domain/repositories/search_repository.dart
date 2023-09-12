@@ -5,7 +5,7 @@ import 'package:slate/domain/entities/movie.dart';
 import 'package:slate/domain/entities/travel.dart';
 
 abstract class SearchRepository {
-  Future<Either<Failure, List>> getKeywordSearchResults(
+  Future<Either<Failure, (List<Movie>, List<Travel>)>> getKeywordSearchResults(
     String keyword,
     int movieLastId,
     int attractionLastId,

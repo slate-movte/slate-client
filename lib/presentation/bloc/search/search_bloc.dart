@@ -35,7 +35,14 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
       event.attractionLastId,
     ));
 
-    result.fold((failure) => null, (list) => null);
+    result.fold(
+      (failure) {
+        print(failure);
+      },
+      (list) {
+        print(list.toString());
+      },
+    );
   }
 
   Future _movieInfoSearchEvent(

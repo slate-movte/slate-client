@@ -5,6 +5,8 @@ enum TravelType {
   MOVIE_LOCATION,
 }
 
+// TravelType getTravelType()
+
 // enum MarkerType {
 //   RESTAURANT,
 //   ACCOMMODATION,

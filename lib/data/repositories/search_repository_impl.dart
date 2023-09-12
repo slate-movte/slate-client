@@ -33,13 +33,13 @@ class SearchRepositoryImpl implements SearchRepository {
   }
 
   @override
-  Future<Either<Failure, List>> getKeywordSearchResults(
+  Future<Either<Failure, (List<Movie>, List<Travel>)>> getKeywordSearchResults(
     String keyword,
     int movieLastId,
     int attractionLastId,
   ) async {
     try {
-      List result = await dataSource.getSearchResultsWithKeyword(
+      final result = await dataSource.getSearchResultsWithKeyword(
         keyword,
         movieLastId,
         attractionLastId,
