@@ -2,25 +2,6 @@ import 'package:equatable/equatable.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:slate/core/utils/enums.dart';
 
-/*
-  "id": 10,
-                "title": "범어사(부산)",
-                "tel": "",
-                "images": [
-                    "http://tong.visitkorea.or.kr/cms/resource/72/1954572_image2_1.jpg",
-                    "http://tong.visitkorea.or.kr/cms/resource/72/1954572_image3_1.jpg"
-                ],
-                "type": "ATTRACTION",
-                "location": {
-                    "address": "부산광역시 금정구 범어사로 250 (청룡동)",
-                    "latitude": 35.2839975351,
-                    "longitude": 129.0681263762
-                },
-                "menus": [
-                    ""
-                ]
-*/
-
 abstract class Travel extends Equatable {
   final int id;
   final String title;

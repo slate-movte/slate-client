@@ -11,7 +11,7 @@ import 'package:slate/data/models/travel_model.dart';
 import 'package:slate/domain/entities/travel.dart';
 
 abstract class SearchApiRemoteDataSource {
-  Future<(List<MovieModel>, List<Travel>)> getSearchResultsWithKeyword(
+  Future<List> getSearchResultsWithKeyword(
     String keyword,
     int movieLastId,
     int attractionLastId,
@@ -107,13 +107,12 @@ class SearchApiRemoteDataSourceImpl implements SearchApiRemoteDataSource {
   }
 
   @override
-  Future<(List<MovieModel>, List<Travel>)> getSearchResultsWithKeyword(
+  Future<List> getSearchResultsWithKeyword(
     String keyword,
     int movieLastId,
     int attractionLastId,
   ) async {
-    List<MovieModel> movies = [];
-    List<Travel> attractions = [];
+    List results = [];
     try {
       var url = Uri.parse(
         SearchAPI.keywordURL(
@@ -132,14 +131,16 @@ class SearchApiRemoteDataSourceImpl implements SearchApiRemoteDataSource {
         List jsonAttraction =
             List<Map<String, dynamic>>.from(json['data']['attractionList']);
 
-        movies =
-            jsonMovie.map((movie) => MovieModel.withKeywordApi(movie)).toList();
+        results.addAll(
+          jsonMovie.map((movie) => MovieModel.withKeywordApi(movie)).toList(),
+        );
 
-        attractions = jsonAttraction
-            .map((attraction) => TravelModel.fromJson(attraction))
-            .toList();
-
-        return (movies, attractions);
+        results.addAll(
+          jsonAttraction
+              .map((attraction) => TravelModel.fromJson(attraction))
+              .toList(),
+        );
+        return results;
       } else {
         throw HttpException(response.statusCode.toString());
       }

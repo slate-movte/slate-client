@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:slate/core/utils/themes.dart';
+import 'package:slate/presentation/bloc/search/search_bloc.dart';
+import 'package:slate/presentation/bloc/search/search_event.dart';
+import 'package:slate/presentation/bloc/search/search_state.dart';
 import 'package:slate/presentation/views/searched_item_view.dart';
 
 class SearchView extends StatefulWidget {
@@ -13,6 +17,11 @@ class SearchView extends StatefulWidget {
 class _SearchViewState extends State<SearchView> {
   bool viewOption = true;
   TextEditingController controller = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +41,6 @@ class _SearchViewState extends State<SearchView> {
                     FocusScope.of(context).unfocus();
                   },
                   controller: controller,
-                  autofocus: true,
                   style: Theme.of(context).textTheme.bodyLarge,
                   decoration: const InputDecoration(
                     suffixIcon: Icon(Icons.search),
@@ -48,7 +56,14 @@ class _SearchViewState extends State<SearchView> {
           child: const SizedBox(),
         ),
       ),
-      body: const ItemListView(),
+      body: BlocBuilder<SearchBloc, SearchState>(builder: (context, state) {
+        if (state is InitSearch) {
+          return Center(
+            child: CircularProgressIndicator(),
+          );
+        }
+        return ItemListView();
+      }),
     );
   }
 }

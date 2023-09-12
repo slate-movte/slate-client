@@ -2,21 +2,27 @@ import 'package:get_it/get_it.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:slate/data/repositories/camera_repository_impl.dart';
 import 'package:slate/data/repositories/map_repository_impl.dart';
+import 'package:slate/data/repositories/search_repository_impl.dart';
 import 'package:slate/data/sources/native/camera_native_data_source.dart';
 import 'package:slate/data/sources/remote/location_remote_data_source.dart';
 import 'package:slate/data/sources/remote/map_remote_data_source.dart';
+import 'package:slate/data/sources/remote/search_api_remote_data_source.dart';
 import 'package:slate/domain/repositories/camera_repository.dart';
 import 'package:slate/domain/repositories/map_repository.dart';
+import 'package:slate/domain/repositories/search_repository.dart';
 import 'package:slate/domain/usecases/camera_usecase.dart';
 import 'package:slate/domain/usecases/map_usecase.dart';
+import 'package:slate/domain/usecases/search_usecase.dart';
 import 'package:slate/presentation/bloc/camera/camera_bloc.dart';
 import 'package:slate/presentation/bloc/map/map_bloc.dart';
+import 'package:slate/presentation/bloc/search/search_bloc.dart';
 
 final DI = GetIt.instance;
 
 // bloc
 const String BLOC_CAMERA = 'BLOC_CAMERA';
 const String BLOC_MAP = 'BLOC_MAP';
+const String BLOC_SEARCH = 'BLOC_SEARCH';
 
 // usecase
 const String USECASE_GET_CAMERA_CONTROLLER = 'USECASE_GET_CAMERA_CONTROLLER';
@@ -27,15 +33,22 @@ const String USECASE_SAVE_PICTURE = 'USECASE_SAVE_PICTURE';
 const String USECASE_GET_MARKER_WITH_TYPE = 'USECASE_GET_MARKER_WITH_TYPE';
 const String USECASE_GET_CAMERA_POSITION = 'USECASE_GET_CAMERA_POSITION';
 const String USECASE_DISPOSE_CAMERA = 'USECASE_DISPOSE_CAMERA';
+const String USECASE_KEYWORD_SEARCH = 'USECASE_KEYWORD_SEARCH';
+const String USECASE_MOVIE_INFO_SEARCH = 'USECASE_MOVIE_INFO_SEARCH';
+const String USECASE_RESTAURANT_INFO_SEARCH = 'USECASE_RESTAURANT_INFO_SEARCH';
+const String USECASE_ACCOMO_INFO_SEARCH = 'USECASE_ACCOMO_INFO_SEARCH';
+const String USECASE_ATTRACTION_INFO_SEARCH = 'USECASE_ATTRACTION_INFO_SEARCH';
 
 // repo
 const String REPO_CAMERA = 'REPO_CAMERA';
 const String REPO_MAP = 'REPO_MAP';
+const String REPO_SEARCH = 'REPO_SEARCH';
 
 // data
 const String DATA_CAMERA = 'DATA_CAMERA';
 const String DATA_MAP = 'DATA_MAP';
 const String DATA_LOCATION = 'DATA_LOCATION';
+const String DATA_SEARCH = 'DATA_SEARCH';
 
 // core
 const String CORE_LATLNG_BOUNDS = 'CORE_LATLNG_BOUNDS';
@@ -61,7 +74,53 @@ Future<void> init() async {
     instanceName: BLOC_MAP,
   );
 
+  DI.registerLazySingleton<SearchBloc>(
+    () => SearchBloc(
+      keywordSearch: DI(instanceName: USECASE_KEYWORD_SEARCH),
+      movieInfoSearch: DI(instanceName: USECASE_MOVIE_INFO_SEARCH),
+      restaurantInfoSearch: DI(instanceName: USECASE_RESTAURANT_INFO_SEARCH),
+      accommoInfoSearch: DI(instanceName: USECASE_ACCOMO_INFO_SEARCH),
+      attractionInfoSearch: DI(instanceName: USECASE_ATTRACTION_INFO_SEARCH),
+    ),
+    instanceName: BLOC_SEARCH,
+  );
+
   // usecase
+  DI.registerLazySingleton<KeywordSearch>(
+    () => KeywordSearch(
+      repository: DI(instanceName: REPO_SEARCH),
+    ),
+    instanceName: USECASE_KEYWORD_SEARCH,
+  );
+
+  DI.registerLazySingleton<MovieInfoSearch>(
+    () => MovieInfoSearch(
+      repository: DI(instanceName: REPO_SEARCH),
+    ),
+    instanceName: USECASE_MOVIE_INFO_SEARCH,
+  );
+
+  DI.registerLazySingleton<RestaurantInfoSearch>(
+    () => RestaurantInfoSearch(
+      repository: DI(instanceName: REPO_SEARCH),
+    ),
+    instanceName: USECASE_RESTAURANT_INFO_SEARCH,
+  );
+
+  DI.registerLazySingleton<AccommoInfoSearch>(
+    () => AccommoInfoSearch(
+      repository: DI(instanceName: REPO_SEARCH),
+    ),
+    instanceName: USECASE_ACCOMO_INFO_SEARCH,
+  );
+
+  DI.registerLazySingleton<AttractionInfoSearch>(
+    () => AttractionInfoSearch(
+      repository: DI(instanceName: REPO_SEARCH),
+    ),
+    instanceName: USECASE_ATTRACTION_INFO_SEARCH,
+  );
+
   DI.registerLazySingleton<DisposeCamera>(
     () => DisposeCamera(
       repository: DI(instanceName: REPO_CAMERA),
@@ -112,6 +171,13 @@ Future<void> init() async {
   );
 
   // repository
+  DI.registerLazySingleton<SearchRepository>(
+    () => SearchRepositoryImpl(
+      dataSource: DI(instanceName: DATA_SEARCH),
+    ),
+    instanceName: REPO_SEARCH,
+  );
+
   DI.registerLazySingleton<CameraRepository>(
     () => CameraRepositoryImpl(
       cameraDataSource: DI(instanceName: DATA_CAMERA),
@@ -128,6 +194,11 @@ Future<void> init() async {
   );
 
   // datasource
+  DI.registerLazySingleton<SearchApiRemoteDataSource>(
+    () => SearchApiRemoteDataSourceImpl(),
+    instanceName: DATA_SEARCH,
+  );
+
   DI.registerLazySingleton<CameraNativeDataSource>(
     () => CameraNativeDataSourceImpl(),
     instanceName: DATA_CAMERA,

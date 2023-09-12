@@ -28,7 +28,11 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
     KeywordSearchEvent event,
     Emitter<SearchState> emit,
   ) async {
-    emit(InitSearch());
+    if (event.reload) {
+      emit(InitSearch());
+    } else {
+      emit(DataLoading());
+    }
     final result = await keywordSearch((
       event.keyword,
       event.movieLastId,
@@ -37,10 +41,10 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
 
     result.fold(
       (failure) {
-        print(failure);
+        emit(SearchError(message: 'ERROR'));
       },
       (list) {
-        print(list.toString());
+        emit(KeywordDataLoaded(dataList: list));
       },
     );
   }
@@ -52,7 +56,14 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
     emit(InitSearch());
     final result = await movieInfoSearch(event.id);
 
-    result.fold((failure) => null, (movie) => null);
+    result.fold(
+      (failure) {
+        emit(SearchError(message: 'ERROR'));
+      },
+      (movie) {
+        emit(MovieDataLoaded(movie: movie));
+      },
+    );
   }
 
   Future _restaurantInfoSearchEvent(
@@ -62,7 +73,14 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
     emit(InitSearch());
     final result = await restaurantInfoSearch(event.id);
 
-    result.fold((failure) => null, (restaurant) => null);
+    result.fold(
+      (failure) {
+        emit(SearchError(message: 'ERROR'));
+      },
+      (restaurant) {
+        emit(RestaurantDataLoaded(restaurant: restaurant));
+      },
+    );
   }
 
   Future _accommoInfoSearchEvent(
@@ -72,7 +90,14 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
     emit(InitSearch());
     final result = await accommoInfoSearch(event.id);
 
-    result.fold((failure) => null, (accommo) => null);
+    result.fold(
+      (failure) {
+        emit(SearchError(message: 'ERROR'));
+      },
+      (accommo) {
+        emit(AccommoDataLoaded(accommodation: accommo));
+      },
+    );
   }
 
   Future _attractionSearchEvent(
@@ -82,6 +107,13 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
     emit(InitSearch());
     final result = await attractionInfoSearch(event.id);
 
-    result.fold((failure) => null, (attraction) => null);
+    result.fold(
+      (failure) {
+        emit(SearchError(message: 'ERROR'));
+      },
+      (attraction) {
+        emit(AttractionDataLoaded(attraction: attraction));
+      },
+    );
   }
 }

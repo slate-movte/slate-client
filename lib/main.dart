@@ -5,6 +5,7 @@ import 'package:slate/core/caches/slate_auth.dart';
 import 'package:slate/core/utils/themes.dart';
 import 'package:slate/presentation/bloc/camera/camera_bloc.dart';
 import 'package:slate/presentation/bloc/map/map_bloc.dart';
+import 'package:slate/presentation/bloc/search/search_bloc.dart';
 import 'package:slate/presentation/views/sign_in_view.dart';
 import 'injection.dart';
 
@@ -51,7 +52,11 @@ class Slate extends StatelessWidget {
               instanceName: BLOC_MAP,
             ),
           ),
-          // BlocProvider(create: (_) => Di.)
+          BlocProvider(
+            create: (_) => DI.get<SearchBloc>(
+              instanceName: BLOC_SEARCH,
+            ),
+          ),
         ],
         child: MaterialApp(
           theme: Themes.lite,

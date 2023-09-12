@@ -33,7 +33,7 @@ class SearchRepositoryImpl implements SearchRepository {
   }
 
   @override
-  Future<Either<Failure, (List<Movie>, List<Travel>)>> getKeywordSearchResults(
+  Future<Either<Failure, List>> getKeywordSearchResults(
     String keyword,
     int movieLastId,
     int attractionLastId,
