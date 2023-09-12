@@ -28,4 +28,7 @@ Flutter, SpringBoot, JPA, MySQL, GitHub Action, AWS Cloud 등
 </br></br>
 ## 팀원
 강병선, 강인영, 김도은, 이승민, 조성찬, 조인혁, 한영찬
+
+## Team Email
+[Contact Us](hanmango.o@gmail.com)
 </br></br>
