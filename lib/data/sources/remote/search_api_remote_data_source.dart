@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:developer';
 import 'dart:io';
 
 import 'package:http/http.dart' as http;
@@ -25,23 +24,86 @@ abstract class SearchApiRemoteDataSource {
 
 class SearchApiRemoteDataSourceImpl implements SearchApiRemoteDataSource {
   @override
-  Future<AccommodationModel> getAccommoInfoWithId(int id) {
-    throw UnimplementedError();
+  Future<AccommodationModel> getAccommoInfoWithId(int id) async {
+    try {
+      var url = Uri.parse(SearchAPI.accommodationInfoURL(id: id));
+
+      var response = await http.get(url);
+
+      if (response.statusCode == 200) {
+        var json = jsonDecode(utf8.decode(response.bodyBytes)) as Map;
+
+        return AccommodationModel.fromJson(
+          Map<String, dynamic>.from(json['data']),
+        );
+      } else {
+        throw HttpException(response.statusCode.toString());
+      }
+    } catch (e) {
+      throw ApiException();
+    }
   }
 
   @override
-  Future<AttractionModel> getAttractionInfoWithId(int id) {
-    throw UnimplementedError();
+  Future<AttractionModel> getAttractionInfoWithId(int id) async {
+    try {
+      var url = Uri.parse(SearchAPI.attractionInfoURL(id: id));
+
+      var response = await http.get(url);
+      if (response.statusCode == 200) {
+        var json = jsonDecode(utf8.decode(response.bodyBytes)) as Map;
+
+        return AttractionModel.fromJson(
+          Map<String, dynamic>.from(json['data']),
+        );
+      } else {
+        throw HttpException(response.statusCode.toString());
+      }
+    } catch (e) {
+      throw ApiException();
+    }
   }
 
   @override
-  Future<MovieModel> getMovieInfoWithId(int id) {
-    throw UnimplementedError();
+  Future<MovieModel> getMovieInfoWithId(int id) async {
+    try {
+      var url = Uri.parse(SearchAPI.movieInfoURL(id: id));
+
+      var response = await http.get(url);
+
+      if (response.statusCode == 200) {
+        var json = jsonDecode(utf8.decode(response.bodyBytes)) as Map;
+
+        return MovieModel.fromJson(
+          Map<String, dynamic>.from(json['data']),
+        );
+      } else {
+        throw HttpException(response.statusCode.toString());
+      }
+    } catch (e) {
+      throw ApiException();
+    }
   }
 
   @override
-  Future<RestaurantModel> getRestaurantInfoWithId(int id) {
-    throw UnimplementedError();
+  Future<RestaurantModel> getRestaurantInfoWithId(int id) async {
+    try {
+      var url = Uri.parse(SearchAPI.restaurantInfoURL(id: id));
+
+      var response = await http.get(url);
+
+      if (response.statusCode == 200) {
+        var json = jsonDecode(utf8.decode(response.bodyBytes)) as Map;
+
+        return RestaurantModel.fromJson(
+          Map<String, dynamic>.from(json['data']),
+        );
+      } else {
+        throw HttpException(response.statusCode.toString());
+      }
+    } catch (e) {
+      throw ApiException();
+    }
   }
 
   @override
@@ -53,15 +115,6 @@ class SearchApiRemoteDataSourceImpl implements SearchApiRemoteDataSource {
     List<MovieModel> movies = [];
     List<Travel> attractions = [];
     try {
-      // var url = Uri.https(
-      //   Api.hosts(),
-      //   SearchAPI.keywordURL(
-      //     keyword: keyword,
-      //     movieLastId: movieLastId,
-      //     attractionLastId: attractionLastId,
-      //   ),
-      // );
-
       var url = Uri.parse(
         SearchAPI.keywordURL(
           keyword: keyword,
@@ -69,10 +122,6 @@ class SearchApiRemoteDataSourceImpl implements SearchApiRemoteDataSource {
           attractionLastId: attractionLastId,
         ),
       );
-
-      // var url = Uri.parse(
-      //   'https://dev.movte.cloud/search?keyword=&movieLastId=1&attractionLastId=1',
-      // );
 
       var response = await http.get(url);
       if (response.statusCode == 200) {
@@ -83,23 +132,18 @@ class SearchApiRemoteDataSourceImpl implements SearchApiRemoteDataSource {
         List jsonAttraction =
             List<Map<String, dynamic>>.from(json['data']['attractionList']);
 
-        log('1');
-
         movies =
             jsonMovie.map((movie) => MovieModel.withKeywordApi(movie)).toList();
-        log('2');
 
         attractions = jsonAttraction
             .map((attraction) => TravelModel.fromJson(attraction))
             .toList();
-        log('3');
 
         return (movies, attractions);
       } else {
         throw HttpException(response.statusCode.toString());
       }
     } catch (e) {
-      print(e);
       throw ApiException();
     }
   }

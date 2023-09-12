@@ -2,25 +2,6 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:slate/core/utils/enums.dart';
 import 'package:slate/domain/entities/travel.dart';
 
-/*
-  "id": 10,
-                "title": "범어사(부산)",
-                "tel": "",
-                "images": [
-                    "http://tong.visitkorea.or.kr/cms/resource/72/1954572_image2_1.jpg",
-                    "http://tong.visitkorea.or.kr/cms/resource/72/1954572_image3_1.jpg"
-                ],
-                "type": "ATTRACTION",
-                "location": {
-                    "address": "부산광역시 금정구 범어사로 250 (청룡동)",
-                    "latitude": 35.2839975351,
-                    "longitude": 129.0681263762
-                },
-                "menus": [
-                    ""
-                ]
-*/
-
 class TravelModel extends Travel {
   TravelModel({
     required super.id,
@@ -49,17 +30,26 @@ class RestaurantModel extends Restaurant {
     required super.title,
     required super.images,
     required super.location,
-    super.menus,
-    super.tel,
+    required super.menus,
+    required super.tel,
+    required super.homepage,
+    required super.overview,
+    required super.openTime,
+    required super.restDate,
   });
 
   factory RestaurantModel.fromJson(Map<String, dynamic> json) {
     return RestaurantModel(
       id: json['id'],
       title: json['title'],
-      images: json['images'],
-      location: LatLng(json['latitude'], json['longitude']),
-      menus: json['menus'],
+      images: List<String>.from(json['images']),
+      location: LatLng(json['latitude'] ?? 0, json['longitude'] ?? 0),
+      menus: List<String>.from(json['menus']),
+      tel: json['tel'],
+      homepage: json['homepage'],
+      overview: json['overview'],
+      openTime: json['openTime'],
+      restDate: json['restDate'],
     );
   }
 }
@@ -70,14 +60,20 @@ class AccommodationModel extends Accommodation {
     required super.title,
     required super.images,
     required super.location,
+    required super.homepage,
+    required super.overview,
+    required super.tel,
   });
 
   factory AccommodationModel.fromJson(Map<String, dynamic> json) {
     return AccommodationModel(
       id: json['id'],
       title: json['title'],
-      images: json['images'],
-      location: LatLng(json['latitude'], json['longitude']),
+      images: List<String>.from(json['images']),
+      location: LatLng(json['latitude'] ?? 0, json['longitude'] ?? 0),
+      homepage: json['homepage'],
+      overview: json['overview'],
+      tel: json['tel'],
     );
   }
 }
@@ -88,5 +84,24 @@ class AttractionModel extends Attraction {
     required super.title,
     required super.images,
     required super.location,
+    required super.tel,
+    required super.homepage,
+    required super.overview,
+    required super.openTime,
+    required super.restDate,
   });
+
+  factory AttractionModel.fromJson(Map<String, dynamic> json) {
+    return AttractionModel(
+      id: json['id'],
+      title: json['title'],
+      images: List<String>.from(json['images']),
+      location: LatLng(json['latitude'] ?? 0, json['longitude'] ?? 0),
+      homepage: json['homepage'],
+      overview: json['overview'],
+      tel: json['tel'],
+      openTime: json['openTime'],
+      restDate: json['restDate'],
+    );
+  }
 }

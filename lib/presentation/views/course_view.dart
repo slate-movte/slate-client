@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:slate/data/models/movie_model.dart';
@@ -30,24 +32,25 @@ class _CourseViewState extends State<CourseView> {
         // ),
         // Text("곧 공개될 페이지입니다."),
 
-        Flexible(
-          flex: 1,
-          child: ListView(
-            children: result.$1.map((movie) => Text(movie.title)).toList(),
-          ),
-        ),
-        Flexible(
-          flex: 1,
-          child: ListView(
-            children: result.$2.map((travel) => Text(travel.title)).toList(),
-          ),
-        ),
+        // Flexible(
+        //   flex: 1,
+        //   child: ListView(
+        //     children: result.$1.map((movie) => Text(movie.title)).toList(),
+        //   ),
+        // ),
+        // Flexible(
+        //   flex: 1,
+        //   child: ListView(
+        //     children: result.$2.map((travel) => Text(travel.title)).toList(),
+        //   ),
+        // ),
         ElevatedButton(
           onPressed: () async {
-            result = await dataSource.getSearchResultsWithKeyword("", 1, 1);
-            setState(() {});
+            // result = await dataSource.getSearchResultsWithKeyword("", 1, 1);
+            // final data = await dataSource.getAccommoInfoWithId(14);
+            final data = await dataSource.getMovieInfoWithId(112);
 
-            print(result);
+            log(data.toString());
           },
           child: Text('dddd'),
         ),

@@ -10,10 +10,13 @@ class SearchAPI extends Api {
   }) =>
       "${Api.hosts}search?keyword=$keyword&movieLastId=$movieLastId&attractionLastId=$attractionLastId";
 
-  static String movieInfoURL({required int id}) => "search/movie?id=$id";
+  static String movieInfoURL({required int id}) =>
+      "${Api.hosts}search/movie/$id";
 
-  static String restaurantInfoURL({required int id}) => "search/restaurant/$id";
+  static String restaurantInfoURL({required int id}) =>
+      "${Api.hosts}search/restaurant/$id";
   static String accommodationInfoURL({required int id}) =>
-      "search/accommodation/$id";
-  static String attractionInfoURL({required int id}) => "search/attraction/$id";
+      "${Api.hosts}search/accommodation/$id";
+  static String attractionInfoURL({required int id}) =>
+      "${Api.hosts}search/attraction/$id";
 }
