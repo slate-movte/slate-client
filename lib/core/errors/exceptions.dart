@@ -33,3 +33,5 @@ class LocationException implements Exception {}
 class MapException implements Exception {}
 
 class ApiException implements Exception {}
+
+class SignupException implements Exception {}

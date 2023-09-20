@@ -20,3 +20,8 @@ class SearchAPI extends Api {
   static String attractionInfoURL({required int id}) =>
       "${Api.hosts}search/attraction/$id";
 }
+
+class UserAPI extends Api {
+  static String signupURL() =>
+      "${Api.hosts}user/signup";
+}

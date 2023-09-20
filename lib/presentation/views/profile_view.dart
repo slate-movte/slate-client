@@ -70,7 +70,7 @@ class ProfileView extends StatelessWidget {
                         Navigator.pushAndRemoveUntil(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => const SignInView(),
+                            builder: (context) => SignInView(),
                           ),
                           (route) => false,
                         );

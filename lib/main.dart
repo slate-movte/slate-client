@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
 import 'package:slate/core/caches/slate_auth.dart';
 import 'package:slate/core/utils/themes.dart';
 import 'package:slate/presentation/bloc/camera/camera_bloc.dart';
@@ -11,7 +12,7 @@ import 'injection.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  // KakaoSdk.init(nativeAppKey: '95c71c63e60de73eca63343269998377');
+  KakaoSdk.init(nativeAppKey: '95c71c63e60de73eca63343269998377');
   // UserApi.instance.signup();
   // UserApi.instance.accessTokenInfo();
   // UserApi.instance.logout();
