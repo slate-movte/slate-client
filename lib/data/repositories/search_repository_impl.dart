@@ -39,7 +39,7 @@ class SearchRepositoryImpl implements SearchRepository {
     int attractionLastId,
   ) async {
     try {
-      List result = await dataSource.getSearchResultsWithKeyword(
+      final result = await dataSource.getSearchResultsWithKeyword(
         keyword,
         movieLastId,
         attractionLastId,

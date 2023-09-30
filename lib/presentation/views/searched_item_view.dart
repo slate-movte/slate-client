@@ -12,6 +12,8 @@ import 'package:slate/injection.dart';
 import 'package:slate/presentation/bloc/map/map_bloc.dart';
 import 'package:slate/presentation/bloc/map/map_event.dart';
 import 'package:slate/presentation/bloc/map/map_state.dart';
+import 'package:slate/presentation/bloc/search/search_bloc.dart';
+import 'package:slate/presentation/bloc/search/search_event.dart';
 import 'package:slate/presentation/views/item_info_view.dart';
 import 'package:slate/presentation/views/movie_info_view.dart';
 import 'package:slate/presentation/widgets/item_table.dart';
@@ -329,13 +331,16 @@ class _ItemMapViewState extends State<ItemMapView> {
 }
 
 class ItemListView extends SearchedItemView {
-  const ItemListView({super.key});
+  String keyword;
+  ItemListView({super.key, this.keyword = ""});
 
   @override
   State<ItemListView> createState() => _ItemListViewState();
 }
 
 class _ItemListViewState extends State<ItemListView> {
+  int movieLastId = 1;
+  int attractionLastId = 1;
   List<Map<String, dynamic>> items = [
     {
       'title': '해운대',
@@ -374,6 +379,18 @@ class _ItemListViewState extends State<ItemListView> {
       'tags': [],
     },
   ];
+
+  @override
+  void initState() {
+    context.read<SearchBloc>().add(
+          KeywordSearchEvent(
+            keyword: widget.keyword,
+            movieLastId: movieLastId,
+            attractionLastId: attractionLastId,
+          ),
+        );
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {

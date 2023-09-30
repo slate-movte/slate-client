@@ -1,6 +1,11 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:slate/data/models/movie_model.dart';
+import 'package:slate/data/sources/remote/search_api_remote_data_source.dart';
+import 'package:slate/domain/entities/travel.dart';
 
 import '../../core/utils/assets.dart';
 import '../../core/utils/themes.dart';

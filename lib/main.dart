@@ -6,6 +6,7 @@ import 'package:slate/core/utils/themes.dart';
 import 'package:slate/presentation/bloc/camera/camera_bloc.dart';
 import 'package:slate/presentation/bloc/course/course_bloc.dart';
 import 'package:slate/presentation/bloc/map/map_bloc.dart';
+import 'package:slate/presentation/bloc/search/search_bloc.dart';
 import 'package:slate/presentation/views/sign_in_view.dart';
 import 'injection.dart';
 
@@ -53,8 +54,13 @@ class Slate extends StatelessWidget {
             ),
           ),
           BlocProvider(
+            create: (_) => DI.get<SearchBloc>(
+              instanceName: BLOC_SEARCH,
+            ),
+          ),
+          BlocProvider(
             create: (_) => DI.get<CourseBloc>(
-              instanceName: BLOC_COURSE,
+              instanceName: BLOC_COURSE.
             ),
           ),
         ],

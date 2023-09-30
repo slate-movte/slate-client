@@ -11,6 +11,7 @@ abstract class Travel extends Equatable {
   final String? overview;
   final TravelType type;
   final LatLng location;
+  final List<String>? menus;
 
   const Travel({
     required this.id,
@@ -18,6 +19,7 @@ abstract class Travel extends Equatable {
     required this.images,
     required this.type,
     required this.location,
+    this.menus,
     this.tel,
     this.homepage,
     this.overview,
@@ -36,6 +38,9 @@ class Attraction extends Travel {
     required super.title,
     required super.images,
     required super.location,
+    super.tel,
+    super.homepage,
+    super.overview,
     super.type = TravelType.ATTRACTION,
     this.openTime,
     this.restDate,
@@ -43,7 +48,6 @@ class Attraction extends Travel {
 }
 
 class Restaurant extends Travel {
-  final String? treatMenu;
   final String? openTime;
   final String? restDate;
 
@@ -53,9 +57,12 @@ class Restaurant extends Travel {
     required super.images,
     required super.location,
     super.type = TravelType.RESTAURANT,
-    this.treatMenu,
+    super.menus = const [],
     this.openTime,
     this.restDate,
+    super.homepage,
+    super.overview,
+    super.tel,
   });
 }
 
@@ -66,5 +73,8 @@ class Accommodation extends Travel {
     required super.images,
     required super.location,
     super.type = TravelType.ACCOMMODATION,
+    super.homepage,
+    super.overview,
+    super.tel,
   });
 }
