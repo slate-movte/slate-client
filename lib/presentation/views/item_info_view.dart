@@ -16,7 +16,7 @@ class _ItemInfoViewState extends State<ItemInfoView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('수훈식당'),
+        title: Text(widget.item.title),
         centerTitle: false,
       ),
       body: ItemMapView(

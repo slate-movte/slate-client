@@ -10,7 +10,7 @@ import 'package:slate/core/utils/apis.dart';
 
 abstract class MapRemoteDataSource {
   Future<CameraPosition> getCameraPosition(LatLng latLng);
-  Future<Set<MapItemModel>> getMarkersWithMapAPI(
+  Future<List<MapItemModel>> getMarkersWithMapAPI(
     LatLng latLng,
     TravelType type,
     int cameraRange
@@ -32,7 +32,7 @@ class MapRemoteDataSourceImpl implements MapRemoteDataSource {
   }
 
   @override
-  Future<Set<MapItemModel>> getMarkersWithMapAPI(
+  Future<List<MapItemModel>> getMarkersWithMapAPI(
     LatLng latLng,
     TravelType type,
     int cameraRange
@@ -42,11 +42,11 @@ class MapRemoteDataSourceImpl implements MapRemoteDataSource {
       var url = Uri.parse(MarkerAPI.markerInfoURL(latlng: latLng, locationType: type.convertedText, range: cameraRange));
       var response = await http.get(url);
 
-      Set<MapItemModel> markers = {};
+      List<MapItemModel> markers = [];
 
       if (response.statusCode == 200) {
         var json = jsonDecode(utf8.decode(response.bodyBytes)) as Map;
-        //print("마커정보 : "+json['data'].toString());
+        print("마커정보 : "+json['data'][0].toString());
 
         for(int i=0; i<json.length; i++){
           MapItemModel mapItemModel = MapItemModel.fromJson(

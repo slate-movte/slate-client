@@ -32,7 +32,7 @@ class MapRepositoryImpl implements MapRepository {
   }
 
   @override
-  Future<Either<Failure, Set<MapItem>>> getMarkersWithType(
+  Future<Either<Failure, List<MapItem>>> getMarkersWithType(
     TravelType type,
     LatLng? latLng,
   ) async {

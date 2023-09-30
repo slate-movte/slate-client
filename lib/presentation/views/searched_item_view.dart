@@ -52,7 +52,7 @@ class _ItemMapViewState extends State<ItemMapView> {
           .read<MapBloc>()
           .add(InitializeMapEvent(latLng: widget.item!.position));
       SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
-        openBottomSheet(context);
+        openBottomSheet(context, widget.item!);
       });
     } else {
       context.read<MapBloc>().add(InitializeMapEvent());
@@ -84,7 +84,7 @@ class _ItemMapViewState extends State<ItemMapView> {
                       markerId: widget.item!.markerId,
                       position: widget.item!.position,
                       onTap: () {
-                        openBottomSheet(context);
+                        openBottomSheet(context, widget.item!);
                       },
                     ));
                   } else {
@@ -103,17 +103,23 @@ class _ItemMapViewState extends State<ItemMapView> {
 
                 setState(() {
                   state.markers.forEach(
-                    (item) {
+                    (item) async {
                       _markers.add(
                         Marker(
                           markerId: item.markerId,
                           position: item.position,
                           onTap: () {
+                            // context.read<SearchBolc>().add(Move2UserLocationEvent());
                             widget.initBottomSheet
-                                ? openBottomSheet(context)
+                                ? openBottomSheet(context, item)
                                 : openModalDailog(context, item);
                           },
                         ),
+                      );
+                      print("맵2" + state.markers[0].position.toString());
+                      GoogleMapController controller = await _controller.future;
+                      await controller.animateCamera(
+                        CameraUpdate.newCameraPosition(CameraPosition(target: state.markers[0].position, zoom: 15)),
                       );
                     },
                   );
@@ -222,7 +228,7 @@ class _ItemMapViewState extends State<ItemMapView> {
                               });
                               context.read<MapBloc>().add(
                                     GetMarkersEvent(type: element.$3),
-                                  );
+                              );
                             },
                           ),
                         ),
@@ -244,8 +250,8 @@ class _ItemMapViewState extends State<ItemMapView> {
         color: ColorOf.white.light,
         height: 200.h,
         child: SearchedItem(
-          title: '수훈식당',
-          type: TravelType.RESTAURANT,
+          title: item.title,
+          type: item.type,
           subTitle: '부산 수영구 광안로61번가길 32 2층',
           tag: ['수훈비빔밥', '수훈쌈밥'],
           phone: '0507-1367-1753',
@@ -264,7 +270,7 @@ class _ItemMapViewState extends State<ItemMapView> {
     );
   }
 
-  Future openBottomSheet(BuildContext context) async {
+  Future openBottomSheet(BuildContext context, MapItem item) async {
     showBottomSheet(
       elevation: 1,
       context: context,
@@ -274,7 +280,7 @@ class _ItemMapViewState extends State<ItemMapView> {
           child: ItemTable(
             header: ItemHeader(
               header: Text(
-                '수훈식당',
+                item.title,
                 style: Theme.of(context).textTheme.titleLarge,
               ),
               actions: [
