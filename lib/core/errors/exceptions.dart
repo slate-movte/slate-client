@@ -31,3 +31,5 @@ class KakaoOAuthException implements CacheException {}
 class LocationException implements Exception {}
 
 class MapException implements Exception {}
+
+class ApiException implements Exception {}

@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../core/utils/assets.dart';
 import '../../core/utils/themes.dart';
-import 'course_thumbnail_view.dart';
+import '../bloc/course/course_bloc.dart';
+import '../bloc/course/course_event.dart';
+import '../bloc/course/course_state.dart';
+import 'course_contents_view.dart';
 
 class CourseView extends StatefulWidget {
   const CourseView({super.key});
@@ -13,6 +17,13 @@ class CourseView extends StatefulWidget {
 }
 
 class _CourseViewState extends State<CourseView> {
+
+  @override
+  void initState() {
+    context.read<CourseBloc>().add(UpdateAllCourseEvent());
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -26,40 +37,34 @@ class _CourseViewState extends State<CourseView> {
           height: 32.h,
         ),
       ),
-      body: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              // Container(
-              //   padding: EdgeInsets.only(bottom: SizeOf.h_sm, left: SizeOf.w_lg),
-              //   width: double.infinity,
-              //   child:
-              //   Text(
-              //     '추천코스',
-              //     style: Theme.of(context).textTheme.titleLarge,
-              //     textAlign: TextAlign.start,
-              //   ),
-              // ),
-              contentBox(Images.COURSE_IMG.path, "A촬영지 근처 코스", "영화로 둘러 보는 부산"),
-              contentBox(Images.COURSE_IMG.path, "동래구", "비오는 날: 이 영화 기억나?"),
-              ],
-          ),
-              // Image.asset(
-              //   Images.APP_LOGO.path,
-              //   width: 150.w,
-              //   height: 100.h,
-              // ),
-              // Text("곧 공개될 페이지입니다."),
+      body: BlocConsumer<CourseBloc, CourseState>(
+        listener: (context, state) {  },
+        builder: (context, state) {
+          if(state is AllCourseLoaded){
+            return ListView.builder(
+              itemBuilder: (context, index) {
+                // print(state.course[index].toString());
+                return contentBox(state.course[index]['courseId'],state.course[index]['thumbnailImageUrl'],state.course[index]['subTitle'],state.course[index]['title'],);
+              },
+              itemCount: state.course.length,
+            );
+          }else{
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+        },
+      ),
     );
   }
 
-  Widget contentBox(String imagePath, String subTitle, String mainTitle){
+  Widget contentBox(int courseId, String imagePath, String subTitle, String mainTitle){
     return InkWell(
       onTap: () {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => CourseThumbnailView(subTitle: subTitle, mainTitle : mainTitle),
+            builder: (context) => CourseContentsView(courseId: courseId),
           ),
         );
       },
@@ -67,7 +72,10 @@ class _CourseViewState extends State<CourseView> {
         width: double.infinity,
         child: Column(
           children: [
-            Image.asset(
+            SizedBox(
+                height: 24.h,
+            ),
+            Image.network(
               imagePath,
               height: 197.h,
               width: 350.w,
@@ -103,9 +111,6 @@ class _CourseViewState extends State<CourseView> {
                 ],
               ),
             ),
-            SizedBox(
-              height: 24.h
-            )
           ],
         ),
       ),

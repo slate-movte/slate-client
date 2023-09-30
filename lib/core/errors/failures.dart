@@ -16,3 +16,5 @@ class SearchFailure extends Failure {}
 class AuthFailure extends Failure {}
 
 class MapFailure extends Failure {}
+
+class CourseFailure extends Failure {}

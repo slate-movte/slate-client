@@ -1,6 +1,7 @@
 import 'package:get_it/get_it.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:slate/data/repositories/camera_repository_impl.dart';
+import 'package:slate/data/repositories/course_repository_impl.dart';
 import 'package:slate/data/repositories/map_repository_impl.dart';
 import 'package:slate/data/sources/native/camera_native_data_source.dart';
 import 'package:slate/data/sources/remote/location_remote_data_source.dart';
@@ -10,13 +11,19 @@ import 'package:slate/domain/repositories/map_repository.dart';
 import 'package:slate/domain/usecases/camera_usecase.dart';
 import 'package:slate/domain/usecases/map_usecase.dart';
 import 'package:slate/presentation/bloc/camera/camera_bloc.dart';
+import 'package:slate/presentation/bloc/course/course_bloc.dart';
 import 'package:slate/presentation/bloc/map/map_bloc.dart';
+
+import 'data/sources/remote/course_api_remote_data_source.dart';
+import 'domain/repositories/course_repository.dart';
+import 'domain/usecases/course_usecase.dart';
 
 final DI = GetIt.instance;
 
 // bloc
 const String BLOC_CAMERA = 'BLOC_CAMERA';
 const String BLOC_MAP = 'BLOC_MAP';
+const String BLOC_COURSE = 'BLOC_COURSE';
 
 // usecase
 const String USECASE_GET_CAMERA_CONTROLLER = 'USECASE_GET_CAMERA_CONTROLLER';
@@ -27,15 +34,19 @@ const String USECASE_SAVE_PICTURE = 'USECASE_SAVE_PICTURE';
 const String USECASE_GET_MARKER_WITH_TYPE = 'USECASE_GET_MARKER_WITH_TYPE';
 const String USECASE_GET_CAMERA_POSITION = 'USECASE_GET_CAMERA_POSITION';
 const String USECASE_DISPOSE_CAMERA = 'USECASE_DISPOSE_CAMERA';
+const String USECASE_GET_ALLCOURSE = 'USECASE_GET_ALLCOURSE';
+const String USECASE_GET_INFOCOURSE = 'USECASE_GET_INFOCOURSE';
 
 // repo
 const String REPO_CAMERA = 'REPO_CAMERA';
 const String REPO_MAP = 'REPO_MAP';
+const String REPO_COURSE = 'REPO_COURSE';
 
 // data
 const String DATA_CAMERA = 'DATA_CAMERA';
 const String DATA_MAP = 'DATA_MAP';
 const String DATA_LOCATION = 'DATA_LOCATION';
+const String DATA_COURSE = 'DATA_COURSE';
 
 // core
 const String CORE_LATLNG_BOUNDS = 'CORE_LATLNG_BOUNDS';
@@ -59,6 +70,14 @@ Future<void> init() async {
       getMarkersWithType: DI(instanceName: USECASE_GET_MARKER_WITH_TYPE),
     ),
     instanceName: BLOC_MAP,
+  );
+
+  DI.registerLazySingleton<CourseBloc>(
+    () => CourseBloc(
+        allCourse: DI(instanceName: USECASE_GET_ALLCOURSE),
+        infoCourse: DI(instanceName: USECASE_GET_INFOCOURSE),
+    ),
+    instanceName: BLOC_COURSE,
   );
 
   // usecase
@@ -111,6 +130,20 @@ Future<void> init() async {
     instanceName: USECASE_TAKE_PICTURE,
   );
 
+  DI.registerLazySingleton<AllCourse>(
+        () => AllCourse(
+      repository: DI(instanceName: REPO_COURSE),
+    ),
+    instanceName: USECASE_GET_ALLCOURSE,
+  );
+
+  DI.registerLazySingleton<InfoCourse>(
+        () => InfoCourse(
+      repository: DI(instanceName: REPO_COURSE),
+    ),
+    instanceName: USECASE_GET_INFOCOURSE,
+  );
+
   // repository
   DI.registerLazySingleton<CameraRepository>(
     () => CameraRepositoryImpl(
@@ -127,6 +160,13 @@ Future<void> init() async {
     instanceName: REPO_MAP,
   );
 
+  DI.registerLazySingleton<CourseRepository>(
+        () => CourseRepositoryImpl(
+            dataSource: DI(instanceName: DATA_COURSE),
+    ),
+    instanceName: REPO_COURSE,
+  );
+
   // datasource
   DI.registerLazySingleton<CameraNativeDataSource>(
     () => CameraNativeDataSourceImpl(),
@@ -141,6 +181,11 @@ Future<void> init() async {
   DI.registerLazySingleton<LocationRemoteDataSource>(
     () => LocationRemoteDataSourceImpl(),
     instanceName: DATA_LOCATION,
+  );
+
+  DI.registerLazySingleton<CourseApiRemoteDataSource>(
+        () => CourseApiRemoteDataSourceImpl(),
+    instanceName: DATA_COURSE,
   );
 
   // core
