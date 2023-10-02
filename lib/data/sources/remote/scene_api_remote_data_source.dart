@@ -16,7 +16,7 @@ class SceneApiRemoteDataSourceImpl implements SceneApiRemoteDataSource {
   @override
   Future<List<MovieModel>> getScenesWithMovieTitle(String title) async {
     try {
-      var url = Uri.parse(SearchAPI.scenesURL(title: title));
+      var url = Uri.parse(SceneApi.scenesURL(title: title));
 
       var response = await http.get(url);
 

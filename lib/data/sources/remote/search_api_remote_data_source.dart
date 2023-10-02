@@ -150,7 +150,7 @@ class SearchApiRemoteDataSourceImpl implements SearchApiRemoteDataSource {
   Future<List<MovieModel>> getScenesWithMovieTitle(String title) async {
     List<MovieModel> results = [];
     try {
-      var url = Uri.parse(SearchAPI.scenesURL(title: title));
+      var url = Uri.parse(SceneApi.scenesURL(title: title));
 
       var response = await http.get(url);
       if (response.statusCode == 200) {
