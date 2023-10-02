@@ -23,3 +23,11 @@ class SearchAPI extends Api {
   static String scenesURL({required String title}) =>
       "${Api.hosts}scene?title=$title";
 }
+
+class CourseAPI implements APIS {
+  static String courseAll() =>
+      'https://dev.movte.cloud/course/all';
+
+  static String courseInfo({required int id}) =>
+      'https://dev.movte.cloud/course/$id';
+}

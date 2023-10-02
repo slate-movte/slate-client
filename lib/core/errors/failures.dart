@@ -18,3 +18,5 @@ class AuthFailure extends Failure {}
 class MapFailure extends Failure {}
 
 class SceneFailure extends Failure {}
+
+class CourseFailure extends Failure {}

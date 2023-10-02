@@ -24,22 +24,27 @@ class ProfileView extends StatelessWidget {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Badge(
-                      label: Icon(
-                        Icons.camera_alt,
-                        color: ColorOf.white.light,
-                      ),
-                      alignment: Alignment.bottomRight,
-                      largeSize: 35.h,
-                      padding: EdgeInsets.symmetric(horizontal: 7.w),
-                      backgroundColor: ColorOf.point.light,
-                      offset: const Offset(0, 0),
-                      child: CircleAvatar(
-                        radius: 56.r,
-                        backgroundColor: ColorOf.grey.light,
-                        backgroundImage:
-                            AssetImage(Images.DEFAULT_PROFILE.path),
-                      ),
+                    // Badge(
+                    //   label: Icon(
+                    //     Icons.camera_alt,
+                    //     color: ColorOf.white.light,
+                    //   ),
+                    //   alignment: Alignment.bottomRight,
+                    //   largeSize: 35.h,
+                    //   padding: EdgeInsets.symmetric(horizontal: 7.w),
+                    //   backgroundColor: ColorOf.point.light,
+                    //   offset: const Offset(0, 0),
+                    //   child: CircleAvatar(
+                    //     radius: 56.r,
+                    //     backgroundColor: ColorOf.grey.light,
+                    //     backgroundImage:
+                    //         AssetImage(Images.DEFAULT_PROFILE.path),
+                    //   ),
+                    // ),
+                    CircleAvatar(
+                      radius: 56.r,
+                      backgroundColor: ColorOf.grey.light,
+                      backgroundImage: AssetImage(Images.DEFAULT_PROFILE.path),
                     ),
                     Padding(
                       padding: EdgeInsets.only(top: SizeOf.h_lg),
