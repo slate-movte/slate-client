@@ -19,15 +19,15 @@ class SearchAPI extends Api {
       "${Api.hosts}search/accommodation/$id";
   static String attractionInfoURL({required int id}) =>
       "${Api.hosts}search/attraction/$id";
-
-  static String scenesURL({required String title}) =>
-      "${Api.hosts}scene?title=$title";
 }
 
-class CourseAPI implements APIS {
-  static String courseAll() =>
-      'https://dev.movte.cloud/course/all';
+class CourseAPI implements Api {
+  static String courseAll() => '${Api.hosts}course/all';
 
-  static String courseInfo({required int id}) =>
-      'https://dev.movte.cloud/course/$id';
+  static String courseInfo({required int id}) => '${Api.hosts}course/$id';
+}
+
+class SceneApi implements Api {
+  static String scenesURL({required String title}) =>
+      "${Api.hosts}scene?title=$title";
 }
