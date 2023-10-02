@@ -42,3 +42,9 @@ class AttractionInfoSearchEvent extends SearchEvent {
 
   AttractionInfoSearchEvent({required this.id});
 }
+
+class MovieLocationInfoSearchEvent extends SearchEvent {
+  final int id;
+
+  MovieLocationInfoSearchEvent({required this.id});
+}

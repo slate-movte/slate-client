@@ -16,7 +16,7 @@ abstract class SearchApiRemoteDataSource {
   Future<RestaurantModel> getRestaurantInfoWithId(int id);
   Future<AttractionModel> getAttractionInfoWithId(int id);
   Future<AccommodationModel> getAccommoInfoWithId(int id);
-  Future<List<MovieModel>> getScenesWithMovieTitle(String title);
+  Future<MovieLocationModel> getMovieLocationInfoWithId(int id);
 }
 
 class SearchApiRemoteDataSourceImpl implements SearchApiRemoteDataSource {
@@ -168,6 +168,28 @@ class SearchApiRemoteDataSourceImpl implements SearchApiRemoteDataSource {
         throw HttpException(response.statusCode.toString());
       }
     } catch (e) {
+      throw ApiException();
+    }
+  }
+
+  Future<MovieLocationModel> getMovieLocationInfoWithId(int id) async {
+    try {
+      var url = Uri.parse(SearchAPI.movieLocationInfoURL(id: id));
+
+      var response = await http.get(url);
+
+      if (response.statusCode == 200) {
+        var json = jsonDecode(utf8.decode(response.bodyBytes)) as Map;
+
+        return MovieLocationModel.fromJson(
+          Map<String, dynamic>.from(json['data']),
+        );
+      } else {
+        print("맵오류1");
+        throw HttpException(response.statusCode.toString());
+      }
+    } catch (e) {
+      print("맵오류2");
       throw ApiException();
     }
   }

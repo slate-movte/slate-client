@@ -14,6 +14,9 @@ import 'package:slate/injection.dart';
 import 'package:slate/presentation/bloc/map/map_bloc.dart';
 import 'package:slate/presentation/bloc/map/map_event.dart';
 import 'package:slate/presentation/bloc/map/map_state.dart';
+import 'package:slate/presentation/bloc/search/search_bloc.dart';
+import 'package:slate/presentation/bloc/search/search_event.dart';
+import 'package:slate/presentation/bloc/search/search_state.dart';
 import 'package:slate/presentation/views/item_info_view.dart';
 import 'package:slate/presentation/views/movie_info_view.dart';
 import 'package:slate/presentation/widgets/item_table.dart';
@@ -21,6 +24,7 @@ import 'package:slate/presentation/widgets/item_table.dart';
 import 'package:slate/presentation/widgets/searched_item.dart';
 
 import '../../core/utils/assets.dart';
+import '../../data/models/travel_model.dart';
 
 abstract class SearchedItemView extends StatefulWidget {
   const SearchedItemView({super.key});
@@ -30,12 +34,14 @@ class ItemMapView extends SearchedItemView {
   final bool initBottomSheet;
   final double? bottomSheetHeight;
   final MapItem? item;
+  final MovieLocationModel? movieLocationModel;
 
   const ItemMapView({
     super.key,
     this.initBottomSheet = false,
     this.bottomSheetHeight,
     this.item,
+    this.movieLocationModel,
   });
 
   @override
@@ -52,7 +58,7 @@ class _ItemMapViewState extends State<ItemMapView> {
           .read<MapBloc>()
           .add(InitializeMapEvent(latLng: widget.item!.position));
       SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
-        openBottomSheet(context);
+        openBottomSheet(context, widget.item!);
       });
     } else {
       context.read<MapBloc>().add(InitializeMapEvent());
@@ -74,6 +80,21 @@ class _ItemMapViewState extends State<ItemMapView> {
     return Scaffold(
       body: Stack(
         children: [
+          BlocListener<SearchBloc, SearchState>(
+              child: SizedBox.shrink(),
+              listener: (context, state) {
+                if (state is MovieLocationDataLoaded ||
+                    state is RestaurantDataLoaded ||
+                    state is AccommoDataLoaded ||
+                    state is AttractionDataLoaded) {
+                  state.props.forEach((item) async {
+                    // print("맵아이템" + item.runtimeType.toString());
+                    widget.initBottomSheet
+                        ? openBottomSheet(context, item!)
+                        : openModalDailog(context, item!);
+                  });
+                }
+              }),
           BlocConsumer<MapBloc, MapState>(
             listener: (context, state) async {
               if (state is MapInitialized) {
@@ -84,7 +105,7 @@ class _ItemMapViewState extends State<ItemMapView> {
                       markerId: widget.item!.markerId,
                       position: widget.item!.position,
                       onTap: () {
-                        openBottomSheet(context);
+                        // openBottomSheet(context, widget.item!);
                       },
                     ));
                   } else {
@@ -103,17 +124,47 @@ class _ItemMapViewState extends State<ItemMapView> {
 
                 setState(() {
                   state.markers.forEach(
-                    (item) {
+                    (item) async {
                       _markers.add(
                         Marker(
                           markerId: item.markerId,
                           position: item.position,
                           onTap: () {
-                            widget.initBottomSheet
-                                ? openBottomSheet(context)
-                                : openModalDailog(context, item);
+                            // print("맵아이템1" + item.markerId.value.toString());
+                            switch (item.type) {
+                              case TravelType.RESTAURANT:
+                                context.read<SearchBloc>().add(
+                                    RestaurantInfoSearchEvent(
+                                        id: int.parse(
+                                            item.markerId.value.toString())));
+                                break;
+                              case TravelType.ACCOMMODATION:
+                                context.read<SearchBloc>().add(
+                                    AccommoInfoSearchEvent(
+                                        id: int.parse(
+                                            item.markerId.value.toString())));
+                                break;
+                              case TravelType.ATTRACTION:
+                                context.read<SearchBloc>().add(
+                                    AttractionInfoSearchEvent(
+                                        id: int.parse(
+                                            item.markerId.value.toString())));
+                                break;
+                              case TravelType.MOVIE_LOCATION:
+                                context.read<SearchBloc>().add(
+                                    MovieLocationInfoSearchEvent(
+                                        id: int.parse(
+                                            item.markerId.value.toString())));
+                                break;
+                            }
                           },
                         ),
+                      );
+                      // print("맵2" + state.markers[0].position.toString());
+                      GoogleMapController controller = await _controller.future;
+                      await controller.animateCamera(
+                        CameraUpdate.newCameraPosition(CameraPosition(
+                            target: state.markers[0].position, zoom: 15)),
                       );
                     },
                   );
@@ -237,24 +288,74 @@ class _ItemMapViewState extends State<ItemMapView> {
     );
   }
 
-  Future openModalDailog(BuildContext context, MapItem item) async {
+  Future openModalDailog(BuildContext context, Object item) async {
+    // print("맵모달" + item.toString());
+    String title = "제목";
+    TravelType type = TravelType.MOVIE_LOCATION;
+    String address = "주소";
+    List<String>? tag = [];
+    String? phone = "010-0000-0000";
+    String? image = "";
+
+    MovieLocationModel? movieItem;
+
+    switch (item.runtimeType) {
+      case MovieLocationModel:
+        movieItem = item as MovieLocationModel;
+        title = movieItem.title;
+        type = TravelType.MOVIE_LOCATION;
+        image = movieItem.imageUrl;
+        address = movieItem.address;
+        break;
+      case AttractionModel:
+        AttractionModel attractionItem = item as AttractionModel;
+        title = attractionItem.title;
+        type = TravelType.ATTRACTION;
+        image = attractionItem.images?[0];
+        address = attractionItem.address;
+        break;
+      case AccommodationModel:
+        AccommodationModel accommodationItem = item as AccommodationModel;
+        title = accommodationItem.title;
+        type = TravelType.ACCOMMODATION;
+        phone = accommodationItem.tel;
+        image = accommodationItem.images?[0];
+        address = accommodationItem.address;
+        break;
+      case RestaurantModel:
+        RestaurantModel restaurantItem = item as RestaurantModel;
+        title = restaurantItem.title;
+        type = TravelType.RESTAURANT;
+        tag = restaurantItem.menus;
+        phone = restaurantItem.tel;
+        image = restaurantItem.images?[0];
+        address = restaurantItem.address;
+        break;
+    }
+
     showBottomSheet(
       context: context,
       builder: (context) => Container(
         color: ColorOf.white.light,
         height: 200.h,
         child: SearchedItem(
-          title: '수훈식당',
-          type: TravelType.RESTAURANT,
-          subTitle: '부산 수영구 광안로61번가길 32 2층',
-          tag: ['수훈비빔밥', '수훈쌈밥'],
-          phone: '0507-1367-1753',
+          title: title,
+          type: type,
+          subTitle: address,
+          tag: (type == TravelType.RESTAURANT) ? tag! : [],
+          phone: (type == TravelType.MOVIE_LOCATION ||
+                  type == TravelType.ATTRACTION)
+              ? null
+              : phone,
+          imageUrl: image,
           function: () {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => item.type == TravelType.MOVIE_LOCATION
-                    ? const MovieInfoView()
+                builder: (context) => type == TravelType.MOVIE_LOCATION
+                    ? MovieInfoView(
+                        item: movieItem,
+                      )
                     : ItemInfoView(item: item),
               ),
             );
@@ -264,17 +365,121 @@ class _ItemMapViewState extends State<ItemMapView> {
     );
   }
 
-  Future openBottomSheet(BuildContext context) async {
+  Future openBottomSheet(BuildContext context, Object item) async {
+    String title = "-";
+    TravelType type = TravelType.MOVIE_LOCATION;
+    String addressText = "주소";
+    List<String>? tag = [];
+    String? phoneNum = "010-0000-0000";
+    String? image = "";
+
+    MovieLocationModel movieItem;
+    AttractionModel attractionItem;
+    AccommodationModel accommodationItem;
+    RestaurantModel restaurantItem;
+
+    switch (item.runtimeType) {
+      case MapItem:
+        MapItem mapItem = item as MapItem;
+        switch (mapItem.type) {
+          case TravelType.RESTAURANT:
+            context.read<SearchBloc>().add(RestaurantInfoSearchEvent(
+                id: int.parse(mapItem.markerId.value)));
+            break;
+          case TravelType.ACCOMMODATION:
+            context.read<SearchBloc>().add(AccommoInfoSearchEvent(
+                id: int.parse(mapItem.markerId.value.toString())));
+            break;
+          case TravelType.ATTRACTION:
+            context.read<SearchBloc>().add(AttractionInfoSearchEvent(
+                id: int.parse(mapItem.markerId.value.toString())));
+            break;
+          case TravelType.MOVIE_LOCATION:
+            context.read<SearchBloc>().add(MovieLocationInfoSearchEvent(
+                id: int.parse(mapItem.markerId.value.toString())));
+            break;
+        }
+        print("헤이이ㅣ" + mapItem.toString());
+
+      case MovieLocationModel:
+        print("헤이3" + item.toString());
+        movieItem = item as MovieLocationModel;
+        title = movieItem.title;
+        type = TravelType.MOVIE_LOCATION;
+        image = movieItem.imageUrl;
+        addressText = movieItem.address;
+        break;
+      case AttractionModel:
+        print("헤이4" + item.toString());
+        attractionItem = item as AttractionModel;
+        title = attractionItem.title;
+        type = TravelType.ATTRACTION;
+        image = attractionItem.images?[0];
+        addressText = attractionItem.address;
+        phoneNum = attractionItem.tel;
+        break;
+      case AccommodationModel:
+        print("헤이5" + item.toString());
+        accommodationItem = item as AccommodationModel;
+        title = accommodationItem.title;
+        type = TravelType.ACCOMMODATION;
+        phoneNum = accommodationItem.tel;
+        image = accommodationItem.images?[0];
+        addressText = accommodationItem.address;
+        break;
+      case RestaurantModel:
+        print("헤이식당" + item.toString());
+        restaurantItem = item as RestaurantModel;
+        setState(() {
+          title = restaurantItem.title;
+        });
+        // title = restaurantItem.title;
+        type = TravelType.RESTAURANT;
+        tag = restaurantItem.menus;
+        phoneNum = restaurantItem.tel;
+        image = restaurantItem.images?[0];
+        addressText = restaurantItem.address;
+
+        break;
+    }
+
     showBottomSheet(
       elevation: 1,
       context: context,
       builder: (context) {
+        print("헤이2" + title.toString());
+
+        // BlocListener<SearchBloc,SearchState>(
+        //   listener: (context, state){
+        //     print("식당블록");
+        //     //mapItem으로 들어와서 데이터가 다시 로드될 때
+        //     if (state is MovieLocationDataLoaded ||
+        //         state is RestaurantDataLoaded ||
+        //         state is AccommoDataLoaded ||
+        //         state is AttractionDataLoaded) {
+        //       print("식당뉴" + state.toString());
+        //       switch (state) {
+        //         case MovieLocationModel:
+        //         case RestaurantModel:
+        //           print("식당새롭게" + state.toString());
+        //           RestaurantModel item = state as RestaurantModel;
+        //           title = item.title;
+        //         case AccommodationModel:
+        //         case AttractionModel:
+        //       }
+        //     }else{
+        //       //아무 변화 없을 때,
+        //       print("식당뉴X");
+        //     }
+        //   },
+        // );
+
         return SizedBox(
           height: widget.bottomSheetHeight ?? 550.h,
           child: ItemTable(
             header: ItemHeader(
               header: Text(
-                '수훈식당',
+                title,
                 style: Theme.of(context).textTheme.titleLarge,
               ),
               actions: [
@@ -290,15 +495,17 @@ class _ItemMapViewState extends State<ItemMapView> {
               ItemSection(
                 padding: EdgeInsets.zero,
                 builder: ItemSectionBuilder()
-                  ..address = const ItemTableRow(
+                  ..address = ItemTableRow(
                     title: '주소',
-                    body: '부산 수영구 광안로 61번가길 32 2층',
+                    body: addressText,
                   )
-                  ..phone = ItemTableRow(
-                    title: '전화번호',
-                    body: '0507-1367-1753',
-                    bodyTextStyle: Theme.of(context).textTheme.bodySmall,
-                  )
+                  ..phone = item.runtimeType != MovieLocationModel
+                      ? ItemTableRow(
+                          title: '전화번호',
+                          body: phoneNum!,
+                          bodyTextStyle: Theme.of(context).textTheme.bodySmall,
+                        )
+                      : null
                   ..hours = const ItemTableRow(
                     title: '영업시간',
                     body: '''월요일 09:00~21:00

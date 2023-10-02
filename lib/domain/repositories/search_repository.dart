@@ -18,4 +18,6 @@ abstract class SearchRepository {
   Future<Either<Failure, Accommodation>> getAccommoInfo(int id);
 
   Future<Either<Failure, Attraction>> getAttractionInfo(int id);
+
+  Future<Either<Failure, MovieLocation>> getMovieLocationInfo(int id);
 }

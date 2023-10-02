@@ -69,6 +69,15 @@ class AttractionDataLoaded extends SearchState {
   List<Object?> get props => [attraction];
 }
 
+class MovieLocationDataLoaded extends SearchState {
+  final MovieLocation movieLocation;
+
+  MovieLocationDataLoaded({required this.movieLocation});
+
+  @override
+  List<Object?> get props => [movieLocation];
+}
+
 class SearchError extends SearchState {
   final String message;
 

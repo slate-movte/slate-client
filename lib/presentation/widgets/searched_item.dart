@@ -56,7 +56,7 @@ class SearchedItem extends StatelessWidget {
       phone: travel.tel,
       tag: travel.menus ?? [],
       subTitle: travel.address,
-      imageUrl: travel.images.first,
+      imageUrl: travel.images!.first,
       function: function,
     );
   }
@@ -117,20 +117,26 @@ class SearchedItem extends StatelessWidget {
                   ),
                   Visibility(
                     visible: subTitle != null,
-                    child: Text(
-                      subTitle ?? '',
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: Theme.of(context).textTheme.bodyLarge,
+                    child: Container(
+                      width: 170.w,
+                      child: Text(
+                        subTitle ?? '',
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: Theme.of(context).textTheme.bodyLarge,
+                      ),
                     ),
                   ),
                   Visibility(
                     visible: movieInfo != null,
-                    child: Text(
-                      movieInfo ?? '',
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: Theme.of(context).textTheme.labelLarge,
+                    child: Container(
+                      width: 170.w,
+                      child: Text(
+                        movieInfo ?? '',
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: Theme.of(context).textTheme.labelLarge,
+                      ),
                     ),
                   ),
                   SizedBox(
@@ -145,25 +151,27 @@ class SearchedItem extends StatelessWidget {
                     ),
                   ),
                   Visibility(
-                    visible: type == TravelType.RESTAURANT,
-                    child: Wrap(
-                      children: tag
-                          .map(
-                            (tag) => Padding(
-                              padding: EdgeInsets.only(right: SizeOf.w_sm),
-                              child: Chip(
-                                label: Text(tag),
-                                labelPadding: EdgeInsets.all(0),
-                                visualDensity: VisualDensity(
-                                  horizontal: 0.0,
-                                  vertical: -4,
+                      visible: type == TravelType.RESTAURANT,
+                      child: SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        child: Row(
+                          children: tag
+                              .map(
+                                (tag) => Padding(
+                                  padding: EdgeInsets.only(right: SizeOf.w_sm),
+                                  child: Chip(
+                                    label: Text(tag),
+                                    labelPadding: EdgeInsets.all(0),
+                                    visualDensity: VisualDensity(
+                                      horizontal: 0.0,
+                                      vertical: -4,
+                                    ),
+                                  ),
                                 ),
-                              ),
-                            ),
-                          )
-                          .toList(),
-                    ),
-                  ),
+                              )
+                              .toList(),
+                        ),
+                      )),
                   SizedBox(
                     height: SizeOf.h_sm,
                   ),

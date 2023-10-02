@@ -33,7 +33,7 @@ class CameraMovingError extends MapState {}
 class MarkerLoading extends MapState {}
 
 class MarkerLoaded extends MapState {
-  final Set<MapItem> markers;
+  final List<MapItem> markers;
 
   const MarkerLoaded({required this.markers});
 

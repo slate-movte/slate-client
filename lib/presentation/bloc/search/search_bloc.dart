@@ -9,6 +9,7 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
   RestaurantInfoSearch restaurantInfoSearch;
   AccommoInfoSearch accommoInfoSearch;
   AttractionInfoSearch attractionInfoSearch;
+  MovieLocationInfoSearch movieLocationInfoSearch;
 
   SearchBloc({
     required this.keywordSearch,
@@ -16,12 +17,14 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
     required this.restaurantInfoSearch,
     required this.accommoInfoSearch,
     required this.attractionInfoSearch,
+    required this.movieLocationInfoSearch,
   }) : super(InitSearch()) {
     on<KeywordSearchEvent>(_keywordSearchEvent);
     on<MovieInfoSearchEvent>(_movieInfoSearchEvent);
     on<RestaurantInfoSearchEvent>(_restaurantInfoSearchEvent);
     on<AccommoInfoSearchEvent>(_accommoInfoSearchEvent);
     on<AttractionInfoSearchEvent>(_attractionSearchEvent);
+    on<MovieLocationInfoSearchEvent>(_movieLocationSearchEvent);
   }
 
   Future _keywordSearchEvent(
@@ -72,7 +75,6 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
   ) async {
     emit(InitSearch());
     final result = await restaurantInfoSearch(event.id);
-
     result.fold(
       (failure) {
         emit(SearchError(message: 'ERROR'));
@@ -113,6 +115,23 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
       },
       (attraction) {
         emit(AttractionDataLoaded(attraction: attraction));
+      },
+    );
+  }
+
+  Future _movieLocationSearchEvent(
+      MovieLocationInfoSearchEvent event,
+      Emitter<SearchState> emit,
+      ) async {
+    emit(InitSearch());
+    final result = await movieLocationInfoSearch(event.id);
+
+    result.fold(
+          (failure) {
+        emit(SearchError(message: 'ERROR'));
+      },
+          (movieLocation) {
+        emit(MovieLocationDataLoaded(movieLocation: movieLocation));
       },
     );
   }

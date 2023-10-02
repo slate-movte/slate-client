@@ -60,6 +60,15 @@ class SearchRepositoryImpl implements SearchRepository {
     }
   }
 
+  Future<Either<Failure, MovieLocation>> getMovieLocationInfo(int id) async {
+    try {
+      MovieLocation result = await dataSource.getMovieLocationInfoWithId(id);
+      return Right(result);
+    } on Exception {
+      return Left(SearchFailure());
+    }
+  }
+
   @override
   Future<Either<Failure, Restaurant>> getRestaurantInfo(int id) async {
     try {

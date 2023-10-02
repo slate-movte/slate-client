@@ -55,7 +55,8 @@ const String USECASE_ACCOMO_INFO_SEARCH = 'USECASE_ACCOMO_INFO_SEARCH';
 const String USECASE_ATTRACTION_INFO_SEARCH = 'USECASE_ATTRACTION_INFO_SEARCH';
 const String USECASE_GET_SCENES_WITH_MOVIE_TITLE =
     'USECASE_GET_SCENES_WITH_MOVIE_TITLE';
-
+const String USECASE_MOVIELOCATION_INFO_SEARCH =
+    'USECASE_MOVIELOCATION_INFO_SEARCH';
 // repo
 const String REPO_CAMERA = 'REPO_CAMERA';
 const String REPO_MAP = 'REPO_MAP';
@@ -118,6 +119,8 @@ Future<void> init() async {
       restaurantInfoSearch: DI(instanceName: USECASE_RESTAURANT_INFO_SEARCH),
       accommoInfoSearch: DI(instanceName: USECASE_ACCOMO_INFO_SEARCH),
       attractionInfoSearch: DI(instanceName: USECASE_ATTRACTION_INFO_SEARCH),
+      movieLocationInfoSearch:
+          DI(instanceName: USECASE_MOVIELOCATION_INFO_SEARCH),
     ),
     instanceName: BLOC_SEARCH,
   );
@@ -163,6 +166,13 @@ Future<void> init() async {
       repository: DI(instanceName: REPO_SEARCH),
     ),
     instanceName: USECASE_ATTRACTION_INFO_SEARCH,
+  );
+
+  DI.registerLazySingleton<MovieLocationInfoSearch>(
+    () => MovieLocationInfoSearch(
+      repository: DI(instanceName: REPO_SEARCH),
+    ),
+    instanceName: USECASE_MOVIELOCATION_INFO_SEARCH,
   );
 
   DI.registerLazySingleton<DisposeCamera>(
