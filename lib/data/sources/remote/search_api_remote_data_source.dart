@@ -4,11 +4,9 @@ import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:slate/core/errors/exceptions.dart';
 import 'package:slate/core/utils/apis.dart';
-import 'package:slate/core/utils/enums.dart';
 
 import 'package:slate/data/models/movie_model.dart';
 import 'package:slate/data/models/travel_model.dart';
-import 'package:slate/domain/entities/travel.dart';
 
 abstract class SearchApiRemoteDataSource {
   Future<List> getSearchResultsWithKeyword(
@@ -20,6 +18,7 @@ abstract class SearchApiRemoteDataSource {
   Future<RestaurantModel> getRestaurantInfoWithId(int id);
   Future<AttractionModel> getAttractionInfoWithId(int id);
   Future<AccommodationModel> getAccommoInfoWithId(int id);
+  Future<MovieLocationModel> getMovieLocationInfoWithId(int id);
 }
 
 class SearchApiRemoteDataSourceImpl implements SearchApiRemoteDataSource {
@@ -145,6 +144,29 @@ class SearchApiRemoteDataSourceImpl implements SearchApiRemoteDataSource {
         throw HttpException(response.statusCode.toString());
       }
     } catch (e) {
+      throw ApiException();
+    }
+  }
+
+  @override
+  Future<MovieLocationModel> getMovieLocationInfoWithId(int id) async {
+    try {
+      var url = Uri.parse(SearchAPI.movieLocationInfoURL(id: id));
+
+      var response = await http.get(url);
+
+      if (response.statusCode == 200) {
+        var json = jsonDecode(utf8.decode(response.bodyBytes)) as Map;
+
+        return MovieLocationModel.fromJson(
+          Map<String, dynamic>.from(json['data']),
+        );
+      } else {
+        print("맵오류1");
+        throw HttpException(response.statusCode.toString());
+      }
+    } catch (e) {
+      print("맵오류2");
       throw ApiException();
     }
   }

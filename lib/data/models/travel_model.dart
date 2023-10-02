@@ -10,6 +10,9 @@ class TravelModel extends Travel {
     required super.type,
     required super.location,
     super.menus,
+    super.sceneLocation,
+    super.imageUrl,
+    required super.address,
   });
 
   factory TravelModel.fromJson(Map<String, dynamic> json) {
@@ -20,6 +23,7 @@ class TravelModel extends Travel {
       location: LatLng(json['latitude'] ?? 0, json['longitude'] ?? 0),
       menus: List<String>.from(json['menus']),
       type: TravelType.values.byName(json['type']),
+      address: json['location']['address'],
     );
   }
 }
@@ -36,6 +40,7 @@ class RestaurantModel extends Restaurant {
     required super.overview,
     required super.openTime,
     required super.restDate,
+    required super.address,
   });
 
   factory RestaurantModel.fromJson(Map<String, dynamic> json) {
@@ -50,6 +55,7 @@ class RestaurantModel extends Restaurant {
       overview: json['overview'],
       openTime: json['openTime'],
       restDate: json['restDate'],
+      address: json['location']['address'],
     );
   }
 }
@@ -63,6 +69,7 @@ class AccommodationModel extends Accommodation {
     required super.homepage,
     required super.overview,
     required super.tel,
+    required super.address,
   });
 
   factory AccommodationModel.fromJson(Map<String, dynamic> json) {
@@ -74,6 +81,7 @@ class AccommodationModel extends Accommodation {
       homepage: json['homepage'],
       overview: json['overview'],
       tel: json['tel'],
+      address: json['location']['address'],
     );
   }
 }
@@ -89,9 +97,11 @@ class AttractionModel extends Attraction {
     required super.overview,
     required super.openTime,
     required super.restDate,
+    required super.address,
   });
 
   factory AttractionModel.fromJson(Map<String, dynamic> json) {
+
     return AttractionModel(
       id: json['id'],
       title: json['title'],
@@ -102,6 +112,33 @@ class AttractionModel extends Attraction {
       tel: json['tel'],
       openTime: json['openTime'],
       restDate: json['restDate'],
+      address: json['location']['address'],
+    );
+  }
+}
+
+class MovieLocationModel extends MovieLocation {
+  MovieLocationModel({
+    required super.id,
+    required super.title,
+    required super.sceneLocation,
+    required super.imageUrl,
+    required super.location,
+    required super.movieId,
+    required super.address,
+  });
+
+  factory MovieLocationModel.fromJson(Map<String, dynamic> json) {
+    Map<String, dynamic> location = json['location'];
+
+    return MovieLocationModel(
+      id: json['sceneId'],
+      title: json['movie']['title'],
+      imageUrl: json['imageUrl'],
+      sceneLocation: json['sceneLocation'],
+      location: LatLng((location['latitude'] ?? 0.0 ) as double, (location['longitude'] ?? 0.0 ) as double),
+      movieId: json['movie']['movieId'],
+      address: location['address'],
     );
   }
 }

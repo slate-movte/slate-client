@@ -11,6 +11,7 @@ class SearchedItem extends StatelessWidget {
   String? phone;
   List<String> tag;
   String? actors;
+  String? image;
   final Function()? function;
 
   SearchedItem({
@@ -23,6 +24,7 @@ class SearchedItem extends StatelessWidget {
     this.subTitle,
     this.phone,
     this.tag = const ['수훈비빔밥', '수훈쌈밥'],
+    this.image,
   });
 
   String _typeConvertor() {
@@ -54,44 +56,57 @@ class SearchedItem extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Row(
-                    children: [
-                      Text(
-                        title,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: Theme.of(context).textTheme.titleSmall,
-                      ),
-                      SizedBox(
-                        width: SizeOf.w_sm,
-                      ),
-                      Text(
-                        _typeConvertor(),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: Theme.of(context).textTheme.bodyMedium,
-                      ),
-                    ],
-                  ),
+                Container(
+                  margin: EdgeInsets.only(right: SizeOf.w_lg),
+                  width: MediaQuery.of(context).size.width/2,
+                  child: SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Row(
+                      children: [
+                        Text(
+                          title,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: Theme.of(context).textTheme.titleSmall,
+                        ),
+                        SizedBox(
+                          width: SizeOf.w_sm,
+                        ),
+                        Text(
+                          _typeConvertor(),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: Theme.of(context).textTheme.bodyMedium,
+                        ),
+                      ],
+                    ),
+                  )
+                ),
                   SizedBox(
                     height: SizeOf.h_sm,
                   ),
                   Visibility(
                     visible: subTitle != null,
-                    child: Text(
-                      subTitle ?? '',
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: Theme.of(context).textTheme.bodyLarge,
+                    child: Container(
+                      width: 170.w,
+                      child: Text(
+                        subTitle ?? '',
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: Theme.of(context).textTheme.bodyLarge,
+                      ),
                     ),
                   ),
                   Visibility(
                     visible: movieInfo != null,
-                    child: Text(
-                      movieInfo ?? '',
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: Theme.of(context).textTheme.labelLarge,
+                    child: Container(
+                      width: 170.w,
+                     child: Text(
+                          movieInfo ?? '',
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: Theme.of(context).textTheme.labelLarge,
+                        ),
                     ),
                   ),
                   SizedBox(
@@ -99,64 +114,89 @@ class SearchedItem extends StatelessWidget {
                   ),
                   Visibility(
                     visible: actors != null,
-                    child: Text(
-                      actors ?? '',
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: Theme.of(context).textTheme.labelLarge,
+                    child: Container(
+                      width: 170.w,
+                      child:
+                        Text(
+                          actors ?? '',
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: Theme.of(context).textTheme.labelLarge,
+                        ),
                     ),
                   ),
                   Visibility(
                     visible: type == TravelType.RESTAURANT,
-                    child: Row(
-                      children: tag
-                          .map(
-                            (tag) => Padding(
-                              padding: EdgeInsets.only(right: SizeOf.w_sm),
-                              child: Chip(
-                                label: Text(tag),
-                                labelPadding: EdgeInsets.all(0),
-                                visualDensity: VisualDensity(
-                                  horizontal: 0.0,
-                                  vertical: -4,
-                                ),
+                    child: SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: Row(
+                        children: tag
+                            .map(
+                              (tag) => Padding(
+                            padding: EdgeInsets.only(right: SizeOf.w_sm),
+                            child: Chip(
+                              label: Text(tag),
+                              labelPadding: EdgeInsets.all(0),
+                              visualDensity: VisualDensity(
+                                horizontal: 0.0,
+                                vertical: -4,
                               ),
                             ),
-                          )
-                          .toList(),
-                    ),
+                          ),
+                        )
+                            .toList(),
+                      ),
+                    )
                   ),
                   SizedBox(
                     height: SizeOf.h_sm,
                   ),
                   Visibility(
                     visible: phone != null,
-                    child: Row(
-                      children: [
-                        Icon(
-                          Icons.phone,
-                          size: 16.sp,
-                          color: ColorOf.grey.light,
-                        ),
-                        SizedBox(
-                          width: SizeOf.w_sm,
-                        ),
-                        Text(
-                          phone ?? '',
-                          style: Theme.of(context).textTheme.bodySmall,
-                        ),
-                      ],
-                    ),
+                    child: Container(
+                      width: 170.w,
+                      child: Row(
+                        children: [
+                          Icon(
+                            Icons.phone,
+                            size: 16.sp,
+                            color: ColorOf.grey.light,
+                          ),
+                          SizedBox(
+                            width: SizeOf.w_sm,
+                          ),
+                          Text(
+                            phone ?? '',
+                            style: Theme.of(context).textTheme.bodySmall,
+                          ),
+                        ],
+                      ),
+                    )
                   )
                 ],
               ),
             ),
-            // Placeholder(
-            //   child: SizedBox(
-            //     height: 83.h,
-            //     width: 83.w,
-            //   ),
-            // ),
+            Visibility(
+              visible: image != null,
+                child: Image(
+                image: NetworkImage(
+                  image!,
+                ),
+                width: 120.h,
+                height: 120.h,
+                fit: BoxFit.fill,
+                errorBuilder: (context, exception, stackTrace) {
+                  return Container(
+                    width: 120.h,
+                    height: 120.h,
+                    decoration: BoxDecoration(
+                      color: ColorOf.lightGrey.light
+                    ),
+                    child: Text('Empty Image',textAlign: TextAlign.center,),
+                  );
+                },
+              ),
+            )
           ],
         ),
       ),

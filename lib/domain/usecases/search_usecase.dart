@@ -63,3 +63,13 @@ class AttractionInfoSearch extends SearchUseCase
     return await super.repository.getAttractionInfo(params);
   }
 }
+
+class MovieLocationInfoSearch extends SearchUseCase
+    implements UseCase<MovieLocation, int> {
+  MovieLocationInfoSearch({required super.repository});
+
+  @override
+  Future<Either<Failure, MovieLocation>> call(int params) async {
+    return await super.repository.getMovieLocationInfo(params);
+  }
+}

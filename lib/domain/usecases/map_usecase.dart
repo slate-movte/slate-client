@@ -13,13 +13,13 @@ abstract class MapUseCase {
 }
 
 class GetMarkersWithType extends MapUseCase
-    implements UseCase<Set<MapItem>, (TravelType type, LatLng? latLng)> {
+    implements UseCase<List<MapItem>, (TravelType type, LatLng? latLng)> {
   MapRepository repository;
 
   GetMarkersWithType({required this.repository});
 
   @override
-  Future<Either<Failure, Set<MapItem>>> call(
+  Future<Either<Failure, List<MapItem>>> call(
     (TravelType, LatLng?) params,
   ) async {
     return await repository.getMarkersWithType(params.$1, params.$2);
