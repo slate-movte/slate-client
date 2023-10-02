@@ -337,7 +337,7 @@ class _ItemMapViewState extends State<ItemMapView> {
       context: context,
       builder: (context) => Container(
         color: ColorOf.white.light,
-        height: 200.h,
+        height: 160.h,
         child: SearchedItem(
           title: title,
           type: type,

@@ -315,7 +315,7 @@ class _ItemTableGridState extends State<ItemTableGrid> {
               children: List.generate(widget.items.length, (index) {
                 final imageProvider = NetworkImage(widget.items[index]);
                 return ClipRRect(
-                  borderRadius: BorderRadius.all(Radius.circular(8)),
+                  borderRadius: BorderRadius.all(Radius.circular(SizeOf.r)),
                   child: InkWell(
                     onTap: () {
                       if (widget.inCameraUse) {

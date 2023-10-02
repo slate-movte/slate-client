@@ -54,7 +54,11 @@ class SearchedItem extends StatelessWidget {
       type: travel.type,
       title: travel.title,
       phone: travel.tel,
-      tag: travel.menus ?? [],
+      tag: travel.menus == null
+          ? []
+          : travel.menus!.length > 4
+              ? travel.menus!.sublist(0, 3)
+              : travel.menus!,
       subTitle: travel.address,
       imageUrl: travel.images!.first,
       function: function,
@@ -197,12 +201,15 @@ class SearchedItem extends StatelessWidget {
                 ],
               ),
             ),
-            Image.network(
-              imageUrl!,
-              width: 80.w,
-              height: type == TravelType.MOVIE_LOCATION ? 100.h : 80.h,
-              fit: BoxFit.fill,
-              errorBuilder: (context, error, stackTrace) => SizedBox.shrink(),
+            ClipRRect(
+              borderRadius: BorderRadius.all(Radius.circular(SizeOf.r)),
+              child: Image.network(
+                imageUrl!,
+                width: 80.w,
+                height: type == TravelType.MOVIE_LOCATION ? 100.h : 80.h,
+                fit: BoxFit.fill,
+                errorBuilder: (context, error, stackTrace) => SizedBox.shrink(),
+              ),
             ),
           ],
         ),
