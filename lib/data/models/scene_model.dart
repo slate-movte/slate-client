@@ -22,12 +22,4 @@ class SceneModel extends Scene {
       imageUrl: json['imageUrl'],
     );
   }
-
-  // SceneModel(Map<String, dynamic> json, int movieId, String title)
-  //     : super(
-  //         id: json['sceneId'],
-  //         imageUrl: json['imageUrl'],
-  //         movieId: movieId,
-  //         title: title,
-  //       );
 }
