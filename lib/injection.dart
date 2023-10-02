@@ -48,13 +48,11 @@ const String USECASE_RESTAURANT_INFO_SEARCH = 'USECASE_RESTAURANT_INFO_SEARCH';
 const String USECASE_ACCOMO_INFO_SEARCH = 'USECASE_ACCOMO_INFO_SEARCH';
 const String USECASE_ATTRACTION_INFO_SEARCH = 'USECASE_ATTRACTION_INFO_SEARCH';
 
-
 // repo
 const String REPO_CAMERA = 'REPO_CAMERA';
 const String REPO_MAP = 'REPO_MAP';
 const String REPO_COURSE = 'REPO_COURSE';
 const String REPO_SEARCH = 'REPO_SEARCH';
-
 
 // data
 const String DATA_CAMERA = 'DATA_CAMERA';
@@ -89,10 +87,11 @@ Future<void> init() async {
 
   DI.registerLazySingleton<CourseBloc>(
     () => CourseBloc(
-        allCourse: DI(instanceName: USECASE_GET_ALLCOURSE),
-        infoCourse: DI(instanceName: USECASE_GET_INFOCOURSE),
+      allCourse: DI(instanceName: USECASE_GET_ALLCOURSE),
+      infoCourse: DI(instanceName: USECASE_GET_INFOCOURSE),
     ),
     instanceName: BLOC_COURSE,
+  );
 
   DI.registerLazySingleton<SearchBloc>(
     () => SearchBloc(
@@ -191,14 +190,14 @@ Future<void> init() async {
   );
 
   DI.registerLazySingleton<AllCourse>(
-        () => AllCourse(
+    () => AllCourse(
       repository: DI(instanceName: REPO_COURSE),
     ),
     instanceName: USECASE_GET_ALLCOURSE,
   );
 
   DI.registerLazySingleton<InfoCourse>(
-        () => InfoCourse(
+    () => InfoCourse(
       repository: DI(instanceName: REPO_COURSE),
     ),
     instanceName: USECASE_GET_INFOCOURSE,
@@ -228,8 +227,8 @@ Future<void> init() async {
   );
 
   DI.registerLazySingleton<CourseRepository>(
-        () => CourseRepositoryImpl(
-            dataSource: DI(instanceName: DATA_COURSE),
+    () => CourseRepositoryImpl(
+      dataSource: DI(instanceName: DATA_COURSE),
     ),
     instanceName: REPO_COURSE,
   );
@@ -250,14 +249,13 @@ Future<void> init() async {
     instanceName: DATA_MAP,
   );
 
-  DI.registerLazySingleton<LocationRemoteDataSource
-    (
+  DI.registerLazySingleton<LocationRemoteDataSource>(
     () => LocationRemoteDataSourceImpl(),
     instanceName: DATA_LOCATION,
   );
 
   DI.registerLazySingleton<CourseApiRemoteDataSource>(
-        () => CourseApiRemoteDataSourceImpl(),
+    () => CourseApiRemoteDataSourceImpl(),
     instanceName: DATA_COURSE,
   );
 

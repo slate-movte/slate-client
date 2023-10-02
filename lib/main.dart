@@ -60,7 +60,7 @@ class Slate extends StatelessWidget {
           ),
           BlocProvider(
             create: (_) => DI.get<CourseBloc>(
-              instanceName: BLOC_COURSE.
+              instanceName: BLOC_COURSE,
             ),
           ),
         ],

@@ -10,8 +10,6 @@ enum Images {
   SITE_ICON(path: 'lib/assets/images/flag.png'),
   ACCOM_ICON(path: 'lib/assets/images/building.png');
 
-
-
   const Images({required this.path});
 
   final String path;
