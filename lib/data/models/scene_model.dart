@@ -11,8 +11,10 @@ class SceneModel extends Scene {
   });
 
   factory SceneModel.fromJson(
-      Map<String, dynamic> json, int movieId, String title) {
-    log('message');
+    Map<String, dynamic> json,
+    String title,
+    int movieId,
+  ) {
     return SceneModel(
       movieId: movieId,
       title: title,

@@ -19,4 +19,7 @@ class SearchAPI extends Api {
       "${Api.hosts}search/accommodation/$id";
   static String attractionInfoURL({required int id}) =>
       "${Api.hosts}search/attraction/$id";
+
+  static String scenesURL({required String title}) =>
+      "${Api.hosts}scene?title=$title";
 }

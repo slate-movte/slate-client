@@ -8,12 +8,12 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:slate/core/utils/enums.dart';
 import 'package:slate/core/utils/themes.dart';
 import 'package:slate/domain/entities/map_item.dart';
+import 'package:slate/domain/entities/movie.dart';
+import 'package:slate/domain/entities/travel.dart';
 import 'package:slate/injection.dart';
 import 'package:slate/presentation/bloc/map/map_bloc.dart';
 import 'package:slate/presentation/bloc/map/map_event.dart';
 import 'package:slate/presentation/bloc/map/map_state.dart';
-import 'package:slate/presentation/bloc/search/search_bloc.dart';
-import 'package:slate/presentation/bloc/search/search_event.dart';
 import 'package:slate/presentation/views/item_info_view.dart';
 import 'package:slate/presentation/views/movie_info_view.dart';
 import 'package:slate/presentation/widgets/item_table.dart';
@@ -331,99 +331,46 @@ class _ItemMapViewState extends State<ItemMapView> {
 }
 
 class ItemListView extends SearchedItemView {
-  String keyword;
-  ItemListView({super.key, this.keyword = ""});
+  List items;
+
+  ItemListView({
+    super.key,
+    this.items = const [],
+  });
 
   @override
   State<ItemListView> createState() => _ItemListViewState();
 }
 
 class _ItemListViewState extends State<ItemListView> {
-  int movieLastId = 1;
-  int attractionLastId = 1;
-  List<Map<String, dynamic>> items = [
-    {
-      'title': '해운대',
-      'type': TravelType.MOVIE_LOCATION,
-      'movie': '개봉일 2009.07.22',
-      'actors': '설경구, 하지원, 박중훈, 엄정화',
-      'subTitle': null,
-      'phone': null,
-      'tags': [],
-    },
-    {
-      'title': '수훈식당',
-      'type': TravelType.RESTAURANT,
-      'subTitle': '부산 수영구 광안로61번가길 32 2층',
-      'tags': <String>['수훈비빔밥', '수훈쌈밥'],
-      'phone': '0507-1367-1753',
-      'movie': null,
-      'actors': null,
-    },
-    {
-      'title': '토요코인호텔 부산서면',
-      'type': TravelType.ACCOMMODATION,
-      'subTitle': '부산 부산진구 서전로 39',
-      'phone': '051-638-1045',
-      'movie': null,
-      'actors': null,
-      'tags': [],
-    },
-    {
-      'title': '서면 먹자골목',
-      'type': TravelType.ATTRACTION,
-      'subTitle': '부산 부산진구 부전동',
-      'movie': null,
-      'actors': null,
-      'phone': null,
-      'tags': [],
-    },
-  ];
-
-  @override
-  void initState() {
-    context.read<SearchBloc>().add(
-          KeywordSearchEvent(
-            keyword: widget.keyword,
-            movieLastId: movieLastId,
-            attractionLastId: attractionLastId,
-          ),
-        );
-    super.initState();
-  }
-
   @override
   Widget build(BuildContext context) {
     return ListView.separated(
+      shrinkWrap: true,
       itemBuilder: (context, index) {
-        return SearchedItem(
-          type: items[index]['type'],
-          title: items[index]['title'],
-          subTitle: items[index]['subTitle'],
-          phone: items[index]['phone'],
-          movieInfo: items[index]['movie'],
-          actors: items[index]['actors'],
-          function: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => index % 2 == 1
-                    ? ItemInfoView(
-                        item: MapItem(
-                          markerId: MarkerId('1'),
-                          type: TravelType.ACCOMMODATION,
-                          title: 'd',
-                          position: LatLng(90, 10),
-                        ),
-                      )
-                    : const MovieInfoView(), // example
-              ),
-            );
-          },
-        );
+        if (widget.items[index] is Movie) {
+          return SearchedItem.movie(
+            movie: widget.items[index],
+            function: () {},
+          );
+          // Movie movie = widget.items[index] as Movie;
+          // log(movie.toString());
+          // return SearchedItem(
+          //   item: movie,
+          //   type: TravelType.MOVIE_LOCATION,
+          //   title: movie.title,
+          //   movieInfo: movie.plot,
+          // );
+        } else if (widget.items[index] is Travel) {
+          return SearchedItem.travel(
+            travel: widget.items[index],
+            function: () {},
+          );
+        }
+        return SizedBox.shrink();
       },
       separatorBuilder: (context, index) => const Divider(),
-      itemCount: 4,
+      itemCount: widget.items.length,
     );
   }
 }

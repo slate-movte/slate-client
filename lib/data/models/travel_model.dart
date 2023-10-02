@@ -9,6 +9,8 @@ class TravelModel extends Travel {
     required super.images,
     required super.type,
     required super.location,
+    super.address,
+    super.tel,
     super.menus,
   });
 
@@ -20,6 +22,8 @@ class TravelModel extends Travel {
       location: LatLng(json['latitude'] ?? 0, json['longitude'] ?? 0),
       menus: List<String>.from(json['menus']),
       type: TravelType.values.byName(json['type']),
+      tel: json['tel'],
+      address: json['location']['address'],
     );
   }
 }

@@ -35,7 +35,6 @@ class _HomeViewState extends State<HomeView> {
           fit: BoxFit.contain,
           height: 32.h,
         ),
-        // toolbarHeight: 80.h,
         actions: [
           InkWell(
             onTap: () {

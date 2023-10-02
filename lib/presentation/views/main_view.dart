@@ -64,7 +64,7 @@ class _MainViewState extends State<MainView> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => const CameraView(),
+                      builder: (context) => CameraView(),
                     ),
                   );
                 },

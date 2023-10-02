@@ -2,19 +2,24 @@ import 'package:get_it/get_it.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:slate/data/repositories/camera_repository_impl.dart';
 import 'package:slate/data/repositories/map_repository_impl.dart';
+import 'package:slate/data/repositories/scene_repository_impl.dart';
 import 'package:slate/data/repositories/search_repository_impl.dart';
 import 'package:slate/data/sources/native/camera_native_data_source.dart';
 import 'package:slate/data/sources/remote/location_remote_data_source.dart';
 import 'package:slate/data/sources/remote/map_remote_data_source.dart';
+import 'package:slate/data/sources/remote/scene_api_remote_data_source.dart';
 import 'package:slate/data/sources/remote/search_api_remote_data_source.dart';
 import 'package:slate/domain/repositories/camera_repository.dart';
 import 'package:slate/domain/repositories/map_repository.dart';
+import 'package:slate/domain/repositories/scene_repository.dart';
 import 'package:slate/domain/repositories/search_repository.dart';
 import 'package:slate/domain/usecases/camera_usecase.dart';
 import 'package:slate/domain/usecases/map_usecase.dart';
+import 'package:slate/domain/usecases/scene_usecase.dart';
 import 'package:slate/domain/usecases/search_usecase.dart';
 import 'package:slate/presentation/bloc/camera/camera_bloc.dart';
 import 'package:slate/presentation/bloc/map/map_bloc.dart';
+import 'package:slate/presentation/bloc/scene/scene_bloc.dart';
 import 'package:slate/presentation/bloc/search/search_bloc.dart';
 
 final DI = GetIt.instance;
@@ -23,6 +28,7 @@ final DI = GetIt.instance;
 const String BLOC_CAMERA = 'BLOC_CAMERA';
 const String BLOC_MAP = 'BLOC_MAP';
 const String BLOC_SEARCH = 'BLOC_SEARCH';
+const String BLOC_SCENE = 'BLOC_SCENE';
 
 // usecase
 const String USECASE_GET_CAMERA_CONTROLLER = 'USECASE_GET_CAMERA_CONTROLLER';
@@ -38,23 +44,35 @@ const String USECASE_MOVIE_INFO_SEARCH = 'USECASE_MOVIE_INFO_SEARCH';
 const String USECASE_RESTAURANT_INFO_SEARCH = 'USECASE_RESTAURANT_INFO_SEARCH';
 const String USECASE_ACCOMO_INFO_SEARCH = 'USECASE_ACCOMO_INFO_SEARCH';
 const String USECASE_ATTRACTION_INFO_SEARCH = 'USECASE_ATTRACTION_INFO_SEARCH';
+const String USECASE_GET_SCENES_WITH_MOVIE_TITLE =
+    'USECASE_GET_SCENES_WITH_MOVIE_TITLE';
 
 // repo
 const String REPO_CAMERA = 'REPO_CAMERA';
 const String REPO_MAP = 'REPO_MAP';
 const String REPO_SEARCH = 'REPO_SEARCH';
+const String REPO_SCENE = 'REPO_SCENE';
 
 // data
 const String DATA_CAMERA = 'DATA_CAMERA';
 const String DATA_MAP = 'DATA_MAP';
 const String DATA_LOCATION = 'DATA_LOCATION';
 const String DATA_SEARCH = 'DATA_SEARCH';
+const String DATA_SCENE = 'DATA_SCENE';
 
 // core
 const String CORE_LATLNG_BOUNDS = 'CORE_LATLNG_BOUNDS';
 
 Future<void> init() async {
   // bloc
+  DI.registerLazySingleton<SceneBloc>(
+    () => SceneBloc(
+      getScenesWithMovieTitle:
+          DI(instanceName: USECASE_GET_SCENES_WITH_MOVIE_TITLE),
+    ),
+    instanceName: BLOC_SCENE,
+  );
+
   DI.registerLazySingleton<CameraBloc>(
     () => CameraBloc(
         getCameraController: DI(instanceName: USECASE_GET_CAMERA_CONTROLLER),
@@ -86,6 +104,13 @@ Future<void> init() async {
   );
 
   // usecase
+  DI.registerLazySingleton<GetScenesWithMovieTitle>(
+    () => GetScenesWithMovieTitle(
+      repository: DI(instanceName: REPO_SCENE),
+    ),
+    instanceName: USECASE_GET_SCENES_WITH_MOVIE_TITLE,
+  );
+
   DI.registerLazySingleton<KeywordSearch>(
     () => KeywordSearch(
       repository: DI(instanceName: REPO_SEARCH),
@@ -171,6 +196,13 @@ Future<void> init() async {
   );
 
   // repository
+  DI.registerLazySingleton<SceneRepository>(
+    () => SceneRepositoryImpl(
+      dataSource: DI(instanceName: DATA_SCENE),
+    ),
+    instanceName: REPO_SCENE,
+  );
+
   DI.registerLazySingleton<SearchRepository>(
     () => SearchRepositoryImpl(
       dataSource: DI(instanceName: DATA_SEARCH),
@@ -194,6 +226,11 @@ Future<void> init() async {
   );
 
   // datasource
+  DI.registerLazySingleton<SceneApiRemoteDataSource>(
+    () => SceneApiRemoteDataSourceImpl(),
+    instanceName: DATA_SCENE,
+  );
+
   DI.registerLazySingleton<SearchApiRemoteDataSource>(
     () => SearchApiRemoteDataSourceImpl(),
     instanceName: DATA_SEARCH,

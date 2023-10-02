@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -17,9 +19,18 @@ class SearchView extends StatefulWidget {
 class _SearchViewState extends State<SearchView> {
   bool viewOption = true;
   TextEditingController controller = TextEditingController();
+  int movieLastId = 0;
+  int attractionLastId = 0;
 
   @override
   void initState() {
+    context.read<SearchBloc>().add(
+          KeywordSearchEvent(
+            keyword: "",
+            movieLastId: movieLastId,
+            attractionLastId: attractionLastId,
+          ),
+        );
     super.initState();
   }
 
@@ -56,14 +67,20 @@ class _SearchViewState extends State<SearchView> {
           child: const SizedBox(),
         ),
       ),
-      body: BlocBuilder<SearchBloc, SearchState>(builder: (context, state) {
-        if (state is InitSearch) {
+      body: BlocBuilder<SearchBloc, SearchState>(
+        builder: (context, state) {
+          if (state is KeywordDataLoaded) {
+            state.dataList.map((e) => log(e.toString()));
+
+            return ItemListView(items: state.dataList);
+          } else if (state is SearchError) {
+            return Text("ERROR");
+          }
           return Center(
             child: CircularProgressIndicator(),
           );
-        }
-        return ItemListView();
-      }),
+        },
+      ),
     );
   }
 }

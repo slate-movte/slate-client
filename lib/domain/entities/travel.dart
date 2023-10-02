@@ -11,6 +11,7 @@ abstract class Travel extends Equatable {
   final String? overview;
   final TravelType type;
   final LatLng location;
+  final String? address;
   final List<String>? menus;
 
   const Travel({
@@ -19,6 +20,7 @@ abstract class Travel extends Equatable {
     required this.images,
     required this.type,
     required this.location,
+    this.address,
     this.menus,
     this.tel,
     this.homepage,

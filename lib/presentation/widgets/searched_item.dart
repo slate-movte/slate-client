@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:slate/core/utils/enums.dart';
 import 'package:slate/core/utils/themes.dart';
+import 'package:slate/domain/entities/movie.dart';
+import 'package:slate/domain/entities/travel.dart';
 
 class SearchedItem extends StatelessWidget {
   TravelType type;
@@ -10,7 +12,8 @@ class SearchedItem extends StatelessWidget {
   String? subTitle;
   String? phone;
   List<String> tag;
-  String? actors;
+  List<String>? actors;
+  String? imageUrl;
   final Function()? function;
 
   SearchedItem({
@@ -22,8 +25,41 @@ class SearchedItem extends StatelessWidget {
     this.movieInfo,
     this.subTitle,
     this.phone,
-    this.tag = const ['수훈비빔밥', '수훈쌈밥'],
+    this.imageUrl,
+    this.tag = const [],
   });
+
+  factory SearchedItem.movie({
+    required Movie movie,
+    required Function() function,
+  }) {
+    return SearchedItem(
+      type: TravelType.MOVIE_LOCATION,
+      title: movie.title,
+      movieInfo:
+          '개봉일 ${movie.openDate!.year}.${movie.openDate!.month}.${movie.openDate!.day}',
+      imageUrl: movie.posterUrl,
+      function: function,
+      actors: movie.movieCastList.length > 4
+          ? movie.movieCastList.sublist(0, 3)
+          : movie.movieCastList,
+    );
+  }
+
+  factory SearchedItem.travel({
+    required Travel travel,
+    required Function() function,
+  }) {
+    return SearchedItem(
+      type: travel.type,
+      title: travel.title,
+      phone: travel.tel,
+      tag: travel.menus ?? [],
+      subTitle: travel.address,
+      imageUrl: travel.images.first,
+      function: function,
+    );
+  }
 
   String _typeConvertor() {
     switch (type) {
@@ -56,11 +92,14 @@ class SearchedItem extends StatelessWidget {
                 children: [
                   Row(
                     children: [
-                      Text(
-                        title,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: Theme.of(context).textTheme.titleSmall,
+                      ConstrainedBox(
+                        constraints: BoxConstraints(maxWidth: 140.w),
+                        child: Text(
+                          title,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: Theme.of(context).textTheme.titleSmall,
+                        ),
                       ),
                       SizedBox(
                         width: SizeOf.w_sm,
@@ -99,16 +138,15 @@ class SearchedItem extends StatelessWidget {
                   ),
                   Visibility(
                     visible: actors != null,
-                    child: Text(
-                      actors ?? '',
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: Theme.of(context).textTheme.labelLarge,
+                    child: Row(
+                      children: (actors ?? [])
+                          .map((actor) => Text('${actor} '))
+                          .toList(),
                     ),
                   ),
                   Visibility(
                     visible: type == TravelType.RESTAURANT,
-                    child: Row(
+                    child: Wrap(
                       children: tag
                           .map(
                             (tag) => Padding(
@@ -130,7 +168,7 @@ class SearchedItem extends StatelessWidget {
                     height: SizeOf.h_sm,
                   ),
                   Visibility(
-                    visible: phone != null,
+                    visible: phone != null && phone != "",
                     child: Row(
                       children: [
                         Icon(
@@ -151,12 +189,13 @@ class SearchedItem extends StatelessWidget {
                 ],
               ),
             ),
-            // Placeholder(
-            //   child: SizedBox(
-            //     height: 83.h,
-            //     width: 83.w,
-            //   ),
-            // ),
+            Image.network(
+              imageUrl!,
+              width: 80.w,
+              height: type == TravelType.MOVIE_LOCATION ? 100.h : 80.h,
+              fit: BoxFit.fill,
+              errorBuilder: (context, error, stackTrace) => SizedBox.shrink(),
+            ),
           ],
         ),
       ),

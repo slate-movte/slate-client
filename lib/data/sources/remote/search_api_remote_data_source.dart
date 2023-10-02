@@ -1,14 +1,10 @@
 import 'dart:convert';
 import 'dart:io';
-
 import 'package:http/http.dart' as http;
 import 'package:slate/core/errors/exceptions.dart';
 import 'package:slate/core/utils/apis.dart';
-import 'package:slate/core/utils/enums.dart';
-
 import 'package:slate/data/models/movie_model.dart';
 import 'package:slate/data/models/travel_model.dart';
-import 'package:slate/domain/entities/travel.dart';
 
 abstract class SearchApiRemoteDataSource {
   Future<List> getSearchResultsWithKeyword(
@@ -20,6 +16,7 @@ abstract class SearchApiRemoteDataSource {
   Future<RestaurantModel> getRestaurantInfoWithId(int id);
   Future<AttractionModel> getAttractionInfoWithId(int id);
   Future<AccommodationModel> getAccommoInfoWithId(int id);
+  Future<List<MovieModel>> getScenesWithMovieTitle(String title);
 }
 
 class SearchApiRemoteDataSourceImpl implements SearchApiRemoteDataSource {
@@ -140,6 +137,32 @@ class SearchApiRemoteDataSourceImpl implements SearchApiRemoteDataSource {
               .map((attraction) => TravelModel.fromJson(attraction))
               .toList(),
         );
+        return results;
+      } else {
+        throw HttpException(response.statusCode.toString());
+      }
+    } catch (e) {
+      throw ApiException();
+    }
+  }
+
+  @override
+  Future<List<MovieModel>> getScenesWithMovieTitle(String title) async {
+    List<MovieModel> results = [];
+    try {
+      var url = Uri.parse(SearchAPI.scenesURL(title: title));
+
+      var response = await http.get(url);
+      if (response.statusCode == 200) {
+        var json = jsonDecode(utf8.decode(response.bodyBytes)) as Map;
+
+        List jsonMovies =
+            List<Map<String, dynamic>>.from(json['data']['movies']);
+
+        results.addAll(
+          jsonMovies.map((movie) => MovieModel.withKeywordApi(movie)).toList(),
+        );
+
         return results;
       } else {
         throw HttpException(response.statusCode.toString());

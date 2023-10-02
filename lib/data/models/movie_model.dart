@@ -7,8 +7,8 @@ class MovieModel extends Movie {
   MovieModel({
     required super.id,
     required super.title,
-    required super.posterUrl,
-    required super.openDate,
+    super.posterUrl,
+    super.openDate,
     super.audienceCount,
     super.company,
     super.director,
@@ -17,6 +17,22 @@ class MovieModel extends Movie {
     super.rating,
     super.sceneImages,
   });
+
+  factory MovieModel.withScenes(Map<String, dynamic> json) {
+    return MovieModel(
+      id: json['id'] as int,
+      title: json['title'] as String,
+      sceneImages: List<Map<String, dynamic>>.from(json['scenes'])
+          .map(
+            (data) => SceneModel.fromJson(
+              data,
+              json['title'],
+              json['id'],
+            ),
+          )
+          .toList(),
+    );
+  }
 
   factory MovieModel.withKeywordApi(Map<String, dynamic> json) {
     return MovieModel(
@@ -43,7 +59,11 @@ class MovieModel extends Movie {
       plot: json['plot'],
       sceneImages: List<Map<String, dynamic>>.from(json['sceneImages'])
           .map(
-            (data) => SceneModel.fromJson(data, json['id'], json['title']),
+            (data) => SceneModel.fromJson(
+              data,
+              json['title'],
+              json['id'],
+            ),
           )
           .toList(),
     );
