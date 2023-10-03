@@ -16,6 +16,7 @@ abstract class Travel extends Equatable {
   final String? imageUrl;
   final String? sceneLocation;
   final int? movieId;
+  final String? openTime;
 
   const Travel({
     required this.id,
@@ -23,6 +24,7 @@ abstract class Travel extends Equatable {
     this.images,
     required this.type,
     required this.location,
+    required this.address,
     this.imageUrl,
     this.menus,
     this.tel,
@@ -30,7 +32,7 @@ abstract class Travel extends Equatable {
     this.overview,
     this.sceneLocation,
     this.movieId,
-    required this.address,
+    this.openTime,
   });
 
   @override

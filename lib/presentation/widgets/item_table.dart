@@ -245,11 +245,15 @@ class _ItemTableRowState extends State<ItemTableRow> {
             style: Theme.of(context).textTheme.bodyMedium,
           ),
           SizedBox(width: SizeOf.w_md),
-          Text(
-            widget.body,
-            style:
-                widget.bodyTextStyle ?? Theme.of(context).textTheme.bodyLarge,
-          ),
+          Flexible(
+            child: Text(
+              widget.body,
+              style:
+              widget.bodyTextStyle ?? Theme.of(context).textTheme.bodyLarge,
+              maxLines: 6,
+              overflow: TextOverflow.ellipsis,
+            ),
+          )
         ],
       ),
     );
