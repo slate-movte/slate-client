@@ -178,6 +178,7 @@ class SearchApiRemoteDataSourceImpl implements SearchApiRemoteDataSource {
     }
   }
 
+  @override
   Future<MovieLocationModel> getMovieLocationInfoWithId(int id) async {
     try {
       var url = Uri.parse(SearchAPI.movieLocationInfoURL(id: id));

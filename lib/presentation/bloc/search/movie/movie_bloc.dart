@@ -2,24 +2,19 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:slate/domain/usecases/search_usecase.dart';
 import 'package:slate/presentation/bloc/search/movie/movie_event.dart';
 import 'package:slate/presentation/bloc/search/movie/movie_state.dart';
-import 'package:slate/presentation/bloc/search/search_event.dart';
 
-class MSearchBloc extends Bloc<MSearchEvent, MSearchState> {
+class MovieBloc extends Bloc<MovieEvent, MovieState> {
   MovieInfoSearch movieInfoSearch;
 
-  MovieLocationInfoSearch movieLocationInfoSearch;
-
-  MSearchBloc({
+  MovieBloc({
     required this.movieInfoSearch,
-    required this.movieLocationInfoSearch,
   }) : super(InitSearch()) {
     on<MovieSearchEvent>(_movieInfoSearchEvent);
-    on<MovieLocationSearchEvent>(_movieLocationSearchEvent);
   }
 
   Future _movieInfoSearchEvent(
     MovieSearchEvent event,
-    Emitter<MSearchState> emit,
+    Emitter<MovieState> emit,
   ) async {
     emit(InitSearch());
     final result = await movieInfoSearch(event.id);
@@ -30,23 +25,6 @@ class MSearchBloc extends Bloc<MSearchEvent, MSearchState> {
       },
       (movie) {
         emit(MovieDataLoaded(movie: movie));
-      },
-    );
-  }
-
-  Future _movieLocationSearchEvent(
-    MovieLocationSearchEvent event,
-    Emitter<MSearchState> emit,
-  ) async {
-    emit(InitSearch());
-    final result = await movieLocationInfoSearch(event.id);
-
-    result.fold(
-      (failure) {
-        emit(MovieLocationSearchError(message: 'ERROR'));
-      },
-      (movieLocation) {
-        emit(MovieLocationDataLoaded(movieLocation: movieLocation));
       },
     );
   }

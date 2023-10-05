@@ -33,7 +33,6 @@ class SearchedItem extends StatelessWidget {
     required Movie movie,
     required Function() function,
   }) {
-    print(movie);
     return SearchedItem(
       type: TravelType.MOVIE_LOCATION,
       title: movie.title,
@@ -61,7 +60,7 @@ class SearchedItem extends StatelessWidget {
               ? travel.menus!.sublist(0, 3)
               : travel.menus!,
       subTitle: travel.address,
-      imageUrl: travel.images!.first,
+      imageUrl: travel.imageUrl,
       function: function,
     );
   }
@@ -202,14 +201,18 @@ class SearchedItem extends StatelessWidget {
                 ],
               ),
             ),
-            ClipRRect(
-              borderRadius: BorderRadius.all(Radius.circular(SizeOf.r)),
-              child: Image.network(
-                imageUrl!,
-                width: 80.w,
-                height: type == TravelType.MOVIE_LOCATION ? 100.h : 80.h,
-                fit: BoxFit.fill,
-                errorBuilder: (context, error, stackTrace) => SizedBox.shrink(),
+            Visibility(
+              visible: imageUrl != null || imageUrl != "",
+              child: ClipRRect(
+                borderRadius: BorderRadius.all(Radius.circular(SizeOf.r)),
+                child: Image.network(
+                  imageUrl ?? "",
+                  width: 80.w,
+                  height: type == TravelType.MOVIE_LOCATION ? 100.h : 80.h,
+                  fit: BoxFit.fill,
+                  errorBuilder: (context, error, stackTrace) =>
+                      SizedBox.shrink(),
+                ),
               ),
             ),
           ],

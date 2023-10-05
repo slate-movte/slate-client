@@ -2,7 +2,7 @@ import 'package:equatable/equatable.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:slate/core/utils/enums.dart';
 
-abstract class Travel extends Equatable {
+class Travel extends Equatable {
   final int id;
   final String title;
   final String? tel;

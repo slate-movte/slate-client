@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:slate/core/utils/themes.dart';
+import 'package:slate/presentation/bloc/search/keyword/search_state.dart';
+import 'package:slate/presentation/bloc/search/movie/movie_bloc.dart';
+import 'package:slate/presentation/bloc/search/movie/movie_event.dart';
+import 'package:slate/presentation/bloc/search/movie/movie_state.dart';
 import 'package:slate/presentation/views/camera_view.dart';
 import 'package:slate/presentation/widgets/item_table.dart';
 
 import '../../data/models/movie_model.dart';
-import '../../data/models/travel_model.dart';
-import '../bloc/search/search_bloc.dart';
-import '../bloc/search/search_event.dart';
-import '../bloc/search/search_state.dart';
 
 class MovieInfoView extends StatefulWidget {
   final int movieId;
@@ -28,8 +28,8 @@ class _MovieInfoViewState extends State<MovieInfoView> {
   void initState() {
     super.initState();
 
-    context.read<SearchBloc>().add(
-          MovieInfoSearchEvent(
+    context.read<MovieBloc>().add(
+          MovieSearchEvent(
             id: widget.movieId,
           ),
         );
@@ -46,7 +46,7 @@ class _MovieInfoViewState extends State<MovieInfoView> {
                 context, MaterialPageRoute(builder: (context) => CameraView()));
           },
         ),
-        body: BlocConsumer<SearchBloc, SearchState>(
+        body: BlocConsumer<MovieBloc, MovieState>(
           builder: (context, state) {
             if (state is MovieDataLoaded) {
               // print("영화정ㅂ"+state.movie.toString());

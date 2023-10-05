@@ -10,6 +10,7 @@ import 'package:slate/data/sources/remote/location_remote_data_source.dart';
 import 'package:slate/data/sources/remote/map_remote_data_source.dart';
 import 'package:slate/data/sources/remote/scene_api_remote_data_source.dart';
 import 'package:slate/data/sources/remote/search_api_remote_data_source.dart';
+import 'package:slate/domain/entities/travel.dart';
 import 'package:slate/domain/repositories/camera_repository.dart';
 import 'package:slate/domain/repositories/map_repository.dart';
 import 'package:slate/domain/repositories/scene_repository.dart';
@@ -22,7 +23,9 @@ import 'package:slate/presentation/bloc/camera/camera_bloc.dart';
 import 'package:slate/presentation/bloc/course/course_bloc.dart';
 import 'package:slate/presentation/bloc/map/map_bloc.dart';
 import 'package:slate/presentation/bloc/scene/scene_bloc.dart';
-import 'package:slate/presentation/bloc/search/search_bloc.dart';
+import 'package:slate/presentation/bloc/search/keyword/search_bloc.dart';
+import 'package:slate/presentation/bloc/search/movie/movie_bloc.dart';
+import 'package:slate/presentation/bloc/search/travel/travel_bloc.dart';
 
 import 'data/sources/remote/course_api_remote_data_source.dart';
 import 'domain/repositories/course_repository.dart';
@@ -36,6 +39,8 @@ const String BLOC_MAP = 'BLOC_MAP';
 const String BLOC_COURSE = 'BLOC_COURSE';
 const String BLOC_SEARCH = 'BLOC_SEARCH';
 const String BLOC_SCENE = 'BLOC_SCENE';
+const String BLOC_MOVIE = 'BLOC_MOVIE';
+const String BLOC_TRAVEL = 'BLOC_TRAVEL';
 
 // usecase
 const String USECASE_GET_CAMERA_CONTROLLER = 'USECASE_GET_CAMERA_CONTROLLER';
@@ -57,6 +62,7 @@ const String USECASE_GET_SCENES_WITH_MOVIE_TITLE =
     'USECASE_GET_SCENES_WITH_MOVIE_TITLE';
 const String USECASE_MOVIELOCATION_INFO_SEARCH =
     'USECASE_MOVIELOCATION_INFO_SEARCH';
+
 // repo
 const String REPO_CAMERA = 'REPO_CAMERA';
 const String REPO_MAP = 'REPO_MAP';
@@ -115,14 +121,26 @@ Future<void> init() async {
   DI.registerLazySingleton<SearchBloc>(
     () => SearchBloc(
       keywordSearch: DI(instanceName: USECASE_KEYWORD_SEARCH),
+    ),
+    instanceName: BLOC_SEARCH,
+  );
+
+  DI.registerLazySingleton<MovieBloc>(
+    () => MovieBloc(
       movieInfoSearch: DI(instanceName: USECASE_MOVIE_INFO_SEARCH),
+    ),
+    instanceName: BLOC_MOVIE,
+  );
+
+  DI.registerLazySingleton<TravelBloc>(
+    () => TravelBloc(
       restaurantInfoSearch: DI(instanceName: USECASE_RESTAURANT_INFO_SEARCH),
       accommoInfoSearch: DI(instanceName: USECASE_ACCOMO_INFO_SEARCH),
       attractionInfoSearch: DI(instanceName: USECASE_ATTRACTION_INFO_SEARCH),
       movieLocationInfoSearch:
           DI(instanceName: USECASE_MOVIELOCATION_INFO_SEARCH),
     ),
-    instanceName: BLOC_SEARCH,
+    instanceName: BLOC_TRAVEL,
   );
 
   // usecase

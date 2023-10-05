@@ -3,16 +3,16 @@ import 'package:equatable/equatable.dart';
 import 'package:slate/domain/entities/movie.dart';
 import 'package:slate/domain/entities/travel.dart';
 
-class MSearchState extends Equatable {
+class MovieState extends Equatable {
   @override
   List<Object?> get props => [];
 }
 
-class InitSearch extends MSearchState {}
+class InitSearch extends MovieState {}
 
-class DataLoading extends MSearchState {}
+class DataLoading extends MovieState {}
 
-class MovieDataLoaded extends MSearchState {
+class MovieDataLoaded extends MovieState {
   final Movie movie;
 
   MovieDataLoaded({required this.movie});
@@ -21,28 +21,10 @@ class MovieDataLoaded extends MSearchState {
   List<Object?> get props => [movie];
 }
 
-class MovieLocationDataLoaded extends MSearchState {
-  final MovieLocation movieLocation;
-
-  MovieLocationDataLoaded({required this.movieLocation});
-
-  @override
-  List<Object?> get props => [movieLocation];
-}
-
-class MovieSearchError extends MSearchState {
+class MovieSearchError extends MovieState {
   final String message;
 
   MovieSearchError({required this.message});
-
-  @override
-  List<Object?> get props => [message];
-}
-
-class MovieLocationSearchError extends MSearchState {
-  final String message;
-
-  MovieLocationSearchError({required this.message});
 
   @override
   List<Object?> get props => [message];

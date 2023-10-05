@@ -4,9 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:slate/core/utils/themes.dart';
-import 'package:slate/presentation/bloc/search/search_bloc.dart';
-import 'package:slate/presentation/bloc/search/search_event.dart';
-import 'package:slate/presentation/bloc/search/search_state.dart';
+import 'package:slate/presentation/bloc/search/keyword/search_bloc.dart';
+import 'package:slate/presentation/bloc/search/keyword/search_event.dart';
 import 'package:slate/presentation/views/searched_item_view.dart';
 
 class SearchView extends StatefulWidget {

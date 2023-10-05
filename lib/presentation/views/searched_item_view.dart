@@ -15,10 +15,12 @@ import 'package:slate/injection.dart';
 import 'package:slate/presentation/bloc/map/map_bloc.dart';
 import 'package:slate/presentation/bloc/map/map_event.dart';
 import 'package:slate/presentation/bloc/map/map_state.dart';
-import 'package:slate/presentation/bloc/search/search_bloc.dart';
-import 'package:slate/presentation/bloc/search/search_event.dart';
-import 'package:slate/presentation/bloc/search/search_state.dart';
-import 'package:slate/presentation/views/item_info_view.dart';
+import 'package:slate/presentation/bloc/search/keyword/search_bloc.dart';
+import 'package:slate/presentation/bloc/search/keyword/search_event.dart';
+import 'package:slate/presentation/bloc/search/keyword/search_state.dart';
+import 'package:slate/presentation/bloc/search/travel/travel_bloc.dart';
+import 'package:slate/presentation/bloc/search/travel/travel_event.dart';
+import 'package:slate/presentation/bloc/search/travel/travel_state.dart';
 import 'package:slate/presentation/views/movie_info_view.dart';
 import 'package:slate/presentation/widgets/item_table.dart';
 
@@ -85,23 +87,35 @@ class _ItemMapViewState extends State<ItemMapView> {
     return Scaffold(
       body: Stack(
         children: [
-          BlocListener<SearchBloc, SearchState>(
-              child: SizedBox.shrink(),
-              listener: (context, state) {
-                if (state is MovieLocationDataLoaded ||
-                    state is RestaurantDataLoaded ||
-                    state is AccommoDataLoaded ||
-                    state is AttractionDataLoaded) {
-                  state.props.forEach((item) async {
-                    // widget.initBottomSheet
-                    //     ? openBottomSheet(context, item!)
-                    //     : openModalDailog(context, item!);
-                    if (!widget.initBottomSheet) {
-                      openModalDailog(context, item!);
-                    }
-                  });
-                }
-              }),
+          BlocListener<TravelBloc, TravelState>(
+            child: SizedBox.shrink(),
+            listener: (context, state) {
+              Travel travel = const Travel(
+                id: 0,
+                title: "title",
+                type: TravelType.MOVIE_LOCATION,
+                location: LatLng(0, 0),
+                address: "address",
+                tel: "010-0000-0000",
+                imageUrl: "",
+                menus: [],
+              );
+
+              if (state is MovieLocationDataLoaded) {
+                travel = state.movieLocation;
+              } else if (state is RestaurantDataLoaded) {
+                travel = state.restaurant;
+              } else if (state is AccommoDataLoaded) {
+                travel = state.accommodation;
+              } else if (state is AttractionDataLoaded) {
+                travel = state.attraction;
+              }
+
+              if (!widget.initBottomSheet) {
+                openModalDailog(context, travel);
+              }
+            },
+          ),
           BlocConsumer<MapBloc, MapState>(
             listener: (context, state) async {
               if (state is MapInitialized) {
@@ -146,26 +160,26 @@ class _ItemMapViewState extends State<ItemMapView> {
 
                             switch (item.type) {
                               case TravelType.RESTAURANT:
-                                context.read<SearchBloc>().add(
-                                    RestaurantInfoSearchEvent(
+                                context.read<TravelBloc>().add(
+                                    GetRestaurantInfoEvent(
                                         id: int.parse(
                                             item.markerId.value.toString())));
                                 break;
                               case TravelType.ACCOMMODATION:
-                                context.read<SearchBloc>().add(
-                                    AccommoInfoSearchEvent(
+                                context.read<TravelBloc>().add(
+                                    GetAccommoInfoEvent(
                                         id: int.parse(
                                             item.markerId.value.toString())));
                                 break;
                               case TravelType.ATTRACTION:
-                                context.read<SearchBloc>().add(
-                                    AttractionInfoSearchEvent(
+                                context.read<TravelBloc>().add(
+                                    GetAttractionInfoEvent(
                                         id: int.parse(
                                             item.markerId.value.toString())));
                                 break;
                               case TravelType.MOVIE_LOCATION:
-                                context.read<SearchBloc>().add(
-                                    MovieLocationInfoSearchEvent(
+                                context.read<TravelBloc>().add(
+                                    GetMovieLocationInfoEvent(
                                         id: int.parse(
                                             item.markerId.value.toString())));
                                 break;
@@ -370,50 +384,7 @@ class _ItemMapViewState extends State<ItemMapView> {
     return LatLng(centerLat, centerLng);
   }
 
-  Future openModalDailog(BuildContext context, Object item) async {
-    String title = "title";
-    TravelType type = TravelType.MOVIE_LOCATION;
-    String address = "address";
-    List<String>? tag = [];
-    String? phone = "010-0000-0000";
-    String? image = "";
-
-    MovieLocationModel? movieItem;
-
-    switch (item.runtimeType) {
-      case MovieLocationModel:
-        movieItem = item as MovieLocationModel;
-        title = movieItem.title;
-        type = TravelType.MOVIE_LOCATION;
-        image = movieItem.imageUrl;
-        address = movieItem.address;
-        break;
-      case AttractionModel:
-        AttractionModel attractionItem = item as AttractionModel;
-        title = attractionItem.title;
-        type = TravelType.ATTRACTION;
-        image = attractionItem.images?[0];
-        address = attractionItem.address;
-        break;
-      case AccommodationModel:
-        AccommodationModel accommodationItem = item as AccommodationModel;
-        title = accommodationItem.title;
-        type = TravelType.ACCOMMODATION;
-        phone = accommodationItem.tel;
-        image = accommodationItem.images?[0];
-        address = accommodationItem.address;
-        break;
-      case RestaurantModel:
-        RestaurantModel restaurantItem = item as RestaurantModel;
-        title = restaurantItem.title;
-        type = TravelType.RESTAURANT;
-        tag = restaurantItem.menus;
-        phone = restaurantItem.tel;
-        image = restaurantItem.images?[0];
-        address = restaurantItem.address;
-        break;
-    }
-
+  Future openModalDailog(BuildContext context, Travel item) async {
     showBottomSheet(
       backgroundColor: Colors.white.withOpacity(0.0),
       context: context,
@@ -421,190 +392,34 @@ class _ItemMapViewState extends State<ItemMapView> {
         color: ColorOf.white.light,
         height: 160.h,
         child: SearchedItem(
-          title: title,
-          type: type,
-          subTitle: address,
-          tag: (type == TravelType.RESTAURANT) ? tag! : [],
-          phone: (type == TravelType.MOVIE_LOCATION ||
-                  type == TravelType.ATTRACTION)
+          title: item.title,
+          type: item.type,
+          subTitle: item.address,
+          tag: item.menus ?? [],
+          phone: [TravelType.MOVIE_LOCATION, TravelType.ATTRACTION]
+                  .contains(item.type)
               ? null
-              : phone,
-          imageUrl: image,
+              : item.tel,
+          imageUrl: item.imageUrl,
           function: () {
             Navigator.push(
               context,
               MaterialPageRoute(
-                  builder: (context) => type == TravelType.MOVIE_LOCATION
-                      ? MovieInfoView(
-                          movieId: movieItem!.id,
-                        )
-                      // : ItemInfoView(item: item),
-                      : MarkerInfoView(item: item)),
+                builder: (context) => item.type == TravelType.MOVIE_LOCATION
+                    ? MovieInfoView(
+                        movieId: item.id,
+                      )
+                    // : ItemInfoView(item: item),
+                    : MarkerInfoView(
+                        id: item.id,
+                        type: item.type,
+                        title: item.title,
+                      ),
+              ),
             );
           },
         ),
       ),
-    );
-  }
-
-  Future openBottomSheet(BuildContext context, Object item) async {
-    String title = "-";
-    TravelType type = TravelType.MOVIE_LOCATION;
-    String addressText = "-";
-    List<String>? tag = [];
-    String? phoneNum = "010-0000-0000";
-    String? image = "";
-
-    MovieLocationModel movieItem;
-    AttractionModel attractionItem;
-    AccommodationModel accommodationItem;
-    RestaurantModel restaurantItem;
-
-    TravelModel travelModel = TravelModel(
-        id: 0,
-        title: "-",
-        images: [],
-        type: TravelType.MOVIE_LOCATION,
-        location: LatLng(0, 0),
-        address: "-",
-        tel: "-",
-        openTime: "",
-        overview: "",
-        homepage: "");
-
-    switch (item.runtimeType) {
-      case MapItem:
-        MapItem mapItem = item as MapItem;
-        switch (mapItem.type) {
-          case TravelType.RESTAURANT:
-            context.read<SearchBloc>().add(RestaurantInfoSearchEvent(
-                id: int.parse(mapItem.markerId.value)));
-            break;
-          case TravelType.ACCOMMODATION:
-            context.read<SearchBloc>().add(AccommoInfoSearchEvent(
-                id: int.parse(mapItem.markerId.value.toString())));
-            break;
-          case TravelType.ATTRACTION:
-            context.read<SearchBloc>().add(AttractionInfoSearchEvent(
-                id: int.parse(mapItem.markerId.value.toString())));
-            break;
-          case TravelType.MOVIE_LOCATION:
-            context.read<SearchBloc>().add(MovieLocationInfoSearchEvent(
-                id: int.parse(mapItem.markerId.value.toString())));
-            break;
-        }
-
-      case MovieLocationModel:
-        movieItem = item as MovieLocationModel;
-        travelModel = TravelModel(
-            id: movieItem.id,
-            title: movieItem.title,
-            images: movieItem.images,
-            type: TravelType.MOVIE_LOCATION,
-            location: movieItem.location,
-            address: movieItem.address,
-            tel: movieItem.tel);
-        break;
-      case AttractionModel:
-        attractionItem = item as AttractionModel;
-        travelModel = TravelModel(
-            id: attractionItem.id,
-            title: attractionItem.title,
-            images: attractionItem.images,
-            type: TravelType.ATTRACTION,
-            location: attractionItem.location,
-            address: attractionItem.address,
-            tel: attractionItem.tel);
-        break;
-      case AccommodationModel:
-        accommodationItem = item as AccommodationModel;
-        travelModel = TravelModel(
-            id: accommodationItem.id,
-            title: accommodationItem.title,
-            images: accommodationItem.images,
-            type: TravelType.ACCOMMODATION,
-            location: accommodationItem.location,
-            address: accommodationItem.address,
-            tel: accommodationItem.tel);
-        break;
-      case RestaurantModel:
-        restaurantItem = item as RestaurantModel;
-        travelModel = TravelModel(
-          id: restaurantItem.id,
-          title: restaurantItem.title,
-          images: restaurantItem.images,
-          type: TravelType.RESTAURANT,
-          location: restaurantItem.location,
-          address: restaurantItem.address,
-          tel: restaurantItem.tel,
-          menus: restaurantItem.menus,
-        );
-        break;
-    }
-
-    showBottomSheet(
-      elevation: 1,
-      context: context,
-      builder: (context) {
-        return SizedBox(
-          height: widget.bottomSheetHeight ?? 550.h,
-          child: ItemTable(
-            header: ItemHeader(
-              header: Text(
-                title,
-                style: Theme.of(context).textTheme.titleLarge,
-              ),
-              actions: [
-                IconButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                  icon: const Icon(Icons.close),
-                )
-              ],
-            ),
-            sections: [
-              ItemSection(
-                padding: EdgeInsets.zero,
-                builder: ItemSectionBuilder()
-                  ..address = ItemTableRow(
-                    title: '주소',
-                    body: addressText,
-                  )
-                  ..phone = item.runtimeType != MovieLocationModel
-                      ? ItemTableRow(
-                          title: '전화번호',
-                          body: phoneNum!,
-                          bodyTextStyle: Theme.of(context).textTheme.bodySmall,
-                        )
-                      : null
-                  ..hours = const ItemTableRow(
-                    title: '영업시간',
-                    body: '''월요일 09:00~21:00
-화요일 09:00~21:00
-수요일 09:00~21:00
-목요일 09:00~21:00
-금요일 09:00~21:00
-토요일 09:00~21:00
-일요일 정기휴무''',
-                  )
-                  ..info = const ItemTableRow(
-                    title: '식당정보',
-                    body: '수훈비빔밥과 수훈쌈밥이 맛있는 부산 맛집!',
-                  )
-                  ..homePage = ItemTableRow(
-                    title: '홈페이지',
-                    body: 'www.soooohoooooon.co.kr',
-                    bodyTextStyle: Theme.of(context).textTheme.bodySmall,
-                  ),
-              ),
-              // ItemSection(
-              //   builder: ItemSectionBuilder()..image = const ItemTableGrid(),
-              // ),
-            ],
-          ),
-        );
-      },
     );
   }
 }
@@ -661,7 +476,7 @@ class _ItemListViewState extends State<ItemListView> {
             items = [];
             isEndScroll = false;
           });
-        } else if (state is DataLoading) {
+        } else if (state is SearchDataLoading) {
           setState(() {
             isLoadMoreRunning = true;
           });
@@ -697,11 +512,17 @@ class _ItemListViewState extends State<ItemListView> {
                     return SearchedItem.travel(
                       travel: items[index],
                       function: () {
+                        log(items[index].id.toString());
+                        log(items[index].type.toString());
+                        log(items[index].title.toString());
+
                         Navigator.push(
                           context,
                           MaterialPageRoute(
                             builder: (context) => MarkerInfoView(
-                              item: items[index],
+                              id: items[index].id,
+                              type: items[index].type,
+                              title: items[index].title,
                             ),
                           ),
                         );
