@@ -8,15 +8,13 @@ import '../bloc/course/course_event.dart';
 
 class CourseContentsView extends StatefulWidget {
   final int courseId;
-  CourseContentsView({Key? key, required this.courseId}): super(key:key);
+  CourseContentsView({Key? key, required this.courseId}) : super(key: key);
 
   @override
   _CourseContentsViewState createState() => _CourseContentsViewState();
-
 }
 
 class _CourseContentsViewState extends State<CourseContentsView> {
-
   int _currentPage = 0;
 
   @override
@@ -27,85 +25,92 @@ class _CourseContentsViewState extends State<CourseContentsView> {
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        centerTitle: false,
-        titleSpacing: SizeOf.w_lg,
-        elevation: 0.0,
-        backgroundColor: Colors.transparent,
-        leading:  IconButton(
-            onPressed: () {
-              Navigator.pop(context);
-            },
-            color: Colors.white,
-            icon: Icon(Icons.arrow_back_ios_new)),
-      ),
-      extendBodyBehindAppBar: true,
-      body: BlocConsumer<CourseBloc, CourseState>(
-        builder: (context, state){
-          if(state is InfoCourseLoaded){
-            return PageView.builder(
-              itemCount: state.info.length,
-              onPageChanged: (int index) {
-                setState(() {
-                  _currentPage = index;
-                });
+        appBar: AppBar(
+          automaticallyImplyLeading: false,
+          centerTitle: false,
+          titleSpacing: SizeOf.w_lg,
+          elevation: 0.0,
+          backgroundColor: Colors.transparent,
+          leading: IconButton(
+              onPressed: () {
+                Navigator.pop(context);
               },
-              itemBuilder: (context, index) {
-                return Container(
-                  height: double.infinity,
-                  width: double.infinity,
-                  color: ColorOf.black.light,
-                  child: Column(
-                    children: [
-                      Visibility(
-                        visible: index != 0 ? true : false,
-                        child: Column(
-                          mainAxisSize: MainAxisSize.max,
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            Container(
-                                height: Scaffold.of(context).appBarMaxHeight,
-                                width: double.infinity,
-                                color: ColorOf.black.light,
-                                child: Padding(
-                                  padding: EdgeInsets.only(top: Scaffold.of(context).appBarMaxHeight!/1.6),
-                                  child: Text(
-                                    "${_currentPage} / ${state.info.length-1}",
-                                    style: Theme.of(context).textTheme.titleSmall!.copyWith(color: ColorOf.white.light),
-                                    textAlign: TextAlign.center,
-                                  ),
-                                )
-                            ),
-                          ],
+              color: Colors.white,
+              icon: Icon(Icons.arrow_back_ios_new)),
+        ),
+        extendBodyBehindAppBar: true,
+        body: BlocConsumer<CourseBloc, CourseState>(
+          builder: (context, state) {
+            if (state is InfoCourseLoaded) {
+              return PageView.builder(
+                itemCount: state.info.length,
+                onPageChanged: (int index) {
+                  setState(() {
+                    _currentPage = index;
+                  });
+                },
+                itemBuilder: (context, index) {
+                  return Container(
+                    height: double.infinity,
+                    width: double.infinity,
+                    color: ColorOf.black.light,
+                    child: Column(
+                      children: [
+                        Visibility(
+                          visible: index != 0 ? true : false,
+                          child: Column(
+                            mainAxisSize: MainAxisSize.max,
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Container(
+                                  height: Scaffold.of(context).appBarMaxHeight,
+                                  width: double.infinity,
+                                  color: ColorOf.black.light,
+                                  child: Padding(
+                                    padding: EdgeInsets.only(
+                                        top: Scaffold.of(context)
+                                                .appBarMaxHeight! /
+                                            1.6),
+                                    child: Text(
+                                      "${_currentPage} / ${state.info.length - 1}",
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .titleSmall!
+                                          .copyWith(color: ColorOf.white.light),
+                                      textAlign: TextAlign.center,
+                                    ),
+                                  )),
+                            ],
+                          ),
                         ),
-                      ),
-                      Container(
+                        Container(
                           width: double.infinity,
-                          height: index != 0 ? MediaQuery.of(context).size.height-MediaQuery.of(context).padding.top : MediaQuery.of(context).size.height,
+                          height: index != 0
+                              ? MediaQuery.of(context).size.height -
+                                  MediaQuery.of(context).padding.top
+                              : MediaQuery.of(context).size.height,
                           decoration: BoxDecoration(
                             image: DecorationImage(
                               fit: index != 0 ? BoxFit.fitWidth : BoxFit.cover,
-                              image: NetworkImage(state.info[index]['imageUrl']),
+                              image:
+                                  NetworkImage(state.info[index]['imageUrl']),
                             ),
                           ),
                           child: Container(),
-                      )
-                    ],
-                  ),
-                );
-              },
-            );
-          }else{
-            return Center(
-              child: CircularProgressIndicator(),
-            );
-          }
-        },
-        listener: (context, state) {},
-      )
-    );
+                        )
+                      ],
+                    ),
+                  );
+                },
+              );
+            } else {
+              return Center(
+                child: CircularProgressIndicator(),
+              );
+            }
+          },
+          listener: (context, state) {},
+        ));
   }
 }

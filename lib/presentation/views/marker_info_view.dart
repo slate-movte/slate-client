@@ -183,7 +183,7 @@ class _MarkerInfoViewState extends State<MarkerInfoView> {
                           ItemSection(
                             builder: ItemSectionBuilder()
                               ..image = ItemTableGrid(
-                                items: item.images!,
+                                items: item.images ?? [],
                               ),
                           ),
                         ],

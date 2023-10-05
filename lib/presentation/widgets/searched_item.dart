@@ -202,11 +202,12 @@ class SearchedItem extends StatelessWidget {
               ),
             ),
             Visibility(
-              visible: imageUrl != null || imageUrl != "",
+              visible: imageUrl != null && imageUrl != "",
               child: ClipRRect(
                 borderRadius: BorderRadius.all(Radius.circular(SizeOf.r)),
                 child: Image.network(
-                  imageUrl ?? "",
+                  imageUrl ??
+                      "http://tong.visitkorea.or.kr/cms/resource/43/2903043_image2_1.JPG",
                   width: 80.w,
                   height: type == TravelType.MOVIE_LOCATION ? 100.h : 80.h,
                   fit: BoxFit.fill,
