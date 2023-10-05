@@ -26,11 +26,15 @@ class DataLoading extends SearchState {}
 
 class KeywordDataLoaded extends SearchState {
   final List dataList;
+  final bool endData;
 
-  KeywordDataLoaded({required this.dataList});
+  KeywordDataLoaded({
+    required this.dataList,
+    this.endData = false,
+  });
 
   @override
-  List<Object?> get props => dataList;
+  List<Object?> get props => [dataList];
 }
 
 class MovieDataLoaded extends SearchState {

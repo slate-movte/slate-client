@@ -33,6 +33,7 @@ class SearchedItem extends StatelessWidget {
     required Movie movie,
     required Function() function,
   }) {
+    print(movie);
     return SearchedItem(
       type: TravelType.MOVIE_LOCATION,
       title: movie.title,

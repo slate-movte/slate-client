@@ -33,7 +33,7 @@ class SearchRepositoryImpl implements SearchRepository {
   }
 
   @override
-  Future<Either<Failure, List>> getKeywordSearchResults(
+  Future<Either<Failure, Map<String, List>>> getKeywordSearchResults(
     String keyword,
     int movieLastId,
     int attractionLastId,
@@ -60,6 +60,7 @@ class SearchRepositoryImpl implements SearchRepository {
     }
   }
 
+  @override
   Future<Either<Failure, MovieLocation>> getMovieLocationInfo(int id) async {
     try {
       MovieLocation result = await dataSource.getMovieLocationInfoWithId(id);

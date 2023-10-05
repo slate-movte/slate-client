@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:slate/core/errors/exceptions.dart';
@@ -7,7 +8,7 @@ import 'package:slate/data/models/movie_model.dart';
 import 'package:slate/data/models/travel_model.dart';
 
 abstract class SearchApiRemoteDataSource {
-  Future<List> getSearchResultsWithKeyword(
+  Future<Map<String, List>> getSearchResultsWithKeyword(
     String keyword,
     int movieLastId,
     int attractionLastId,
@@ -17,6 +18,7 @@ abstract class SearchApiRemoteDataSource {
   Future<AttractionModel> getAttractionInfoWithId(int id);
   Future<AccommodationModel> getAccommoInfoWithId(int id);
   Future<MovieLocationModel> getMovieLocationInfoWithId(int id);
+  Future<List<MovieModel>> getScenesWithMovieTitle(String title);
 }
 
 class SearchApiRemoteDataSourceImpl implements SearchApiRemoteDataSource {
@@ -104,13 +106,14 @@ class SearchApiRemoteDataSourceImpl implements SearchApiRemoteDataSource {
   }
 
   @override
-  Future<List> getSearchResultsWithKeyword(
+  Future<Map<String, List>> getSearchResultsWithKeyword(
     String keyword,
     int movieLastId,
     int attractionLastId,
   ) async {
-    List results = [];
+    Map<String, List> results = {'movie': [], 'attraction': []};
     try {
+      // log(movieLastId.toString());
       var url = Uri.parse(
         SearchAPI.keywordURL(
           keyword: keyword,
@@ -122,21 +125,24 @@ class SearchApiRemoteDataSourceImpl implements SearchApiRemoteDataSource {
       var response = await http.get(url);
       if (response.statusCode == 200) {
         var json = jsonDecode(utf8.decode(response.bodyBytes)) as Map;
+        // log(json.toString());
 
         List jsonMovie =
             List<Map<String, dynamic>>.from(json['data']['movieList']);
+        // log(jsonMovie.toString());
         List jsonAttraction =
             List<Map<String, dynamic>>.from(json['data']['attractionList']);
 
-        results.addAll(
+        results['movie']!.addAll(
           jsonMovie.map((movie) => MovieModel.withKeywordApi(movie)).toList(),
         );
 
-        results.addAll(
+        results['attraction']!.addAll(
           jsonAttraction
               .map((attraction) => TravelModel.fromJson(attraction))
               .toList(),
         );
+        // log(results.toString());
         return results;
       } else {
         throw HttpException(response.statusCode.toString());

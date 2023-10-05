@@ -1,4 +1,8 @@
+import 'dart:developer';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:slate/domain/entities/movie.dart';
+import 'package:slate/domain/entities/travel.dart';
 import 'package:slate/domain/usecases/search_usecase.dart';
 import 'package:slate/presentation/bloc/search/search_event.dart';
 import 'package:slate/presentation/bloc/search/search_state.dart';
@@ -10,6 +14,10 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
   AccommoInfoSearch accommoInfoSearch;
   AttractionInfoSearch attractionInfoSearch;
   MovieLocationInfoSearch movieLocationInfoSearch;
+
+  String keyword = "";
+  int movieLastId = 0;
+  int attractionLastId = 0;
 
   SearchBloc({
     required this.keywordSearch,
@@ -31,15 +39,21 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
     KeywordSearchEvent event,
     Emitter<SearchState> emit,
   ) async {
-    if (event.reload) {
+    keyword = event.keyword ?? "";
+    print(keyword);
+
+    if (event.refresh) {
+      movieLastId = 0;
+      attractionLastId = 0;
       emit(InitSearch());
     } else {
       emit(DataLoading());
     }
+
     final result = await keywordSearch((
-      event.keyword,
-      event.movieLastId,
-      event.attractionLastId,
+      keyword,
+      movieLastId,
+      attractionLastId,
     ));
 
     result.fold(
@@ -47,7 +61,29 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
         emit(SearchError(message: 'ERROR'));
       },
       (list) {
-        emit(KeywordDataLoaded(dataList: list));
+        log(list.toString());
+        List items = [];
+        items.addAll(List<Movie>.from(list['movie']!));
+        items.addAll(List<Travel>.from(list['attraction']!));
+        items.shuffle();
+
+        movieLastId += 5;
+        attractionLastId += 5;
+
+        if (list['movie']!.isEmpty || list['movie']!.length != 5) {
+          movieLastId = -1;
+        }
+
+        if (list['attraction']!.isEmpty || list['attraction']!.length != 5) {
+          attractionLastId = -1;
+        }
+
+        emit(
+          KeywordDataLoaded(
+            dataList: items,
+            endData: movieLastId == -1 && attractionLastId == -1,
+          ),
+        );
       },
     );
   }
@@ -120,17 +156,17 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
   }
 
   Future _movieLocationSearchEvent(
-      MovieLocationInfoSearchEvent event,
-      Emitter<SearchState> emit,
-      ) async {
+    MovieLocationInfoSearchEvent event,
+    Emitter<SearchState> emit,
+  ) async {
     emit(InitSearch());
     final result = await movieLocationInfoSearch(event.id);
 
     result.fold(
-          (failure) {
+      (failure) {
         emit(SearchError(message: 'ERROR'));
       },
-          (movieLocation) {
+      (movieLocation) {
         emit(MovieLocationDataLoaded(movieLocation: movieLocation));
       },
     );

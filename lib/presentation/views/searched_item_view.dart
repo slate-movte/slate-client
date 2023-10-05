@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
@@ -538,11 +539,11 @@ class _ItemMapViewState extends State<ItemMapView> {
 }
 
 class ItemListView extends SearchedItemView {
-  List items;
+  // List items;
 
   ItemListView({
     super.key,
-    this.items = const [],
+    // this.items = const [],
   });
 
   @override
@@ -550,34 +551,95 @@ class ItemListView extends SearchedItemView {
 }
 
 class _ItemListViewState extends State<ItemListView> {
+  List items = [];
+  bool isLoadMoreRunning = false;
+  ScrollController controller = ScrollController();
+  double lastOffset = 0.0;
+  bool isEndScroll = false;
+
+  @override
+  void initState() {
+    super.initState();
+    controller.addListener(_addScrollController);
+  }
+
+  void _addScrollController() {
+    if (controller.offset == controller.position.maxScrollExtent &&
+        !controller.position.outOfRange &&
+        !isEndScroll) {
+      context.read<SearchBloc>().add(KeywordSearchEvent());
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    return ListView.separated(
-      shrinkWrap: true,
-      itemBuilder: (context, index) {
-        if (widget.items[index] is Movie) {
-          return SearchedItem.movie(
-            movie: widget.items[index],
-            function: () {},
-          );
-          // Movie movie = widget.items[index] as Movie;
-          // log(movie.toString());
-          // return SearchedItem(
-          //   item: movie,
-          //   type: TravelType.MOVIE_LOCATION,
-          //   title: movie.title,
-          //   movieInfo: movie.plot,
-          // );
-        } else if (widget.items[index] is Travel) {
-          return SearchedItem.travel(
-            travel: widget.items[index],
-            function: () {},
+    return BlocConsumer<SearchBloc, SearchState>(
+      listener: (context, state) {
+        if (state is KeywordDataLoaded) {
+          if (!isEndScroll) {
+            setState(() {
+              isLoadMoreRunning = false;
+              items.addAll(state.dataList);
+            });
+            isEndScroll = state.endData;
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              lastOffset = controller.offset;
+              if (controller.hasClients) {
+                controller.jumpTo(lastOffset);
+              }
+            });
+          }
+        } else if (state is InitSearch) {
+          setState(() {
+            items = [];
+            isEndScroll = false;
+          });
+        } else if (state is DataLoading) {
+          setState(() {
+            isLoadMoreRunning = true;
+          });
+        }
+      },
+      builder: (context, state) {
+        if (state is InitSearch) {
+          return Center(
+            child: CircularProgressIndicator(),
           );
         }
-        return SizedBox.shrink();
+        log("a:" + items.toString());
+        return Column(
+          children: [
+            Expanded(
+              child: ListView.separated(
+                controller: controller,
+                itemBuilder: (context, index) {
+                  if (items[index] is Movie) {
+                    return SearchedItem.movie(
+                      movie: items[index],
+                      function: () {},
+                    );
+                  } else if (items[index] is Travel) {
+                    return SearchedItem.travel(
+                      travel: items[index],
+                      function: () {},
+                    );
+                  }
+                  return Text('dfasdfdfdsdd');
+                },
+                separatorBuilder: (context, index) => Divider(),
+                itemCount: items.length,
+              ),
+            ),
+            if (isLoadMoreRunning)
+              Container(
+                padding: EdgeInsets.symmetric(vertical: SizeOf.h_lg),
+                child: const Center(
+                  child: CircularProgressIndicator(),
+                ),
+              ),
+          ],
+        );
       },
-      separatorBuilder: (context, index) => const Divider(),
-      itemCount: widget.items.length,
     );
   }
 }

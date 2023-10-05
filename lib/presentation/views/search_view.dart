@@ -19,16 +19,13 @@ class SearchView extends StatefulWidget {
 class _SearchViewState extends State<SearchView> {
   bool viewOption = true;
   TextEditingController controller = TextEditingController();
-  int movieLastId = 0;
-  int attractionLastId = 0;
 
   @override
   void initState() {
     context.read<SearchBloc>().add(
           KeywordSearchEvent(
             keyword: "",
-            movieLastId: movieLastId,
-            attractionLastId: attractionLastId,
+            refresh: true,
           ),
         );
     super.initState();
@@ -49,6 +46,13 @@ class _SearchViewState extends State<SearchView> {
                 width: 314.w,
                 child: TextField(
                   onEditingComplete: () {
+                    log(controller.text);
+                    context.read<SearchBloc>().add(
+                          KeywordSearchEvent(
+                            keyword: controller.text,
+                            refresh: true,
+                          ),
+                        );
                     FocusScope.of(context).unfocus();
                   },
                   controller: controller,
@@ -67,20 +71,7 @@ class _SearchViewState extends State<SearchView> {
           child: const SizedBox(),
         ),
       ),
-      body: BlocBuilder<SearchBloc, SearchState>(
-        builder: (context, state) {
-          if (state is KeywordDataLoaded) {
-            state.dataList.map((e) => log(e.toString()));
-
-            return ItemListView(items: state.dataList);
-          } else if (state is SearchError) {
-            return Text("ERROR");
-          }
-          return Center(
-            child: CircularProgressIndicator(),
-          );
-        },
-      ),
+      body: ItemListView(),
     );
   }
 }

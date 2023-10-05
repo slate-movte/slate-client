@@ -6,18 +6,18 @@ class SearchEvent extends Equatable {
 }
 
 class KeywordSearchEvent extends SearchEvent {
-  final bool reload;
-  final String keyword;
-  final int movieLastId;
-  final int attractionLastId;
+  final bool refresh;
+  final String? keyword;
 
   KeywordSearchEvent({
-    this.reload = false,
-    required this.keyword,
-    required this.movieLastId,
-    required this.attractionLastId,
+    this.refresh = false,
+    this.keyword,
   });
 }
+
+class RefreshSearchEvent extends SearchEvent {}
+
+class LoadMoreDataEvent extends SearchEvent {}
 
 class MovieInfoSearchEvent extends SearchEvent {
   final int id;

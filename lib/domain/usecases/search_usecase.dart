@@ -14,11 +14,13 @@ abstract class SearchUseCase {
 }
 
 class KeywordSearch extends SearchUseCase
-    implements UseCase<List, (String, int, int)> {
+    implements UseCase<Map<String, List>, (String, int, int)> {
   KeywordSearch({required super.repository});
 
   @override
-  Future<Either<Failure, List>> call((String, int, int) params) async {
+  Future<Either<Failure, Map<String, List>>> call(
+    (String, int, int) params,
+  ) async {
     return await super
         .repository
         .getKeywordSearchResults(params.$1, params.$2, params.$3);

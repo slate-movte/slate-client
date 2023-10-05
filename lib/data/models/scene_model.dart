@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:slate/domain/entities/scene.dart';
 
 class SceneModel extends Scene {
