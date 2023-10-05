@@ -436,7 +436,7 @@ class _ItemMapViewState extends State<ItemMapView> {
               MaterialPageRoute(
                   builder: (context) => type == TravelType.MOVIE_LOCATION
                       ? MovieInfoView(
-                          item: movieItem,
+                          movieId: movieItem!.id,
                         )
                       // : ItemInfoView(item: item),
                       : MarkerInfoView(item: item)),
@@ -628,12 +628,6 @@ class _ItemListViewState extends State<ItemListView> {
   double lastOffset = 0.0;
   bool isEndScroll = false;
 
-  @override
-  void initState() {
-    super.initState();
-    controller.addListener(_addScrollController);
-  }
-
   void _addScrollController() {
     if (controller.offset == controller.position.maxScrollExtent &&
         !controller.position.outOfRange &&
@@ -644,6 +638,8 @@ class _ItemListViewState extends State<ItemListView> {
 
   @override
   Widget build(BuildContext context) {
+    controller.addListener(_addScrollController);
+
     return BlocConsumer<SearchBloc, SearchState>(
       listener: (context, state) {
         if (state is KeywordDataLoaded) {
@@ -677,7 +673,6 @@ class _ItemListViewState extends State<ItemListView> {
             child: CircularProgressIndicator(),
           );
         }
-        log("a:" + items.toString());
         return Column(
           children: [
             Expanded(
@@ -687,15 +682,33 @@ class _ItemListViewState extends State<ItemListView> {
                   if (items[index] is Movie) {
                     return SearchedItem.movie(
                       movie: items[index],
-                      function: () {},
+                      function: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => MovieInfoView(
+                              movieId: (items[index] as Movie).id,
+                            ),
+                          ),
+                        );
+                      },
                     );
                   } else if (items[index] is Travel) {
                     return SearchedItem.travel(
                       travel: items[index],
-                      function: () {},
+                      function: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => MarkerInfoView(
+                              item: items[index],
+                            ),
+                          ),
+                        );
+                      },
                     );
                   }
-                  return Text('dfasdfdfdsdd');
+                  return SizedBox.shrink();
                 },
                 separatorBuilder: (context, index) => Divider(),
                 itemCount: items.length,

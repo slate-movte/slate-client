@@ -56,6 +56,7 @@ class _CameraViewState extends State<CameraView> {
       ),
       body: BlocConsumer<CameraBloc, CameraState>(
         listener: (context, state) async {
+          log(state.toString());
           if (state is TakePictureDone) {
             await Navigator.of(context)
                 .push(
@@ -94,29 +95,35 @@ class _CameraViewState extends State<CameraView> {
                                   horizontal: SizeOf.w_md,
                                   vertical: SizeOf.h_md,
                                 ),
-                                child: Container(
-                                  width: 169.w,
-                                  height: 113.h,
-                                  decoration: ShapeDecoration(
-                                    color: ColorOf.black.light,
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius:
-                                          BorderRadius.circular(SizeOf.r),
+                                child: InkWell(
+                                  onTap: () {
+                                    openBottomSheet(context);
+                                  },
+                                  child: Container(
+                                    width: 169.w,
+                                    height: 113.h,
+                                    decoration: ShapeDecoration(
+                                      color: ColorOf.black.light,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(SizeOf.r),
+                                      ),
                                     ),
-                                  ),
-                                  child: BlocBuilder<SceneBloc, SceneState>(
-                                    builder: (context, state) {
-                                      if (state is SceneSelected) {
-                                        return ClipRRect(
-                                          borderRadius: BorderRadius.all(
-                                              Radius.circular(8)),
-                                          child: Image.network(state.sceneUrl),
+                                    child: BlocBuilder<SceneBloc, SceneState>(
+                                      builder: (context, state) {
+                                        if (state is SceneSelected) {
+                                          return ClipRRect(
+                                            borderRadius: BorderRadius.all(
+                                                Radius.circular(8)),
+                                            child:
+                                                Image.network(state.sceneUrl),
+                                          );
+                                        }
+                                        return Center(
+                                          child: Text("영화씬을 선택하세요."),
                                         );
-                                      }
-                                      return Center(
-                                        child: Text("영화씬을 선택하세요."),
-                                      );
-                                    },
+                                      },
+                                    ),
                                   ),
                                 ),
                               ),

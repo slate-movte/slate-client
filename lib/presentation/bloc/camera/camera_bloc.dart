@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:slate/core/errors/failures.dart';
@@ -33,11 +35,13 @@ class CameraBloc extends Bloc<CameraEvent, CameraState> {
   ) async {
     emit(CameraGetReady());
     final result = await getCameraController(NoParams());
+    log(result.toString());
     result.fold(
       (failure) {
         emit(CameraError(message: '다시 시도해주세요.'));
       },
       (result) {
+        log(result.toString());
         emit(CameraOn(controller: result));
       },
     );

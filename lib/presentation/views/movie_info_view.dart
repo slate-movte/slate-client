@@ -12,11 +12,11 @@ import '../bloc/search/search_event.dart';
 import '../bloc/search/search_state.dart';
 
 class MovieInfoView extends StatefulWidget {
-  final MovieLocationModel? item;
+  final int movieId;
 
   const MovieInfoView({
     super.key,
-    this.item,
+    required this.movieId,
   });
 
   @override
@@ -26,10 +26,13 @@ class MovieInfoView extends StatefulWidget {
 class _MovieInfoViewState extends State<MovieInfoView> {
   @override
   void initState() {
-    context.read<SearchBloc>().add(MovieInfoSearchEvent(
-          id: widget.item!.movieId!,
-        ));
     super.initState();
+
+    context.read<SearchBloc>().add(
+          MovieInfoSearchEvent(
+            id: widget.movieId,
+          ),
+        );
   }
 
   @override
@@ -58,16 +61,14 @@ class _MovieInfoViewState extends State<MovieInfoView> {
                       Padding(
                         padding: EdgeInsets.only(right: SizeOf.w_md),
                         child: IconButton(
-                          onPressed: () {
-                            Navigator.pop(context);
-                          },
+                          onPressed: () => Navigator.pop(context),
                           icon: Icon(
                             Icons.close,
                             size: 30,
                             color: ColorOf.white.light,
                           ),
                         ),
-                      ),
+                      )
                     ],
                     forceElevated: true,
                     collapsedHeight: 160.h,
@@ -184,12 +185,15 @@ class _MovieInfoViewState extends State<MovieInfoView> {
                           ),
                         ],
                     ),
-                    // ItemSection(
-                    //   builder: ItemSectionBuilder()
-                    //     ..image = const ItemTableGrid(
-                    //       title: '스틸컷',
-                    //     ),
-                    // ),
+                    ItemSection(
+                      builder: ItemSectionBuilder()
+                        ..image = ItemTableGrid(
+                          title: '스틸컷',
+                          items: movieItem.sceneImages
+                              .map((scene) => scene.imageUrl)
+                              .toList(),
+                        ),
+                    ),
                   ],
                 ),
               );

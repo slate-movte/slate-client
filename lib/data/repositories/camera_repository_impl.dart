@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:camera/camera.dart';
 import 'package:dartz/dartz.dart';
 import 'package:slate/core/errors/exceptions.dart';
@@ -20,6 +22,7 @@ class CameraRepositoryImpl implements CameraRepository {
           await cameraDataSource.getCameraControllerWithInitialized(
         changeDirection,
       );
+      log('message');
       return Right(controller);
     } on CameraNotFoundException {
       return Left(CameraFailure());
