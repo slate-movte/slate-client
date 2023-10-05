@@ -249,7 +249,7 @@ class _ItemTableRowState extends State<ItemTableRow> {
             child: Text(
               widget.body,
               style:
-              widget.bodyTextStyle ?? Theme.of(context).textTheme.bodyLarge,
+                  widget.bodyTextStyle ?? Theme.of(context).textTheme.bodyLarge,
               maxLines: 6,
               overflow: TextOverflow.ellipsis,
             ),

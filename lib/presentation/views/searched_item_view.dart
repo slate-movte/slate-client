@@ -96,7 +96,7 @@ class _ItemMapViewState extends State<ItemMapView> {
                     // widget.initBottomSheet
                     //     ? openBottomSheet(context, item!)
                     //     : openModalDailog(context, item!);
-                    if(!widget.initBottomSheet) {
+                    if (!widget.initBottomSheet) {
                       openModalDailog(context, item!);
                     }
                   });
@@ -106,7 +106,7 @@ class _ItemMapViewState extends State<ItemMapView> {
             listener: (context, state) async {
               if (state is MapInitialized) {
                 //맵 초기화가 일어날 때가 하단 모달 있는 상태이면 초기화 중단 (제외고려)
-                if(_open){
+                if (_open) {
                   return;
                 }
                 setState(() {
@@ -120,9 +120,9 @@ class _ItemMapViewState extends State<ItemMapView> {
                       },
                     ));
                   } else {
-                    context
-                        .read<MapBloc>()
-                        .add(GetMarkersEvent(type: TravelType.MOVIE_LOCATION, latLng: _position.target));
+                    context.read<MapBloc>().add(GetMarkersEvent(
+                        type: TravelType.MOVIE_LOCATION,
+                        latLng: _position.target));
                   }
                 });
               } else if (state is CameraMoved) {
@@ -176,10 +176,13 @@ class _ItemMapViewState extends State<ItemMapView> {
 
                       GoogleMapController controller = await _controller.future;
 
-                        await controller.animateCamera(
-                          CameraUpdate.newCameraPosition(CameraPosition(
-                              target: curLocTag ? _position.target : state.markers[0].position, zoom: 15)),
-                        );
+                      await controller.animateCamera(
+                        CameraUpdate.newCameraPosition(CameraPosition(
+                            target: curLocTag
+                                ? _position.target
+                                : state.markers[0].position,
+                            zoom: 15)),
+                      );
 
                       setState(() {
                         curLocTag = false;
@@ -239,27 +242,28 @@ class _ItemMapViewState extends State<ItemMapView> {
           Align(
             alignment: Alignment.bottomCenter,
             child: Padding(
-              padding: EdgeInsets.symmetric(
-                horizontal: SizeOf.w_md,
-                vertical: SizeOf.h_md,
-              ),
-              child: ActionChip(
-                label: Text("현재 위치에서 검색"),
-                backgroundColor: ColorOf.white.light,
-                labelStyle: Theme.of(context).textTheme.bodyLarge,
-                shape: StadiumBorder(),
-                onPressed: () async {
-                  LatLng centerLocation = await calculateCenter();
-                  setState(() {
-                    curLocTag = true;
-                    _position = CameraPosition(target: centerLocation, zoom: 15);
-                  });
-                  context.read<MapBloc>().add(
-                    GetMarkersEvent(type: onTapedTag, latLng: _position.target),
-                  );
-                },
-              )
-            ),
+                padding: EdgeInsets.symmetric(
+                  horizontal: SizeOf.w_md,
+                  vertical: SizeOf.h_md,
+                ),
+                child: ActionChip(
+                  label: Text("현재 위치에서 검색"),
+                  backgroundColor: ColorOf.white.light,
+                  labelStyle: Theme.of(context).textTheme.bodyLarge,
+                  shape: StadiumBorder(),
+                  onPressed: () async {
+                    LatLng centerLocation = await calculateCenter();
+                    setState(() {
+                      curLocTag = true;
+                      _position =
+                          CameraPosition(target: centerLocation, zoom: 15);
+                    });
+                    context.read<MapBloc>().add(
+                          GetMarkersEvent(
+                              type: onTapedTag, latLng: _position.target),
+                        );
+                  },
+                )),
           ),
           Visibility(
             visible: widget.item == null,
@@ -313,7 +317,7 @@ class _ItemMapViewState extends State<ItemMapView> {
                             elevation: 0.6,
                             onPressed: () async {
                               //테그 클릭하면 하단 모달 닫기
-                              if(_open){
+                              if (_open) {
                                 Navigator.pop(context);
                                 _open = false;
                               }
@@ -322,10 +326,13 @@ class _ItemMapViewState extends State<ItemMapView> {
                               });
                               LatLng centerLocation = await calculateCenter();
                               setState(() {
-                                _position = CameraPosition(target: centerLocation, zoom: 15);
+                                _position = CameraPosition(
+                                    target: centerLocation, zoom: 15);
                               });
                               context.read<MapBloc>().add(
-                                    GetMarkersEvent(type: element.$3, latLng: _position.target),
+                                    GetMarkersEvent(
+                                        type: element.$3,
+                                        latLng: _position.target),
                                   );
                             },
                           ),
@@ -341,9 +348,9 @@ class _ItemMapViewState extends State<ItemMapView> {
     );
   }
 
-  Future<void> closeModal(LatLng latlng)async {
+  Future<void> closeModal(LatLng latlng) async {
     //맵 클릭시 하단 모달 닫기
-    if(_open){
+    if (_open) {
       Navigator.pop(context);
       _open = false;
     }
@@ -364,7 +371,6 @@ class _ItemMapViewState extends State<ItemMapView> {
   }
 
   Future openModalDailog(BuildContext context, Object item) async {
-
     String title = "title";
     TravelType type = TravelType.MOVIE_LOCATION;
     String address = "address";
@@ -411,40 +417,37 @@ class _ItemMapViewState extends State<ItemMapView> {
     showBottomSheet(
       backgroundColor: Colors.white.withOpacity(0.0),
       context: context,
-      builder: (context) =>
-        Container(
-          color: ColorOf.white.light,
-          height: 160.h,
-          child: SearchedItem(
-            title: title,
-            type: type,
-            subTitle: address,
-            tag: (type == TravelType.RESTAURANT) ? tag! : [],
-            phone: (type == TravelType.MOVIE_LOCATION ||
-                type == TravelType.ATTRACTION)
-                ? null
-                : phone,
-            imageUrl: image,
-            function: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
+      builder: (context) => Container(
+        color: ColorOf.white.light,
+        height: 160.h,
+        child: SearchedItem(
+          title: title,
+          type: type,
+          subTitle: address,
+          tag: (type == TravelType.RESTAURANT) ? tag! : [],
+          phone: (type == TravelType.MOVIE_LOCATION ||
+                  type == TravelType.ATTRACTION)
+              ? null
+              : phone,
+          imageUrl: image,
+          function: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
                   builder: (context) => type == TravelType.MOVIE_LOCATION
                       ? MovieInfoView(
-                    item: movieItem,
-                  )
+                          item: movieItem,
+                        )
                       // : ItemInfoView(item: item),
-                  : MarkerInfoView(item: item)
-                ),
-              );
-            },
-          ),
+                      : MarkerInfoView(item: item)),
+            );
+          },
         ),
+      ),
     );
   }
 
   Future openBottomSheet(BuildContext context, Object item) async {
-
     String title = "-";
     TravelType type = TravelType.MOVIE_LOCATION;
     String addressText = "-";
@@ -457,7 +460,17 @@ class _ItemMapViewState extends State<ItemMapView> {
     AccommodationModel accommodationItem;
     RestaurantModel restaurantItem;
 
-    TravelModel travelModel  = TravelModel(id: 0, title: "-", images: [], type: TravelType.MOVIE_LOCATION, location: LatLng(0,0), address: "-", tel: "-", openTime: "", overview: "", homepage: "");
+    TravelModel travelModel = TravelModel(
+        id: 0,
+        title: "-",
+        images: [],
+        type: TravelType.MOVIE_LOCATION,
+        location: LatLng(0, 0),
+        address: "-",
+        tel: "-",
+        openTime: "",
+        overview: "",
+        homepage: "");
 
     switch (item.runtimeType) {
       case MapItem:
@@ -483,19 +496,49 @@ class _ItemMapViewState extends State<ItemMapView> {
 
       case MovieLocationModel:
         movieItem = item as MovieLocationModel;
-        travelModel = TravelModel(id: movieItem.id, title: movieItem.title, images: movieItem.images, type: TravelType.MOVIE_LOCATION, location: movieItem.location, address: movieItem.address, tel: movieItem.tel);
+        travelModel = TravelModel(
+            id: movieItem.id,
+            title: movieItem.title,
+            images: movieItem.images,
+            type: TravelType.MOVIE_LOCATION,
+            location: movieItem.location,
+            address: movieItem.address,
+            tel: movieItem.tel);
         break;
       case AttractionModel:
         attractionItem = item as AttractionModel;
-        travelModel = TravelModel(id: attractionItem.id, title: attractionItem.title, images: attractionItem.images, type: TravelType.ATTRACTION, location: attractionItem.location, address: attractionItem.address, tel: attractionItem.tel);
+        travelModel = TravelModel(
+            id: attractionItem.id,
+            title: attractionItem.title,
+            images: attractionItem.images,
+            type: TravelType.ATTRACTION,
+            location: attractionItem.location,
+            address: attractionItem.address,
+            tel: attractionItem.tel);
         break;
       case AccommodationModel:
         accommodationItem = item as AccommodationModel;
-        travelModel = TravelModel(id: accommodationItem.id, title: accommodationItem.title, images: accommodationItem.images, type: TravelType.ACCOMMODATION, location: accommodationItem.location, address: accommodationItem.address, tel: accommodationItem.tel);
+        travelModel = TravelModel(
+            id: accommodationItem.id,
+            title: accommodationItem.title,
+            images: accommodationItem.images,
+            type: TravelType.ACCOMMODATION,
+            location: accommodationItem.location,
+            address: accommodationItem.address,
+            tel: accommodationItem.tel);
         break;
       case RestaurantModel:
         restaurantItem = item as RestaurantModel;
-        travelModel = TravelModel(id: restaurantItem.id, title: restaurantItem.title, images: restaurantItem.images, type: TravelType.RESTAURANT, location: restaurantItem.location, address: restaurantItem.address, tel: restaurantItem.tel, menus: restaurantItem.menus,);
+        travelModel = TravelModel(
+          id: restaurantItem.id,
+          title: restaurantItem.title,
+          images: restaurantItem.images,
+          type: TravelType.RESTAURANT,
+          location: restaurantItem.location,
+          address: restaurantItem.address,
+          tel: restaurantItem.tel,
+          menus: restaurantItem.menus,
+        );
         break;
     }
 

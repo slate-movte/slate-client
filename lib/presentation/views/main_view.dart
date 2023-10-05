@@ -35,7 +35,7 @@ class _MainViewState extends State<MainView> {
         child: _viewList.elementAt(_selectedIndex),
       ),
       bottomNavigationBar: Container(
-        height: 110.h,
+        height: 125.h,
         decoration: const BoxDecoration(
           color: Colors.white,
           boxShadow: [
