@@ -284,7 +284,10 @@ class _CameraViewState extends State<CameraView> {
                         vertical: 8.h,
                       ),
                       suffixIcon: IconButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          controller.clear();
+                          context.read<SceneBloc>().add(RefreshEvent());
+                        },
                         icon: const Icon(CupertinoIcons.xmark_circle_fill),
                       ),
                       prefixIconColor: ColorOf.grey.light,
