@@ -1,6 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:slate/core/utils/enums.dart';
+
+import '../../core/utils/enums.dart';
 
 class MapItem extends Equatable {
   final MarkerId markerId;
@@ -17,4 +18,9 @@ class MapItem extends Equatable {
 
   @override
   List<Object?> get props => [markerId];
+
+  @override
+  String toString() {
+    return "id : $markerId, title : $title, type : $type";
+  }
 }

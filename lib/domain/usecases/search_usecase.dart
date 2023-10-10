@@ -1,11 +1,10 @@
 import 'package:dartz/dartz.dart';
-import 'package:slate/core/errors/failures.dart';
-import 'package:slate/core/usecases/usecase.dart';
 
-import 'package:slate/domain/entities/movie.dart';
-import 'package:slate/domain/entities/travel.dart';
-
-import 'package:slate/domain/repositories/search_repository.dart';
+import '../../core/errors/failures.dart';
+import '../../core/usecases/usecase.dart';
+import '../entities/movie.dart';
+import '../entities/travel.dart';
+import '../repositories/search_repository.dart';
 
 abstract class SearchUseCase {
   SearchRepository repository;
@@ -14,11 +13,13 @@ abstract class SearchUseCase {
 }
 
 class KeywordSearch extends SearchUseCase
-    implements UseCase<List, (String, int, int)> {
+    implements UseCase<Map<String, List>, (String, int, int)> {
   KeywordSearch({required super.repository});
 
   @override
-  Future<Either<Failure, List>> call((String, int, int) params) async {
+  Future<Either<Failure, Map<String, List>>> call(
+    (String, int, int) params,
+  ) async {
     return await super
         .repository
         .getKeywordSearchResults(params.$1, params.$2, params.$3);
@@ -61,5 +62,15 @@ class AttractionInfoSearch extends SearchUseCase
   @override
   Future<Either<Failure, Attraction>> call(int params) async {
     return await super.repository.getAttractionInfo(params);
+  }
+}
+
+class MovieLocationInfoSearch extends SearchUseCase
+    implements UseCase<MovieLocation, int> {
+  MovieLocationInfoSearch({required super.repository});
+
+  @override
+  Future<Either<Failure, MovieLocation>> call(int params) async {
+    return await super.repository.getMovieLocationInfo(params);
   }
 }

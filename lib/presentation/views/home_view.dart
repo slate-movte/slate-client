@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:slate/core/utils/assets.dart';
-import 'package:slate/core/utils/themes.dart';
-import 'package:slate/presentation/views/profile_view.dart';
-import 'package:slate/presentation/views/search_view.dart';
-import 'package:slate/presentation/views/searched_item_view.dart';
+
+import '../../core/utils/assets.dart';
+import '../../core/utils/themes.dart';
+import 'profile_view.dart';
+import 'search_view.dart';
+import 'searched_item_view.dart';
 
 class HomeView extends StatefulWidget {
   const HomeView({super.key});
@@ -14,15 +16,6 @@ class HomeView extends StatefulWidget {
 }
 
 class _HomeViewState extends State<HomeView> {
-  // bool viewOption = true;
-
-  // final List<SearchedItemView> _searchViewOptions = <SearchedItemView>[
-  //   ItemMapView(
-  //     bottomSheetHeight: 430.h,
-  //   ),
-  //   const ItemListView(),
-  // ];
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -35,7 +28,6 @@ class _HomeViewState extends State<HomeView> {
           fit: BoxFit.contain,
           height: 32.h,
         ),
-        // toolbarHeight: 80.h,
         actions: [
           InkWell(
             onTap: () {
@@ -71,6 +63,8 @@ class _HomeViewState extends State<HomeView> {
                   tag: const Key('TEXT_FIELD_KEY'),
                   child: Material(
                     child: TextField(
+                      readOnly: true,
+                      autofocus: false,
                       style: Theme.of(context).textTheme.bodyLarge,
                       decoration: const InputDecoration(
                         suffixIcon: Icon(Icons.search),
@@ -91,30 +85,7 @@ class _HomeViewState extends State<HomeView> {
           ),
         ),
       ),
-      body: ItemMapView(
-        bottomSheetHeight: 430.h,
-      ),
-      // body: Stack(
-      //   children: [
-      //     _searchViewOptions.elementAt(viewOption ? 0 : 1),
-      //     Align(
-      //       alignment: Alignment.bottomCenter,
-      //       child: ActionChip(
-      //         avatar: Icon(viewOption ? Icons.list : Icons.map),
-      //         label: Text(viewOption ? '목록보기' : '지도로 보기'),
-      //         backgroundColor: ColorOf.white.light,
-      //         labelStyle: Theme.of(context).textTheme.bodyLarge,
-      //         shape: const StadiumBorder(),
-      //         elevation: 0.6,
-      //         onPressed: () {
-      //           setState(() {
-      //             viewOption = !viewOption;
-      //           });
-      //         },
-      //       ),
-      //     ),
-      //   ],
-      // ),
+      body: const ItemMapView(),
     );
   }
 }

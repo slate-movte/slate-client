@@ -1,10 +1,14 @@
+// ignore_for_file: unused_import
+
 import 'package:flutter/material.dart';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:slate/core/errors/failures.dart';
-import 'package:slate/core/usecases/usecase.dart';
-import 'package:slate/domain/usecases/camera_usecase.dart';
-import 'package:slate/presentation/bloc/camera/camera_event.dart';
-import 'package:slate/presentation/bloc/camera/camera_state.dart';
+
+import '../../../core/errors/failures.dart';
+import '../../../core/usecases/usecase.dart';
+import '../../../domain/usecases/camera_usecase.dart';
+import 'camera_event.dart';
+import 'camera_state.dart';
 
 class CameraBloc extends Bloc<CameraEvent, CameraState> {
   GetCameraController getCameraController;
@@ -24,7 +28,6 @@ class CameraBloc extends Bloc<CameraEvent, CameraState> {
     on<DirectionChangeEvent>(_directionChangeEvent);
     on<TakePictureEvent>(_takePictureEvent);
     on<SavePictureEvent>(_savePictureEvent);
-    on<DisposeEvent>(_disposeEvent);
   }
 
   Future _cameraOnEvent(
@@ -33,6 +36,7 @@ class CameraBloc extends Bloc<CameraEvent, CameraState> {
   ) async {
     emit(CameraGetReady());
     final result = await getCameraController(NoParams());
+
     result.fold(
       (failure) {
         emit(CameraError(message: '다시 시도해주세요.'));
@@ -88,21 +92,5 @@ class CameraBloc extends Bloc<CameraEvent, CameraState> {
     }, (success) {
       emit(SavePictureDone());
     });
-  }
-
-  Future _disposeEvent(
-    DisposeEvent event,
-    Emitter<CameraState> state,
-  ) async {
-    final result = await disposeCamera(NoParams());
-
-    result.fold(
-      (failure) {
-        emit(CameraError(message: '카메라 종료 실패'));
-      },
-      (success) {
-        Navigator.pop(event.context);
-      },
-    );
   }
 }

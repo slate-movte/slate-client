@@ -1,40 +1,40 @@
+// ignore_for_file: avoid_function_literals_in_foreach_calls, use_build_context_synchronously
+
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:slate/core/utils/enums.dart';
-import 'package:slate/core/utils/themes.dart';
-import 'package:slate/domain/entities/map_item.dart';
-import 'package:slate/injection.dart';
-import 'package:slate/presentation/bloc/map/map_bloc.dart';
-import 'package:slate/presentation/bloc/map/map_event.dart';
-import 'package:slate/presentation/bloc/map/map_state.dart';
-import 'package:slate/presentation/views/item_info_view.dart';
-import 'package:slate/presentation/views/movie_info_view.dart';
-import 'package:slate/presentation/widgets/item_table.dart';
-
-import 'package:slate/presentation/widgets/searched_item.dart';
+import 'package:slate/presentation/bloc/scene/scene_bloc.dart';
+import 'package:slate/presentation/bloc/scene/scene_event.dart';
 
 import '../../core/utils/assets.dart';
+import '../../core/utils/enums.dart';
+import '../../core/utils/themes.dart';
+import '../../domain/entities/movie.dart';
+import '../../domain/entities/travel.dart';
+import '../../injection.dart';
+import '../bloc/map/map_bloc.dart';
+import '../bloc/map/map_event.dart';
+import '../bloc/map/map_state.dart';
+import '../bloc/search/keyword/search_bloc.dart';
+import '../bloc/search/keyword/search_event.dart';
+import '../bloc/search/keyword/search_state.dart';
+import '../bloc/search/travel/travel_bloc.dart';
+import '../bloc/search/travel/travel_event.dart';
+import '../bloc/search/travel/travel_state.dart';
+import '../widgets/searched_item.dart';
+import 'marker_info_view.dart';
+import 'movie_info_view.dart';
 
 abstract class SearchedItemView extends StatefulWidget {
   const SearchedItemView({super.key});
 }
 
 class ItemMapView extends SearchedItemView {
-  final bool initBottomSheet;
-  final double? bottomSheetHeight;
-  final MapItem? item;
-
-  const ItemMapView({
-    super.key,
-    this.initBottomSheet = false,
-    this.bottomSheetHeight,
-    this.item,
-  });
+  const ItemMapView({super.key});
 
   @override
   State<ItemMapView> createState() => _ItemMapViewState();
@@ -42,19 +42,13 @@ class ItemMapView extends SearchedItemView {
 
 class _ItemMapViewState extends State<ItemMapView> {
   TravelType onTapedTag = TravelType.MOVIE_LOCATION;
+  bool curLocTag = false;
+  bool _open = false;
 
   @override
   void initState() {
-    if (widget.initBottomSheet && widget.item != null) {
-      context
-          .read<MapBloc>()
-          .add(InitializeMapEvent(latLng: widget.item!.position));
-      SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
-        openBottomSheet(context);
-      });
-    } else {
-      context.read<MapBloc>().add(InitializeMapEvent());
-    }
+    context.read<MapBloc>().add(const InitializeMapEvent());
+
     super.initState();
   }
 
@@ -72,59 +66,130 @@ class _ItemMapViewState extends State<ItemMapView> {
     return Scaffold(
       body: Stack(
         children: [
+          BlocListener<TravelBloc, TravelState>(
+            child: const SizedBox.shrink(),
+            listener: (context, state) async {
+              if (state is TravelSearchError) {
+              } else {}
+              Travel travel = const Travel(
+                id: 0,
+                title: "title",
+                type: TravelType.MOVIE_LOCATION,
+                location: LatLng(0, 0),
+                address: "address",
+                tel: "010-0000-0000",
+                imageUrl: "",
+                menus: [],
+              );
+
+              if (state is MovieLocationDataLoaded) {
+                travel = state.movieLocation;
+                if (state.movieLocation.imageUrl != null) {
+                  context.read<SceneBloc>().add(
+                        SelectedSceneEvent(
+                          sceneUrl: state.movieLocation.imageUrl!,
+                          movieTitle: state.movieLocation.title,
+                        ),
+                      );
+                }
+              } else if (state is RestaurantDataLoaded) {
+                travel = state.restaurant;
+              } else if (state is AccommoDataLoaded) {
+                travel = state.accommodation;
+              } else if (state is AttractionDataLoaded) {
+                travel = state.attraction;
+              }
+              openModalDailog(context, travel);
+            },
+          ),
           BlocConsumer<MapBloc, MapState>(
             listener: (context, state) async {
               if (state is MapInitialized) {
-                setState(() {
-                  _position = state.cameraPosition;
-                  if (widget.item != null) {
-                    _markers.add(Marker(
-                      markerId: widget.item!.markerId,
-                      position: widget.item!.position,
-                      onTap: () {
-                        openBottomSheet(context);
-                      },
-                    ));
-                  } else {
-                    context
-                        .read<MapBloc>()
-                        .add(GetMarkersEvent(type: TravelType.MOVIE_LOCATION));
-                  }
-                });
+                _position = state.cameraPosition;
+                context.read<MapBloc>().add(
+                      GetMarkersEvent(
+                        type: TravelType.MOVIE_LOCATION,
+                        latLng: _position.target,
+                      ),
+                    );
               } else if (state is CameraMoved) {
                 GoogleMapController controller = await _controller.future;
+                _position = state.cameraPosition;
                 await controller.animateCamera(
-                  CameraUpdate.newCameraPosition(state.cameraPosition),
+                  CameraUpdate.newCameraPosition(_position),
                 );
               } else if (state is MarkerLoaded) {
                 _markers.clear();
 
+                state.markers.forEach(
+                  (item) {
+                    _markers.add(
+                      Marker(
+                        markerId: item.markerId,
+                        position: item.position,
+                        onTap: () {
+                          _open = true;
+
+                          switch (item.type) {
+                            case TravelType.RESTAURANT:
+                              context.read<TravelBloc>().add(
+                                    GetRestaurantInfoEvent(
+                                      id: int.parse(item.markerId.value),
+                                    ),
+                                  );
+                              break;
+                            case TravelType.ACCOMMODATION:
+                              context.read<TravelBloc>().add(
+                                    GetAccommoInfoEvent(
+                                      id: int.parse(item.markerId.value),
+                                    ),
+                                  );
+                              break;
+                            case TravelType.ATTRACTION:
+                              context.read<TravelBloc>().add(
+                                    GetAttractionInfoEvent(
+                                      id: int.parse(item.markerId.value),
+                                    ),
+                                  );
+                              break;
+                            case TravelType.MOVIE_LOCATION:
+                              context.read<TravelBloc>().add(
+                                    GetMovieLocationInfoEvent(
+                                      id: int.parse(item.markerId.value),
+                                    ),
+                                  );
+                              break;
+                          }
+                        },
+                      ),
+                    );
+                  },
+                );
+
+                GoogleMapController controller = await _controller.future;
+
+                await controller.animateCamera(
+                  CameraUpdate.newCameraPosition(
+                    CameraPosition(
+                        target: curLocTag
+                            ? _position.target
+                            : state.markers[0].position,
+                        zoom: 15),
+                  ),
+                );
+
                 setState(() {
-                  state.markers.forEach(
-                    (item) {
-                      _markers.add(
-                        Marker(
-                          markerId: item.markerId,
-                          position: item.position,
-                          onTap: () {
-                            widget.initBottomSheet
-                                ? openBottomSheet(context)
-                                : openModalDailog(context, item);
-                          },
-                        ),
-                      );
-                    },
-                  );
+                  curLocTag = false;
                 });
               }
             },
             builder: (context, state) {
               if (state is MapLoading) {
-                return Center(
+                return const Center(
                   child: CircularProgressIndicator(),
                 );
               } else if (state is MapError) {
-                return Center(
+                return const Center(
                   child: Text('ERROR'),
                 );
               } else {
@@ -135,6 +200,7 @@ class _ItemMapViewState extends State<ItemMapView> {
                   onMapCreated: (controller) async {
                     _controller.complete(controller);
                   },
+                  onTap: closeModal,
                   markers: _markers,
                   cameraTargetBounds: CameraTargetBounds(
                     DI(instanceName: CORE_LATLNG_BOUNDS),
@@ -156,77 +222,116 @@ class _ItemMapViewState extends State<ItemMapView> {
                 onPressed: () async {
                   context.read<MapBloc>().add(Move2UserLocationEvent());
                 },
+                backgroundColor: Colors.white,
                 child: Icon(
                   Icons.my_location,
                   color: ColorOf.point.light,
                 ),
-                backgroundColor: Colors.white,
               ),
             ),
           ),
-          Visibility(
-            visible: widget.item == null,
-            child: Align(
-              alignment: Alignment.topLeft,
-              child: SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: Row(
-                  children: [
-                    (
-                      '영화 촬영지',
-                      AssetImage(Images.FILM_ICON.path),
-                      TravelType.MOVIE_LOCATION,
-                    ),
-                    (
-                      '식당',
-                      AssetImage(Images.FOOD_ICON.path),
-                      TravelType.RESTAURANT,
-                    ),
-                    (
-                      '관광지',
-                      AssetImage(Images.SITE_ICON.path),
-                      TravelType.ATTRACTION,
-                    ),
-                    (
-                      '숙박',
-                      AssetImage(Images.ACCOM_ICON.path),
-                      TravelType.ACCOMMODATION,
-                    ),
-                  ]
-                      .map(
-                        (element) => Padding(
-                          padding: EdgeInsets.symmetric(
-                            horizontal: SizeOf.w_sm / 2,
-                            vertical: SizeOf.h_sm,
-                          ),
-                          child: ActionChip(
-                            avatar: Image(
-                              image: element.$2,
-                              width: 13.h,
-                            ),
-                            label: Text(element.$1),
-                            side: onTapedTag == element.$3
-                                ? BorderSide(
-                                    color: ColorOf.point.light,
-                                  )
-                                : null,
-                            backgroundColor: ColorOf.white.light,
-                            labelStyle: Theme.of(context).textTheme.bodyLarge,
-                            shape: const StadiumBorder(),
-                            elevation: 0.6,
-                            onPressed: () {
-                              setState(() {
-                                onTapedTag = element.$3;
-                              });
-                              context.read<MapBloc>().add(
-                                    GetMarkersEvent(type: element.$3),
-                                  );
-                            },
-                          ),
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: Padding(
+              padding: EdgeInsets.symmetric(
+                horizontal: SizeOf.w_md,
+                vertical: SizeOf.h_md,
+              ),
+              child: ActionChip(
+                label: const Text("현재 위치에서 검색"),
+                backgroundColor: ColorOf.white.light,
+                labelStyle: Theme.of(context).textTheme.bodyLarge,
+                shape: const StadiumBorder(),
+                onPressed: () async {
+                  LatLng centerLocation = await calculateCenter();
+                  setState(() {
+                    curLocTag = true;
+                    _position =
+                        CameraPosition(target: centerLocation, zoom: 15);
+                  });
+                  context.read<MapBloc>().add(
+                        GetMarkersEvent(
+                          type: onTapedTag,
+                          latLng: _position.target,
                         ),
-                      )
-                      .toList(),
-                ),
+                      );
+                },
+              ),
+            ),
+          ),
+          Align(
+            alignment: Alignment.topLeft,
+            child: SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Row(
+                children: [
+                  (
+                    '영화 촬영지',
+                    AssetImage(Images.FILM_ICON.path),
+                    TravelType.MOVIE_LOCATION,
+                  ),
+                  (
+                    '식당',
+                    AssetImage(Images.FOOD_ICON.path),
+                    TravelType.RESTAURANT,
+                  ),
+                  (
+                    '관광지',
+                    AssetImage(Images.SITE_ICON.path),
+                    TravelType.ATTRACTION,
+                  ),
+                  (
+                    '숙박',
+                    AssetImage(Images.ACCOM_ICON.path),
+                    TravelType.ACCOMMODATION,
+                  ),
+                ]
+                    .map(
+                      (element) => Padding(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: SizeOf.w_sm / 2,
+                          vertical: SizeOf.h_sm,
+                        ),
+                        child: ActionChip(
+                          avatar: Image(
+                            image: element.$2,
+                            width: 13.h,
+                          ),
+                          label: Text(element.$1),
+                          side: onTapedTag == element.$3
+                              ? BorderSide(
+                                  color: ColorOf.point.light,
+                                )
+                              : null,
+                          backgroundColor: ColorOf.white.light,
+                          labelStyle: Theme.of(context).textTheme.bodyLarge,
+                          shape: const StadiumBorder(),
+                          elevation: 0.6,
+                          onPressed: () async {
+                            if (_open) {
+                              Navigator.pop(context);
+                              _open = false;
+                            }
+                            LatLng centerLocation = await calculateCenter();
+                            setState(() {
+                              onTapedTag = element.$3;
+                              _position = CameraPosition(
+                                target: centerLocation,
+                                zoom: 15,
+                              );
+                              _markers.clear();
+                            });
+                            context.read<MapBloc>().add(
+                                  GetMarkersEvent(
+                                    type: element.$3,
+                                    latLng: _position.target,
+                                  ),
+                                );
+                          },
+                        ),
+                      ),
+                    )
+                    .toList(),
               ),
             ),
           ),
@@ -235,25 +340,58 @@ class _ItemMapViewState extends State<ItemMapView> {
     );
   }
 
-  Future openModalDailog(BuildContext context, MapItem item) async {
+  Future<void> closeModal(LatLng latlng) async {
+    if (_open) {
+      Navigator.pop(context);
+      _open = false;
+    }
+    context.read<SceneBloc>().add(RefreshEvent());
+  }
+
+  Future<LatLng> calculateCenter() async {
+    GoogleMapController controller = await _controller.future;
+    LatLngBounds visibleRegion = await controller.getVisibleRegion();
+
+    LatLng southwest = visibleRegion.southwest;
+    LatLng northeast = visibleRegion.northeast;
+
+    double centerLat = (southwest.latitude + northeast.latitude) / 2;
+    double centerLng = (southwest.longitude + northeast.longitude) / 2;
+
+    return LatLng(centerLat, centerLng);
+  }
+
+  Future openModalDailog(BuildContext context, Travel item) async {
     showBottomSheet(
+      enableDrag: false,
+      backgroundColor: Colors.white.withOpacity(0.0),
       context: context,
       builder: (context) => Container(
         color: ColorOf.white.light,
-        height: 200.h,
+        height: 160.h,
         child: SearchedItem(
-          title: '수훈식당',
-          type: TravelType.RESTAURANT,
-          subTitle: '부산 수영구 광안로61번가길 32 2층',
-          tag: ['수훈비빔밥', '수훈쌈밥'],
-          phone: '0507-1367-1753',
+          title: item.title,
+          type: item.type,
+          subTitle: item.address,
+          tag: item.menus ?? [],
+          phone: [TravelType.MOVIE_LOCATION, TravelType.ATTRACTION]
+                  .contains(item.type)
+              ? null
+              : item.tel,
+          imageUrl: item.imageUrl,
           function: () {
             Navigator.push(
               context,
               MaterialPageRoute(
                 builder: (context) => item.type == TravelType.MOVIE_LOCATION
-                    ? const MovieInfoView()
-                    : ItemInfoView(item: item),
+                    ? MovieInfoView(
+                        movieId: item.movieId!,
+                      )
+                    : MarkerInfoView(
+                        id: item.id,
+                        type: item.type,
+                        title: item.title,
+                      ),
               ),
             );
           },
@@ -261,152 +399,122 @@ class _ItemMapViewState extends State<ItemMapView> {
       ),
     );
   }
-
-  Future openBottomSheet(BuildContext context) async {
-    showBottomSheet(
-      elevation: 1,
-      context: context,
-      builder: (context) {
-        return SizedBox(
-          height: widget.bottomSheetHeight ?? 550.h,
-          child: ItemTable(
-            header: ItemHeader(
-              header: Text(
-                '수훈식당',
-                style: Theme.of(context).textTheme.titleLarge,
-              ),
-              actions: [
-                IconButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                  icon: const Icon(Icons.close),
-                )
-              ],
-            ),
-            sections: [
-              ItemSection(
-                padding: EdgeInsets.zero,
-                builder: ItemSectionBuilder()
-                  ..address = const ItemTableRow(
-                    title: '주소',
-                    body: '부산 수영구 광안로 61번가길 32 2층',
-                  )
-                  ..phone = ItemTableRow(
-                    title: '전화번호',
-                    body: '0507-1367-1753',
-                    bodyTextStyle: Theme.of(context).textTheme.bodySmall,
-                  )
-                  ..hours = const ItemTableRow(
-                    title: '영업시간',
-                    body: '''월요일 09:00~21:00
-화요일 09:00~21:00
-수요일 09:00~21:00
-목요일 09:00~21:00
-금요일 09:00~21:00
-토요일 09:00~21:00
-일요일 정기휴무''',
-                  )
-                  ..info = const ItemTableRow(
-                    title: '식당정보',
-                    body: '수훈비빔밥과 수훈쌈밥이 맛있는 부산 맛집!',
-                  )
-                  ..homePage = ItemTableRow(
-                    title: '홈페이지',
-                    body: 'www.soooohoooooon.co.kr',
-                    bodyTextStyle: Theme.of(context).textTheme.bodySmall,
-                  ),
-              ),
-              // ItemSection(
-              //   builder: ItemSectionBuilder()..image = const ItemTableGrid(),
-              // ),
-            ],
-          ),
-        );
-      },
-    );
-  }
 }
 
 class ItemListView extends SearchedItemView {
-  const ItemListView({super.key});
+  const ItemListView({
+    super.key,
+  });
 
   @override
   State<ItemListView> createState() => _ItemListViewState();
 }
 
 class _ItemListViewState extends State<ItemListView> {
-  List<Map<String, dynamic>> items = [
-    {
-      'title': '해운대',
-      'type': TravelType.MOVIE_LOCATION,
-      'movie': '개봉일 2009.07.22',
-      'actors': '설경구, 하지원, 박중훈, 엄정화',
-      'subTitle': null,
-      'phone': null,
-      'tags': [],
-    },
-    {
-      'title': '수훈식당',
-      'type': TravelType.RESTAURANT,
-      'subTitle': '부산 수영구 광안로61번가길 32 2층',
-      'tags': <String>['수훈비빔밥', '수훈쌈밥'],
-      'phone': '0507-1367-1753',
-      'movie': null,
-      'actors': null,
-    },
-    {
-      'title': '토요코인호텔 부산서면',
-      'type': TravelType.ACCOMMODATION,
-      'subTitle': '부산 부산진구 서전로 39',
-      'phone': '051-638-1045',
-      'movie': null,
-      'actors': null,
-      'tags': [],
-    },
-    {
-      'title': '서면 먹자골목',
-      'type': TravelType.ATTRACTION,
-      'subTitle': '부산 부산진구 부전동',
-      'movie': null,
-      'actors': null,
-      'phone': null,
-      'tags': [],
-    },
-  ];
+  List items = [];
+  bool isLoadMoreRunning = false;
+  ScrollController controller = ScrollController();
+  double lastOffset = 0.0;
+  bool isEndScroll = false;
+
+  void _addScrollController() {
+    if (controller.offset == controller.position.maxScrollExtent &&
+        !controller.position.outOfRange &&
+        !isEndScroll) {
+      context.read<SearchBloc>().add(KeywordSearchEvent());
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    return ListView.separated(
-      itemBuilder: (context, index) {
-        return SearchedItem(
-          type: items[index]['type'],
-          title: items[index]['title'],
-          subTitle: items[index]['subTitle'],
-          phone: items[index]['phone'],
-          movieInfo: items[index]['movie'],
-          actors: items[index]['actors'],
-          function: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => index % 2 == 1
-                    ? ItemInfoView(
-                        item: MapItem(
-                          markerId: MarkerId('1'),
-                          type: TravelType.ACCOMMODATION,
-                          title: 'd',
-                          position: LatLng(90, 10),
-                        ),
-                      )
-                    : const MovieInfoView(), // example
+    controller.addListener(_addScrollController);
+
+    return BlocConsumer<SearchBloc, SearchState>(
+      listener: (context, state) {
+        if (state is KeywordDataLoaded) {
+          if (!isEndScroll) {
+            setState(() {
+              isLoadMoreRunning = false;
+              items.addAll(state.dataList);
+            });
+            isEndScroll = state.endData;
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              lastOffset = controller.offset;
+              if (controller.hasClients) {
+                controller.jumpTo(lastOffset);
+              }
+            });
+          }
+        } else if (state is InitSearch) {
+          setState(() {
+            items = [];
+            isEndScroll = false;
+          });
+        } else if (state is SearchDataLoading) {
+          setState(() {
+            isLoadMoreRunning = true;
+          });
+        }
+      },
+      builder: (context, state) {
+        if (state is InitSearch) {
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        }
+        return Column(
+          children: [
+            Expanded(
+              child: ListView.separated(
+                controller: controller,
+                itemBuilder: (context, index) {
+                  if (items[index] is Movie) {
+                    return SearchedItem.movie(
+                      movie: items[index],
+                      function: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => MovieInfoView(
+                              movieId: (items[index] as Movie).id,
+                            ),
+                          ),
+                        );
+                      },
+                    );
+                  } else if (items[index] is Travel) {
+                    return SearchedItem.travel(
+                      travel: items[index],
+                      function: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => MarkerInfoView(
+                              id: items[index].id,
+                              type: items[index].type,
+                              title: items[index].title,
+                            ),
+                          ),
+                        );
+                      },
+                    );
+                  }
+                  return const SizedBox.shrink();
+                },
+                separatorBuilder: (context, index) => const Divider(),
+                itemCount: items.length,
               ),
-            );
-          },
+            ),
+            if (isLoadMoreRunning)
+              Container(
+                padding: EdgeInsets.symmetric(vertical: SizeOf.h_lg),
+                child: const Center(
+                  child: CircularProgressIndicator(),
+                ),
+              ),
+          ],
         );
       },
-      separatorBuilder: (context, index) => const Divider(),
-      itemCount: 4,
     );
   }
 }
