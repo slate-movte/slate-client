@@ -63,6 +63,8 @@ class _HomeViewState extends State<HomeView> {
                   tag: const Key('TEXT_FIELD_KEY'),
                   child: Material(
                     child: TextField(
+                      readOnly: true,
+                      autofocus: false,
                       style: Theme.of(context).textTheme.bodyLarge,
                       decoration: const InputDecoration(
                         suffixIcon: Icon(Icons.search),
@@ -83,9 +85,7 @@ class _HomeViewState extends State<HomeView> {
           ),
         ),
       ),
-      body: ItemMapView(
-        bottomSheetHeight: 430.h,
-      ),
+      body: const ItemMapView(),
     );
   }
 }

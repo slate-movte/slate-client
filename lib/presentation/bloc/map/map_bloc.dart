@@ -68,7 +68,7 @@ class MapBloc extends Bloc<MapEvent, MapState> {
         final result = await getMarkersWithType((event.type, event.latLng));
         result.fold(
           (failure) {
-            emit(const MarkerError(message: '와우'));
+            emit(const MarkerError(message: 'MAP ERROR'));
           },
           (markers) {
             emit(MarkerLoaded(markers: markers));

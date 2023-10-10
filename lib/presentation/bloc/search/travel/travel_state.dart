@@ -45,10 +45,10 @@ class MovieLocationDataLoaded extends TravelState {
   List<Object?> get props => [movieLocation];
 }
 
-class SearchError extends TravelState {
+class TravelSearchError extends TravelState {
   final String message;
 
-  SearchError({required this.message});
+  TravelSearchError({required this.message});
 
   @override
   List<Object?> get props => [message];

@@ -44,6 +44,7 @@ class _SearchViewState extends State<SearchView> {
                 height: 48.h,
                 width: 314.w,
                 child: TextField(
+                  autofocus: false,
                   onEditingComplete: () {
                     context.read<SearchBloc>().add(
                           KeywordSearchEvent(

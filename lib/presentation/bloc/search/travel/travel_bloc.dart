@@ -30,7 +30,7 @@ class TravelBloc extends Bloc<TravelEvent, TravelState> {
     final result = await restaurantInfoSearch(event.id);
     result.fold(
       (failure) {
-        emit(SearchError(message: 'ERROR'));
+        emit(TravelSearchError(message: 'ERROR'));
       },
       (restaurant) {
         emit(RestaurantDataLoaded(restaurant: restaurant));
@@ -47,7 +47,7 @@ class TravelBloc extends Bloc<TravelEvent, TravelState> {
 
     result.fold(
       (failure) {
-        emit(SearchError(message: 'ERROR'));
+        emit(TravelSearchError(message: 'ERROR'));
       },
       (accommo) {
         emit(AccommoDataLoaded(accommodation: accommo));
@@ -64,7 +64,7 @@ class TravelBloc extends Bloc<TravelEvent, TravelState> {
 
     result.fold(
       (failure) {
-        emit(SearchError(message: 'ERROR'));
+        emit(TravelSearchError(message: 'ERROR'));
       },
       (attraction) {
         emit(AttractionDataLoaded(attraction: attraction));
@@ -81,7 +81,7 @@ class TravelBloc extends Bloc<TravelEvent, TravelState> {
 
     result.fold(
       (failure) {
-        emit(SearchError(message: 'ERROR'));
+        emit(TravelSearchError(message: 'ERROR'));
       },
       (movieLocation) {
         emit(MovieLocationDataLoaded(movieLocation: movieLocation));

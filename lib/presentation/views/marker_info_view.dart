@@ -131,14 +131,6 @@ class _MarkerInfoViewState extends State<MarkerInfoView> {
                             item.title,
                             style: Theme.of(context).textTheme.titleLarge,
                           ),
-                          actions: [
-                            IconButton(
-                              onPressed: () {
-                                Navigator.pop(context);
-                              },
-                              icon: const Icon(Icons.close),
-                            )
-                          ],
                         ),
                         sections: [
                           ItemSection(

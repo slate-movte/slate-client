@@ -3,7 +3,6 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -12,8 +11,6 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import '../../core/utils/assets.dart';
 import '../../core/utils/enums.dart';
 import '../../core/utils/themes.dart';
-import '../../data/models/travel_model.dart';
-import '../../domain/entities/map_item.dart';
 import '../../domain/entities/movie.dart';
 import '../../domain/entities/travel.dart';
 import '../../injection.dart';
@@ -35,18 +32,7 @@ abstract class SearchedItemView extends StatefulWidget {
 }
 
 class ItemMapView extends SearchedItemView {
-  final bool initBottomSheet;
-  final double? bottomSheetHeight;
-  final MapItem? item;
-  final MovieLocationModel? movieLocationModel;
-
-  const ItemMapView({
-    super.key,
-    this.initBottomSheet = false,
-    this.bottomSheetHeight,
-    this.item,
-    this.movieLocationModel,
-  });
+  const ItemMapView({super.key});
 
   @override
   State<ItemMapView> createState() => _ItemMapViewState();
@@ -59,14 +45,8 @@ class _ItemMapViewState extends State<ItemMapView> {
 
   @override
   void initState() {
-    if (widget.initBottomSheet && widget.item != null) {
-      context
-          .read<MapBloc>()
-          .add(InitializeMapEvent(latLng: widget.item!.position));
-      SchedulerBinding.instance.addPostFrameCallback((timeStamp) {});
-    } else {
-      context.read<MapBloc>().add(const InitializeMapEvent());
-    }
+    context.read<MapBloc>().add(const InitializeMapEvent());
+
     super.initState();
   }
 
@@ -86,7 +66,9 @@ class _ItemMapViewState extends State<ItemMapView> {
         children: [
           BlocListener<TravelBloc, TravelState>(
             child: const SizedBox.shrink(),
-            listener: (context, state) {
+            listener: (context, state) async {
+              if (state is TravelSearchError) {
+              } else {}
               Travel travel = const Travel(
                 id: 0,
                 title: "title",
@@ -107,32 +89,19 @@ class _ItemMapViewState extends State<ItemMapView> {
               } else if (state is AttractionDataLoaded) {
                 travel = state.attraction;
               }
-
-              if (!widget.initBottomSheet) {
-                openModalDailog(context, travel);
-              }
+              openModalDailog(context, travel);
             },
           ),
           BlocConsumer<MapBloc, MapState>(
             listener: (context, state) async {
               if (state is MapInitialized) {
-                if (_open) {
-                  return;
-                }
-                setState(() {
-                  _position = state.cameraPosition;
-                  if (widget.item != null) {
-                    _markers.add(Marker(
-                      markerId: widget.item!.markerId,
-                      position: widget.item!.position,
-                    ));
-                  } else {
-                    context.read<MapBloc>().add(GetMarkersEvent(
-                          type: TravelType.MOVIE_LOCATION,
-                          latLng: _position.target,
-                        ));
-                  }
-                });
+                _position = state.cameraPosition;
+                context.read<MapBloc>().add(
+                      GetMarkersEvent(
+                        type: TravelType.MOVIE_LOCATION,
+                        latLng: _position.target,
+                      ),
+                    );
               } else if (state is CameraMoved) {
                 GoogleMapController controller = await _controller.future;
                 _position = state.cameraPosition;
@@ -142,63 +111,65 @@ class _ItemMapViewState extends State<ItemMapView> {
               } else if (state is MarkerLoaded) {
                 _markers.clear();
 
-                setState(() {
-                  state.markers.forEach(
-                    (item) async {
-                      _markers.add(
-                        Marker(
-                          markerId: item.markerId,
-                          position: item.position,
-                          onTap: () {
-                            _open = true;
+                state.markers.forEach(
+                  (item) {
+                    _markers.add(
+                      Marker(
+                        markerId: item.markerId,
+                        position: item.position,
+                        onTap: () {
+                          _open = true;
 
-                            switch (item.type) {
-                              case TravelType.RESTAURANT:
-                                context.read<TravelBloc>().add(
+                          switch (item.type) {
+                            case TravelType.RESTAURANT:
+                              context.read<TravelBloc>().add(
                                     GetRestaurantInfoEvent(
-                                        id: int.parse(
-                                            item.markerId.value.toString())));
-                                break;
-                              case TravelType.ACCOMMODATION:
-                                context.read<TravelBloc>().add(
+                                      id: int.parse(item.markerId.value),
+                                    ),
+                                  );
+                              break;
+                            case TravelType.ACCOMMODATION:
+                              context.read<TravelBloc>().add(
                                     GetAccommoInfoEvent(
-                                        id: int.parse(
-                                            item.markerId.value.toString())));
-                                break;
-                              case TravelType.ATTRACTION:
-                                context.read<TravelBloc>().add(
+                                      id: int.parse(item.markerId.value),
+                                    ),
+                                  );
+                              break;
+                            case TravelType.ATTRACTION:
+                              context.read<TravelBloc>().add(
                                     GetAttractionInfoEvent(
-                                        id: int.parse(
-                                            item.markerId.value.toString())));
-                                break;
-                              case TravelType.MOVIE_LOCATION:
-                                context.read<TravelBloc>().add(
+                                      id: int.parse(item.markerId.value),
+                                    ),
+                                  );
+                              break;
+                            case TravelType.MOVIE_LOCATION:
+                              context.read<TravelBloc>().add(
                                     GetMovieLocationInfoEvent(
-                                        id: int.parse(
-                                            item.markerId.value.toString())));
-                                break;
-                            }
-                          },
-                        ),
-                      );
+                                      id: int.parse(item.markerId.value),
+                                    ),
+                                  );
+                              break;
+                          }
+                        },
+                      ),
+                    );
+                  },
+                );
 
-                      GoogleMapController controller = await _controller.future;
+                GoogleMapController controller = await _controller.future;
 
-                      await controller.animateCamera(
-                        CameraUpdate.newCameraPosition(
-                          CameraPosition(
-                              target: curLocTag
-                                  ? _position.target
-                                  : state.markers[0].position,
-                              zoom: 15),
-                        ),
-                      );
+                await controller.animateCamera(
+                  CameraUpdate.newCameraPosition(
+                    CameraPosition(
+                        target: curLocTag
+                            ? _position.target
+                            : state.markers[0].position,
+                        zoom: 15),
+                  ),
+                );
 
-                      setState(() {
-                        curLocTag = false;
-                      });
-                    },
-                  );
+                setState(() {
+                  curLocTag = false;
                 });
               }
             },
@@ -278,81 +249,78 @@ class _ItemMapViewState extends State<ItemMapView> {
               ),
             ),
           ),
-          Visibility(
-            visible: widget.item == null,
-            child: Align(
-              alignment: Alignment.topLeft,
-              child: SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: Row(
-                  children: [
-                    (
-                      '영화 촬영지',
-                      AssetImage(Images.FILM_ICON.path),
-                      TravelType.MOVIE_LOCATION,
-                    ),
-                    (
-                      '식당',
-                      AssetImage(Images.FOOD_ICON.path),
-                      TravelType.RESTAURANT,
-                    ),
-                    (
-                      '관광지',
-                      AssetImage(Images.SITE_ICON.path),
-                      TravelType.ATTRACTION,
-                    ),
-                    (
-                      '숙박',
-                      AssetImage(Images.ACCOM_ICON.path),
-                      TravelType.ACCOMMODATION,
-                    ),
-                  ]
-                      .map(
-                        (element) => Padding(
-                          padding: EdgeInsets.symmetric(
-                            horizontal: SizeOf.w_sm / 2,
-                            vertical: SizeOf.h_sm,
-                          ),
-                          child: ActionChip(
-                            avatar: Image(
-                              image: element.$2,
-                              width: 13.h,
-                            ),
-                            label: Text(element.$1),
-                            side: onTapedTag == element.$3
-                                ? BorderSide(
-                                    color: ColorOf.point.light,
-                                  )
-                                : null,
-                            backgroundColor: ColorOf.white.light,
-                            labelStyle: Theme.of(context).textTheme.bodyLarge,
-                            shape: const StadiumBorder(),
-                            elevation: 0.6,
-                            onPressed: () async {
-                              if (_open) {
-                                Navigator.pop(context);
-                                _open = false;
-                              }
-                              setState(() {
-                                onTapedTag = element.$3;
-                              });
-                              LatLng centerLocation = await calculateCenter();
-                              setState(() {
-                                _position = CameraPosition(
-                                    target: centerLocation, zoom: 15);
-                              });
-                              context.read<MapBloc>().add(
-                                    GetMarkersEvent(
-                                      type: element.$3,
-                                      latLng: _position.target,
-                                    ),
-                                  );
-                            },
-                          ),
+          Align(
+            alignment: Alignment.topLeft,
+            child: SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Row(
+                children: [
+                  (
+                    '영화 촬영지',
+                    AssetImage(Images.FILM_ICON.path),
+                    TravelType.MOVIE_LOCATION,
+                  ),
+                  (
+                    '식당',
+                    AssetImage(Images.FOOD_ICON.path),
+                    TravelType.RESTAURANT,
+                  ),
+                  (
+                    '관광지',
+                    AssetImage(Images.SITE_ICON.path),
+                    TravelType.ATTRACTION,
+                  ),
+                  (
+                    '숙박',
+                    AssetImage(Images.ACCOM_ICON.path),
+                    TravelType.ACCOMMODATION,
+                  ),
+                ]
+                    .map(
+                      (element) => Padding(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: SizeOf.w_sm / 2,
+                          vertical: SizeOf.h_sm,
                         ),
-                      )
-                      .toList(),
-                ),
+                        child: ActionChip(
+                          avatar: Image(
+                            image: element.$2,
+                            width: 13.h,
+                          ),
+                          label: Text(element.$1),
+                          side: onTapedTag == element.$3
+                              ? BorderSide(
+                                  color: ColorOf.point.light,
+                                )
+                              : null,
+                          backgroundColor: ColorOf.white.light,
+                          labelStyle: Theme.of(context).textTheme.bodyLarge,
+                          shape: const StadiumBorder(),
+                          elevation: 0.6,
+                          onPressed: () async {
+                            if (_open) {
+                              Navigator.pop(context);
+                              _open = false;
+                            }
+                            setState(() {
+                              onTapedTag = element.$3;
+                            });
+                            LatLng centerLocation = await calculateCenter();
+                            setState(() {
+                              _position = CameraPosition(
+                                  target: centerLocation, zoom: 15);
+                            });
+                            context.read<MapBloc>().add(
+                                  GetMarkersEvent(
+                                    type: element.$3,
+                                    latLng: _position.target,
+                                  ),
+                                );
+                          },
+                        ),
+                      ),
+                    )
+                    .toList(),
               ),
             ),
           ),
