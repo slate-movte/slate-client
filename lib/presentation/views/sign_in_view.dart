@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import 'package:slate/core/utils/assets.dart';
-import 'package:slate/core/utils/themes.dart';
-import 'package:slate/presentation/views/main_view.dart';
+import '../../core/utils/assets.dart';
+import '../../core/utils/themes.dart';
+import 'main_view.dart';
 
 class SignInView extends StatelessWidget {
   const SignInView({super.key});

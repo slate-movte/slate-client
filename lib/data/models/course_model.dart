@@ -1,8 +1,7 @@
-import 'dart:developer';
 import '../../domain/entities/course.dart';
 
 class CourseModel extends Course {
-  CourseModel({
+  const CourseModel({
     required super.courseId,
     required super.title,
     required super.subTitle,
@@ -20,7 +19,6 @@ class CourseModel extends Course {
   }
 
   factory CourseModel.fromJson(Map<String, dynamic> json) {
-    log('코스모델입력');
     return CourseModel(
       courseId: json['courseId'] as int,
       title: json['title'] as String,
@@ -38,7 +36,7 @@ class CourseModel extends Course {
 }
 
 class CourseContentModel extends CourseContent {
-  CourseContentModel({
+  const CourseContentModel({
     required super.courseId,
     required super.imageUrl,
     required super.order,

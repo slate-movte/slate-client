@@ -1,6 +1,7 @@
 import 'package:dartz/dartz.dart';
-import 'package:slate/core/errors/failures.dart';
-import 'package:slate/core/usecases/usecase.dart';
+
+import '../../core/errors/failures.dart';
+import '../../core/usecases/usecase.dart';
 import '../repositories/course_repository.dart';
 
 abstract class CourseUseCase {
@@ -9,8 +10,7 @@ abstract class CourseUseCase {
   CourseUseCase({required this.repository});
 }
 
-class AllCourse extends CourseUseCase
-    implements UseCase<List, NoParams> {
+class AllCourse extends CourseUseCase implements UseCase<List, NoParams> {
   AllCourse({required super.repository});
 
   @override
@@ -19,8 +19,7 @@ class AllCourse extends CourseUseCase
   }
 }
 
-class InfoCourse extends CourseUseCase
-    implements UseCase<List, int> {
+class InfoCourse extends CourseUseCase implements UseCase<List, int> {
   InfoCourse({required super.repository});
 
   @override

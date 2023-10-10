@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
-import 'package:slate/domain/entities/movie.dart';
+
+import '../../../domain/entities/movie.dart';
 
 class SceneState extends Equatable {
   @override
@@ -8,20 +9,21 @@ class SceneState extends Equatable {
 
 class SceneLoading extends SceneState {}
 
+class SceneIsEmpty extends SceneState {}
+
 class SceneLoaded extends SceneState {
-  List<Movie> list;
+  final List<Movie> list;
 
   SceneLoaded({required this.list});
 
   @override
-  // TODO: implement props
   List<Object?> get props => list;
 }
 
 class SceneInit extends SceneState {}
 
 class SceneSelected extends SceneState {
-  String sceneUrl;
+  final String sceneUrl;
 
   SceneSelected({required this.sceneUrl});
 }

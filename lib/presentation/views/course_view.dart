@@ -1,11 +1,7 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:slate/data/models/movie_model.dart';
-import 'package:slate/data/sources/remote/search_api_remote_data_source.dart';
-import 'package:slate/domain/entities/travel.dart';
 
 import '../../core/utils/assets.dart';
 import '../../core/utils/themes.dart';
@@ -22,10 +18,9 @@ class CourseView extends StatefulWidget {
 }
 
 class _CourseViewState extends State<CourseView> {
-
   @override
   void initState() {
-    context.read<CourseBloc>().add(UpdateAllCourseEvent());
+    context.read<CourseBloc>().add(const UpdateAllCourseEvent());
     super.initState();
   }
 
@@ -43,18 +38,23 @@ class _CourseViewState extends State<CourseView> {
         ),
       ),
       body: BlocConsumer<CourseBloc, CourseState>(
-        listener: (context, state) {  },
+        listener: (context, state) {},
         builder: (context, state) {
-          if(state is AllCourseLoaded){
+          if (state is AllCourseLoaded) {
             return ListView.builder(
               itemBuilder: (context, index) {
                 // print(state.course[index].toString());
-                return contentBox(state.course[index]['courseId'],state.course[index]['thumbnailImageUrl'],state.course[index]['subTitle'],state.course[index]['title'],);
+                return contentBox(
+                  state.course[index]['courseId'],
+                  state.course[index]['thumbnailImageUrl'],
+                  state.course[index]['subTitle'],
+                  state.course[index]['title'],
+                );
               },
               itemCount: state.course.length,
             );
-          }else{
-            return Center(
+          } else {
+            return const Center(
               child: CircularProgressIndicator(),
             );
           }
@@ -63,7 +63,8 @@ class _CourseViewState extends State<CourseView> {
     );
   }
 
-  Widget contentBox(int courseId, String imagePath, String subTitle, String mainTitle){
+  Widget contentBox(
+      int courseId, String imagePath, String subTitle, String mainTitle) {
     return InkWell(
       onTap: () {
         Navigator.push(
@@ -73,12 +74,12 @@ class _CourseViewState extends State<CourseView> {
           ),
         );
       },
-      child: Container(
+      child: SizedBox(
         width: double.infinity,
         child: Column(
           children: [
             SizedBox(
-                height: 24.h,
+              height: 24.h,
             ),
             Image.network(
               imagePath,
@@ -90,28 +91,25 @@ class _CourseViewState extends State<CourseView> {
               color: ColorOf.black.light,
               height: 85.h,
               width: 350.w,
-              padding: EdgeInsets.only(top: SizeOf.h_md, bottom: SizeOf.h_sm, left: SizeOf.w_md),
+              padding: EdgeInsets.only(
+                  top: SizeOf.h_md, bottom: SizeOf.h_sm, left: SizeOf.w_md),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(subTitle,
-                    style: Theme.of(context)
-                        .textTheme
-                        .bodySmall!
-                        .apply(
-                      color: ColorOf.white.light,
-                    ),
+                  Text(
+                    subTitle,
+                    style: Theme.of(context).textTheme.bodySmall!.apply(
+                          color: ColorOf.white.light,
+                        ),
                   ),
                   SizedBox(
                     height: 5.h,
                   ),
-                  Text(mainTitle,
-                    style: Theme.of(context)
-                        .textTheme
-                        .titleMedium!
-                        .apply(
-                      color: ColorOf.white.light,
-                    ),
+                  Text(
+                    mainTitle,
+                    style: Theme.of(context).textTheme.titleMedium!.apply(
+                          color: ColorOf.white.light,
+                        ),
                   ),
                 ],
               ),

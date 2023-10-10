@@ -1,7 +1,6 @@
 import 'package:equatable/equatable.dart';
 
-import 'package:slate/domain/entities/movie.dart';
-import 'package:slate/domain/entities/travel.dart';
+import '../../../../domain/entities/travel.dart';
 
 class TravelState extends Equatable {
   @override

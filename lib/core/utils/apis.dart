@@ -41,5 +41,5 @@ class MarkerAPI extends Api {
           {required LatLng latlng,
           required String locationType,
           required int range}) =>
-      "${Api.hosts}map/search?latitude=${latlng.latitude}&longitude=${latlng.longitude}&locationType=${locationType}&range=${range}";
+      "${Api.hosts}map/search?latitude=${latlng.latitude}&longitude=${latlng.longitude}&locationType=$locationType&range=$range";
 }

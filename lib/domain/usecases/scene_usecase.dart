@@ -1,8 +1,9 @@
 import 'package:dartz/dartz.dart';
-import 'package:slate/core/errors/failures.dart';
-import 'package:slate/core/usecases/usecase.dart';
-import 'package:slate/domain/entities/movie.dart';
-import 'package:slate/domain/repositories/scene_repository.dart';
+
+import '../../core/errors/failures.dart';
+import '../../core/usecases/usecase.dart';
+import '../entities/movie.dart';
+import '../repositories/scene_repository.dart';
 
 abstract class SceneUseCase {}
 

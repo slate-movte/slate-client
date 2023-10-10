@@ -1,8 +1,9 @@
 import 'package:camera/camera.dart';
 import 'package:dartz/dartz.dart';
-import 'package:slate/core/errors/failures.dart';
-import 'package:slate/core/usecases/usecase.dart';
-import 'package:slate/domain/repositories/camera_repository.dart';
+
+import '../../core/errors/failures.dart';
+import '../../core/usecases/usecase.dart';
+import '../repositories/camera_repository.dart';
 
 abstract class CameraUseCase {}
 

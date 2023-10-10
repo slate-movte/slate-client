@@ -1,7 +1,8 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:slate/domain/usecases/scene_usecase.dart';
-import 'package:slate/presentation/bloc/scene/scene_event.dart';
-import 'package:slate/presentation/bloc/scene/scene_state.dart';
+
+import '../../../domain/usecases/scene_usecase.dart';
+import 'scene_event.dart';
+import 'scene_state.dart';
 
 class SceneBloc extends Bloc<SceneEvent, SceneState> {
   GetScenesWithMovieTitle getScenesWithMovieTitle;
@@ -42,6 +43,9 @@ class SceneBloc extends Bloc<SceneEvent, SceneState> {
         emit(SceneError());
       },
       (result) {
+        if (result.isEmpty) {
+          emit(SceneIsEmpty());
+        }
         emit(SceneLoaded(list: result));
       },
     );

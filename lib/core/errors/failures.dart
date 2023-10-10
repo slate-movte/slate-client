@@ -13,8 +13,6 @@ class PermissionFailure extends Failure {}
 
 class SearchFailure extends Failure {}
 
-class AuthFailure extends Failure {}
-
 class MapFailure extends Failure {}
 
 class SceneFailure extends Failure {}

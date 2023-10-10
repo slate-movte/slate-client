@@ -1,11 +1,11 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:shimmer/shimmer.dart';
-import 'package:slate/core/utils/themes.dart';
-import 'package:slate/presentation/bloc/scene/scene_bloc.dart';
-import 'package:slate/presentation/bloc/scene/scene_event.dart';
+
+import '../bloc/scene/scene_bloc.dart';
+import '../bloc/scene/scene_event.dart';
+import '../views/image_info_view.dart';
+import '../../core/utils/themes.dart';
 
 class ItemSectionBuilder {
   ItemTableRow? address;
@@ -15,11 +15,6 @@ class ItemSectionBuilder {
   ItemTableRow? homePage;
   ItemTableGrid? image;
   List<ItemTablePost>? posts;
-
-  @override
-  String toString() {
-    return 'address : $address, phone: $phone, hours: $hours, info: $info, homePage: $homePage, post: ${(posts ?? []).toList()}';
-  }
 }
 
 class ItemSection extends StatelessWidget {
@@ -31,7 +26,6 @@ class ItemSection extends StatelessWidget {
     required ItemSectionBuilder builder,
     this.padding,
   }) {
-    // log(builder.toString());
     items.addAll([
       builder.address,
       builder.phone,
@@ -267,7 +261,7 @@ class ItemTableGrid extends ItemElement {
   final bool inCameraUse;
   final Function()? function;
 
-  ItemTableGrid({
+  const ItemTableGrid({
     super.key,
     this.title,
     this.titleStyle,
@@ -322,15 +316,32 @@ class _ItemTableGridState extends State<ItemTableGrid> {
                 return ClipRRect(
                   borderRadius: BorderRadius.all(Radius.circular(SizeOf.r)),
                   child: InkWell(
+                    onLongPress: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => ImageInfoView(
+                            imageUrl: widget.items[index],
+                          ),
+                        ),
+                      );
+                    },
                     onTap: () {
                       if (widget.inCameraUse) {
                         context.read<SceneBloc>().add(
-                              SelectedSceneEvent(
-                                sceneUrl: widget.items[index],
-                              ),
+                              SelectedSceneEvent(sceneUrl: widget.items[index]),
                             );
                         Navigator.pop(context);
-                      } else {}
+                      } else {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => ImageInfoView(
+                              imageUrl: widget.items[index],
+                            ),
+                          ),
+                        );
+                      }
                     },
                     child: Image(
                       image: imageProvider,
@@ -345,7 +356,7 @@ class _ItemTableGridState extends State<ItemTableGrid> {
                           _setImageLoaded(index);
                           return child;
                         }
-                        return SizedBox.shrink();
+                        return const SizedBox.shrink();
                       },
                     ),
                   ),
@@ -356,7 +367,7 @@ class _ItemTableGridState extends State<ItemTableGrid> {
               Positioned.fill(
                 child: Container(
                   color: ColorOf.white.light,
-                  child: Center(
+                  child: const Center(
                     child: CircularProgressIndicator(),
                   ),
                 ),

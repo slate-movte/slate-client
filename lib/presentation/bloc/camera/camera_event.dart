@@ -1,6 +1,7 @@
+import 'package:flutter/material.dart';
+
 import 'package:camera/camera.dart';
 import 'package:equatable/equatable.dart';
-import 'package:flutter/material.dart';
 
 class CameraEvent extends Equatable {
   @override

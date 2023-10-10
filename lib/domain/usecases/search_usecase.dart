@@ -1,11 +1,10 @@
 import 'package:dartz/dartz.dart';
-import 'package:slate/core/errors/failures.dart';
-import 'package:slate/core/usecases/usecase.dart';
 
-import 'package:slate/domain/entities/movie.dart';
-import 'package:slate/domain/entities/travel.dart';
-
-import 'package:slate/domain/repositories/search_repository.dart';
+import '../../core/errors/failures.dart';
+import '../../core/usecases/usecase.dart';
+import '../entities/movie.dart';
+import '../entities/travel.dart';
+import '../repositories/search_repository.dart';
 
 abstract class SearchUseCase {
   SearchRepository repository;

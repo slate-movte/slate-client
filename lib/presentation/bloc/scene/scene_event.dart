@@ -6,7 +6,7 @@ class SceneEvent extends Equatable {
 }
 
 class GetScenesEvent extends SceneEvent {
-  String input;
+  final String input;
 
   GetScenesEvent({required this.input});
 }
@@ -14,7 +14,7 @@ class GetScenesEvent extends SceneEvent {
 class RefreshEvent extends SceneEvent {}
 
 class SelectedSceneEvent extends SceneEvent {
-  String sceneUrl;
+  final String sceneUrl;
 
   SelectedSceneEvent({required this.sceneUrl});
 }

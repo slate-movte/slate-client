@@ -1,11 +1,13 @@
 import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
+
 import 'package:http/http.dart' as http;
-import 'package:slate/core/errors/exceptions.dart';
-import 'package:slate/core/utils/apis.dart';
-import 'package:slate/data/models/movie_model.dart';
-import 'package:slate/data/models/travel_model.dart';
+
+import '../../../core/errors/exceptions.dart';
+import '../../../core/utils/apis.dart';
+import '../../models/movie_model.dart';
+import '../../models/travel_model.dart';
 
 abstract class SearchApiRemoteDataSource {
   Future<Map<String, List>> getSearchResultsWithKeyword(
@@ -72,6 +74,8 @@ class SearchApiRemoteDataSourceImpl implements SearchApiRemoteDataSource {
 
       if (response.statusCode == 200) {
         var json = jsonDecode(utf8.decode(response.bodyBytes)) as Map;
+
+        log(json.toString());
 
         return MovieModel.fromJson(
           Map<String, dynamic>.from(json['data']),
@@ -192,11 +196,9 @@ class SearchApiRemoteDataSourceImpl implements SearchApiRemoteDataSource {
           Map<String, dynamic>.from(json['data']),
         );
       } else {
-        print("맵오류1");
         throw HttpException(response.statusCode.toString());
       }
     } catch (e) {
-      print("맵오류2");
       throw ApiException();
     }
   }

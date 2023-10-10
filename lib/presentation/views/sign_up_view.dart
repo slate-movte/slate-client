@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:slate/core/utils/themes.dart';
-import 'package:slate/presentation/views/main_view.dart';
-import 'package:slate/presentation/widgets/item_table.dart';
+
+import '../../core/utils/themes.dart';
+import '../widgets/item_table.dart';
+import 'main_view.dart';
 
 class SignUpView extends StatefulWidget {
   const SignUpView({super.key});

@@ -1,9 +1,8 @@
-import 'dart:developer';
-
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:slate/domain/usecases/search_usecase.dart';
-import 'package:slate/presentation/bloc/search/travel/travel_event.dart';
-import 'package:slate/presentation/bloc/search/travel/travel_state.dart';
+
+import '../../../../domain/usecases/search_usecase.dart';
+import 'travel_event.dart';
+import 'travel_state.dart';
 
 class TravelBloc extends Bloc<TravelEvent, TravelState> {
   RestaurantInfoSearch restaurantInfoSearch;

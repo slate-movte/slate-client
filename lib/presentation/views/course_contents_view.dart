@@ -1,17 +1,19 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:slate/presentation/bloc/course/course_state.dart';
+
 import '../../core/utils/themes.dart';
 import '../bloc/course/course_bloc.dart';
 import '../bloc/course/course_event.dart';
+import '../bloc/course/course_state.dart';
 
 class CourseContentsView extends StatefulWidget {
   final int courseId;
-  CourseContentsView({Key? key, required this.courseId}) : super(key: key);
+  const CourseContentsView({Key? key, required this.courseId})
+      : super(key: key);
 
   @override
-  _CourseContentsViewState createState() => _CourseContentsViewState();
+  State<CourseContentsView> createState() => _CourseContentsViewState();
 }
 
 class _CourseContentsViewState extends State<CourseContentsView> {
@@ -19,7 +21,7 @@ class _CourseContentsViewState extends State<CourseContentsView> {
 
   @override
   void initState() {
-    context.read<CourseBloc>().add(getInfoCourseEvent(id: widget.courseId));
+    context.read<CourseBloc>().add(GetCourseInfoEvent(id: widget.courseId));
     super.initState();
   }
 
@@ -37,7 +39,7 @@ class _CourseContentsViewState extends State<CourseContentsView> {
               Navigator.pop(context);
             },
             color: Colors.white,
-            icon: Icon(Icons.arrow_back_ios_new)),
+            icon: const Icon(Icons.arrow_back_ios_new)),
       ),
       extendBodyBehindAppBar: true,
       body: BlocConsumer<CourseBloc, CourseState>(
@@ -72,7 +74,7 @@ class _CourseContentsViewState extends State<CourseContentsView> {
                                     top: Scaffold.of(context).appBarMaxHeight! /
                                         1.6),
                                 child: Text(
-                                  "${_currentPage} / ${state.info.length - 1}",
+                                  "$_currentPage / ${state.info.length - 1}",
                                   style: Theme.of(context)
                                       .textTheme
                                       .titleSmall!
@@ -104,7 +106,7 @@ class _CourseContentsViewState extends State<CourseContentsView> {
               },
             );
           } else {
-            return Center(
+            return const Center(
               child: CircularProgressIndicator(),
             );
           }

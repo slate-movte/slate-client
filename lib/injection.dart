@@ -1,35 +1,38 @@
+// ignore_for_file: unused_import, non_constant_identifier_names, constant_identifier_names
+
 import 'package:get_it/get_it.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:slate/data/repositories/camera_repository_impl.dart';
-import 'package:slate/data/repositories/course_repository_impl.dart';
-import 'package:slate/data/repositories/map_repository_impl.dart';
-import 'package:slate/data/repositories/scene_repository_impl.dart';
-import 'package:slate/data/repositories/search_repository_impl.dart';
-import 'package:slate/data/sources/native/camera_native_data_source.dart';
-import 'package:slate/data/sources/remote/location_remote_data_source.dart';
-import 'package:slate/data/sources/remote/map_remote_data_source.dart';
-import 'package:slate/data/sources/remote/scene_api_remote_data_source.dart';
-import 'package:slate/data/sources/remote/search_api_remote_data_source.dart';
-import 'package:slate/domain/entities/travel.dart';
-import 'package:slate/domain/repositories/camera_repository.dart';
-import 'package:slate/domain/repositories/map_repository.dart';
-import 'package:slate/domain/repositories/scene_repository.dart';
-import 'package:slate/domain/repositories/search_repository.dart';
-import 'package:slate/domain/usecases/camera_usecase.dart';
-import 'package:slate/domain/usecases/map_usecase.dart';
-import 'package:slate/domain/usecases/scene_usecase.dart';
-import 'package:slate/domain/usecases/search_usecase.dart';
-import 'package:slate/presentation/bloc/camera/camera_bloc.dart';
-import 'package:slate/presentation/bloc/course/course_bloc.dart';
-import 'package:slate/presentation/bloc/map/map_bloc.dart';
-import 'package:slate/presentation/bloc/scene/scene_bloc.dart';
-import 'package:slate/presentation/bloc/search/keyword/search_bloc.dart';
-import 'package:slate/presentation/bloc/search/movie/movie_bloc.dart';
-import 'package:slate/presentation/bloc/search/travel/travel_bloc.dart';
 
+import 'data/sources/native/camera_native_data_source.dart';
 import 'data/sources/remote/course_api_remote_data_source.dart';
-import 'domain/repositories/course_repository.dart';
+import 'data/sources/remote/location_remote_data_source.dart';
+import 'data/sources/remote/map_remote_data_source.dart';
+import 'data/sources/remote/scene_api_remote_data_source.dart';
+import 'data/sources/remote/search_api_remote_data_source.dart';
+import 'data/repositories/camera_repository_impl.dart';
+import 'data/repositories/course_repository_impl.dart';
+import 'data/repositories/map_repository_impl.dart';
+import 'data/repositories/scene_repository_impl.dart';
+import 'data/repositories/search_repository_impl.dart';
+
+import 'domain/usecases/camera_usecase.dart';
 import 'domain/usecases/course_usecase.dart';
+import 'domain/usecases/map_usecase.dart';
+import 'domain/usecases/scene_usecase.dart';
+import 'domain/usecases/search_usecase.dart';
+import 'domain/repositories/camera_repository.dart';
+import 'domain/repositories/course_repository.dart';
+import 'domain/repositories/map_repository.dart';
+import 'domain/repositories/scene_repository.dart';
+import 'domain/repositories/search_repository.dart';
+
+import 'presentation/bloc/camera/camera_bloc.dart';
+import 'presentation/bloc/course/course_bloc.dart';
+import 'presentation/bloc/map/map_bloc.dart';
+import 'presentation/bloc/scene/scene_bloc.dart';
+import 'presentation/bloc/search/keyword/search_bloc.dart';
+import 'presentation/bloc/search/movie/movie_bloc.dart';
+import 'presentation/bloc/search/travel/travel_bloc.dart';
 
 final DI = GetIt.instance;
 

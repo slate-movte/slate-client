@@ -1,22 +1,24 @@
 import 'package:flutter/material.dart';
+
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:slate/core/utils/enums.dart';
-import 'package:slate/core/utils/themes.dart';
-import 'package:slate/domain/entities/movie.dart';
-import 'package:slate/domain/entities/travel.dart';
+
+import '../../core/utils/enums.dart';
+import '../../core/utils/themes.dart';
+import '../../domain/entities/movie.dart';
+import '../../domain/entities/travel.dart';
 
 class SearchedItem extends StatelessWidget {
-  TravelType type;
-  String title;
-  String? movieInfo;
-  String? subTitle;
-  String? phone;
-  List<String> tag;
-  List<String>? actors;
-  String? imageUrl;
+  final TravelType type;
+  final String title;
+  final String? movieInfo;
+  final String? subTitle;
+  final String? phone;
+  final List<String> tag;
+  final List<String>? actors;
+  final String? imageUrl;
   final Function()? function;
 
-  SearchedItem({
+  const SearchedItem({
     super.key,
     this.function,
     required this.type,
@@ -121,7 +123,7 @@ class SearchedItem extends StatelessWidget {
                   ),
                   Visibility(
                     visible: subTitle != null,
-                    child: Container(
+                    child: SizedBox(
                       width: 170.w,
                       child: Text(
                         subTitle ?? '',
@@ -133,7 +135,7 @@ class SearchedItem extends StatelessWidget {
                   ),
                   Visibility(
                     visible: movieInfo != null,
-                    child: Container(
+                    child: SizedBox(
                       width: 170.w,
                       child: Text(
                         movieInfo ?? '',
@@ -150,32 +152,33 @@ class SearchedItem extends StatelessWidget {
                     visible: actors != null,
                     child: Row(
                       children: (actors ?? [])
-                          .map((actor) => Text('${actor} '))
+                          .map((actor) => Text('$actor '))
                           .toList(),
                     ),
                   ),
                   Visibility(
-                      visible: type == TravelType.RESTAURANT,
-                      child: SingleChildScrollView(
-                        scrollDirection: Axis.horizontal,
-                        child: Row(
-                          children: tag
-                              .map(
-                                (tag) => Padding(
-                                  padding: EdgeInsets.only(right: SizeOf.w_sm),
-                                  child: Chip(
-                                    label: Text(tag),
-                                    labelPadding: EdgeInsets.all(0),
-                                    visualDensity: VisualDensity(
-                                      horizontal: 0.0,
-                                      vertical: -4,
-                                    ),
+                    visible: type == TravelType.RESTAURANT,
+                    child: SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: Row(
+                        children: tag
+                            .map(
+                              (tag) => Padding(
+                                padding: EdgeInsets.only(right: SizeOf.w_sm),
+                                child: Chip(
+                                  label: Text(tag),
+                                  labelPadding: const EdgeInsets.all(0),
+                                  visualDensity: const VisualDensity(
+                                    horizontal: 0.0,
+                                    vertical: -4,
                                   ),
                                 ),
-                              )
-                              .toList(),
-                        ),
-                      )),
+                              ),
+                            )
+                            .toList(),
+                      ),
+                    ),
+                  ),
                   SizedBox(
                     height: SizeOf.h_sm,
                   ),
@@ -212,7 +215,7 @@ class SearchedItem extends StatelessWidget {
                   height: type == TravelType.MOVIE_LOCATION ? 100.h : 80.h,
                   fit: BoxFit.fill,
                   errorBuilder: (context, error, stackTrace) =>
-                      SizedBox.shrink(),
+                      const SizedBox.shrink(),
                 ),
               ),
             ),

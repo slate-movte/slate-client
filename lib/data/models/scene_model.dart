@@ -1,7 +1,7 @@
-import 'package:slate/domain/entities/scene.dart';
+import '../../domain/entities/scene.dart';
 
 class SceneModel extends Scene {
-  SceneModel({
+  const SceneModel({
     required super.movieId,
     required super.title,
     required super.id,

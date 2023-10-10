@@ -1,10 +1,8 @@
-import 'dart:developer';
-
-import 'package:slate/data/models/scene_model.dart';
-import 'package:slate/domain/entities/movie.dart';
+import '../../domain/entities/movie.dart';
+import 'scene_model.dart';
 
 class MovieModel extends Movie {
-  MovieModel({
+  const MovieModel({
     required super.id,
     required super.title,
     super.posterUrl,
@@ -45,7 +43,6 @@ class MovieModel extends Movie {
   }
 
   factory MovieModel.fromJson(Map<String, dynamic> json) {
-    log('ddd');
     return MovieModel(
       id: json['id'],
       title: json['title'],

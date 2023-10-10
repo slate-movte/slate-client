@@ -23,12 +23,9 @@ class CourseRepositoryImpl implements CourseRepository {
   Future<Either<Failure, List>> getCourseInfoResults(int id) async {
     try {
       List result = await dataSource.getCourseInfoResult(id);
-      print("코스여기" + result.toString());
       return Right(result);
     } on Exception {
       return Left(CourseFailure());
     }
   }
-
 }
-

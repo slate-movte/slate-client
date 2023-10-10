@@ -1,35 +1,34 @@
+// ignore_for_file: avoid_function_literals_in_foreach_calls, use_build_context_synchronously
+
 import 'dart:async';
-import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:slate/core/utils/enums.dart';
-import 'package:slate/core/utils/themes.dart';
-import 'package:slate/domain/entities/map_item.dart';
-import 'package:slate/domain/entities/movie.dart';
-import 'package:slate/domain/entities/travel.dart';
-import 'package:slate/injection.dart';
-import 'package:slate/presentation/bloc/map/map_bloc.dart';
-import 'package:slate/presentation/bloc/map/map_event.dart';
-import 'package:slate/presentation/bloc/map/map_state.dart';
-import 'package:slate/presentation/bloc/search/keyword/search_bloc.dart';
-import 'package:slate/presentation/bloc/search/keyword/search_event.dart';
-import 'package:slate/presentation/bloc/search/keyword/search_state.dart';
-import 'package:slate/presentation/bloc/search/travel/travel_bloc.dart';
-import 'package:slate/presentation/bloc/search/travel/travel_event.dart';
-import 'package:slate/presentation/bloc/search/travel/travel_state.dart';
-import 'package:slate/presentation/views/movie_info_view.dart';
-import 'package:slate/presentation/widgets/item_table.dart';
-
-import 'package:slate/presentation/widgets/searched_item.dart';
 
 import '../../core/utils/assets.dart';
+import '../../core/utils/enums.dart';
+import '../../core/utils/themes.dart';
 import '../../data/models/travel_model.dart';
-import '../widgets/item_table.dart';
+import '../../domain/entities/map_item.dart';
+import '../../domain/entities/movie.dart';
+import '../../domain/entities/travel.dart';
+import '../../injection.dart';
+import '../bloc/map/map_bloc.dart';
+import '../bloc/map/map_event.dart';
+import '../bloc/map/map_state.dart';
+import '../bloc/search/keyword/search_bloc.dart';
+import '../bloc/search/keyword/search_event.dart';
+import '../bloc/search/keyword/search_state.dart';
+import '../bloc/search/travel/travel_bloc.dart';
+import '../bloc/search/travel/travel_event.dart';
+import '../bloc/search/travel/travel_state.dart';
+import '../widgets/searched_item.dart';
 import 'marker_info_view.dart';
+import 'movie_info_view.dart';
 
 abstract class SearchedItemView extends StatefulWidget {
   const SearchedItemView({super.key});
@@ -64,11 +63,9 @@ class _ItemMapViewState extends State<ItemMapView> {
       context
           .read<MapBloc>()
           .add(InitializeMapEvent(latLng: widget.item!.position));
-      SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
-        // openBottomSheet(context, widget.item!);
-      });
+      SchedulerBinding.instance.addPostFrameCallback((timeStamp) {});
     } else {
-      context.read<MapBloc>().add(InitializeMapEvent());
+      context.read<MapBloc>().add(const InitializeMapEvent());
     }
     super.initState();
   }
@@ -88,7 +85,7 @@ class _ItemMapViewState extends State<ItemMapView> {
       body: Stack(
         children: [
           BlocListener<TravelBloc, TravelState>(
-            child: SizedBox.shrink(),
+            child: const SizedBox.shrink(),
             listener: (context, state) {
               Travel travel = const Travel(
                 id: 0,
@@ -119,7 +116,6 @@ class _ItemMapViewState extends State<ItemMapView> {
           BlocConsumer<MapBloc, MapState>(
             listener: (context, state) async {
               if (state is MapInitialized) {
-                //맵 초기화가 일어날 때가 하단 모달 있는 상태이면 초기화 중단 (제외고려)
                 if (_open) {
                   return;
                 }
@@ -129,14 +125,12 @@ class _ItemMapViewState extends State<ItemMapView> {
                     _markers.add(Marker(
                       markerId: widget.item!.markerId,
                       position: widget.item!.position,
-                      onTap: () {
-                        // openBottomSheet(context, widget.item!);
-                      },
                     ));
                   } else {
                     context.read<MapBloc>().add(GetMarkersEvent(
-                        type: TravelType.MOVIE_LOCATION,
-                        latLng: _position.target));
+                          type: TravelType.MOVIE_LOCATION,
+                          latLng: _position.target,
+                        ));
                   }
                 });
               } else if (state is CameraMoved) {
@@ -191,11 +185,13 @@ class _ItemMapViewState extends State<ItemMapView> {
                       GoogleMapController controller = await _controller.future;
 
                       await controller.animateCamera(
-                        CameraUpdate.newCameraPosition(CameraPosition(
-                            target: curLocTag
-                                ? _position.target
-                                : state.markers[0].position,
-                            zoom: 15)),
+                        CameraUpdate.newCameraPosition(
+                          CameraPosition(
+                              target: curLocTag
+                                  ? _position.target
+                                  : state.markers[0].position,
+                              zoom: 15),
+                        ),
                       );
 
                       setState(() {
@@ -208,11 +204,11 @@ class _ItemMapViewState extends State<ItemMapView> {
             },
             builder: (context, state) {
               if (state is MapLoading) {
-                return Center(
+                return const Center(
                   child: CircularProgressIndicator(),
                 );
               } else if (state is MapError) {
-                return Center(
+                return const Center(
                   child: Text('ERROR'),
                 );
               } else {
@@ -245,39 +241,42 @@ class _ItemMapViewState extends State<ItemMapView> {
                 onPressed: () async {
                   context.read<MapBloc>().add(Move2UserLocationEvent());
                 },
+                backgroundColor: Colors.white,
                 child: Icon(
                   Icons.my_location,
                   color: ColorOf.point.light,
                 ),
-                backgroundColor: Colors.white,
               ),
             ),
           ),
           Align(
             alignment: Alignment.bottomCenter,
             child: Padding(
-                padding: EdgeInsets.symmetric(
-                  horizontal: SizeOf.w_md,
-                  vertical: SizeOf.h_md,
-                ),
-                child: ActionChip(
-                  label: Text("현재 위치에서 검색"),
-                  backgroundColor: ColorOf.white.light,
-                  labelStyle: Theme.of(context).textTheme.bodyLarge,
-                  shape: StadiumBorder(),
-                  onPressed: () async {
-                    LatLng centerLocation = await calculateCenter();
-                    setState(() {
-                      curLocTag = true;
-                      _position =
-                          CameraPosition(target: centerLocation, zoom: 15);
-                    });
-                    context.read<MapBloc>().add(
-                          GetMarkersEvent(
-                              type: onTapedTag, latLng: _position.target),
-                        );
-                  },
-                )),
+              padding: EdgeInsets.symmetric(
+                horizontal: SizeOf.w_md,
+                vertical: SizeOf.h_md,
+              ),
+              child: ActionChip(
+                label: const Text("현재 위치에서 검색"),
+                backgroundColor: ColorOf.white.light,
+                labelStyle: Theme.of(context).textTheme.bodyLarge,
+                shape: const StadiumBorder(),
+                onPressed: () async {
+                  LatLng centerLocation = await calculateCenter();
+                  setState(() {
+                    curLocTag = true;
+                    _position =
+                        CameraPosition(target: centerLocation, zoom: 15);
+                  });
+                  context.read<MapBloc>().add(
+                        GetMarkersEvent(
+                          type: onTapedTag,
+                          latLng: _position.target,
+                        ),
+                      );
+                },
+              ),
+            ),
           ),
           Visibility(
             visible: widget.item == null,
@@ -330,7 +329,6 @@ class _ItemMapViewState extends State<ItemMapView> {
                             shape: const StadiumBorder(),
                             elevation: 0.6,
                             onPressed: () async {
-                              //테그 클릭하면 하단 모달 닫기
                               if (_open) {
                                 Navigator.pop(context);
                                 _open = false;
@@ -345,8 +343,9 @@ class _ItemMapViewState extends State<ItemMapView> {
                               });
                               context.read<MapBloc>().add(
                                     GetMarkersEvent(
-                                        type: element.$3,
-                                        latLng: _position.target),
+                                      type: element.$3,
+                                      latLng: _position.target,
+                                    ),
                                   );
                             },
                           ),
@@ -363,14 +362,12 @@ class _ItemMapViewState extends State<ItemMapView> {
   }
 
   Future<void> closeModal(LatLng latlng) async {
-    //맵 클릭시 하단 모달 닫기
     if (_open) {
       Navigator.pop(context);
       _open = false;
     }
   }
 
-  //중심 찾기 함수
   Future<LatLng> calculateCenter() async {
     GoogleMapController controller = await _controller.future;
     LatLngBounds visibleRegion = await controller.getVisibleRegion();
@@ -409,7 +406,6 @@ class _ItemMapViewState extends State<ItemMapView> {
                     ? MovieInfoView(
                         movieId: item.id,
                       )
-                    // : ItemInfoView(item: item),
                     : MarkerInfoView(
                         id: item.id,
                         type: item.type,
@@ -425,11 +421,8 @@ class _ItemMapViewState extends State<ItemMapView> {
 }
 
 class ItemListView extends SearchedItemView {
-  // List items;
-
-  ItemListView({
+  const ItemListView({
     super.key,
-    // this.items = const [],
   });
 
   @override
@@ -484,7 +477,7 @@ class _ItemListViewState extends State<ItemListView> {
       },
       builder: (context, state) {
         if (state is InitSearch) {
-          return Center(
+          return const Center(
             child: CircularProgressIndicator(),
           );
         }
@@ -512,10 +505,6 @@ class _ItemListViewState extends State<ItemListView> {
                     return SearchedItem.travel(
                       travel: items[index],
                       function: () {
-                        log(items[index].id.toString());
-                        log(items[index].type.toString());
-                        log(items[index].title.toString());
-
                         Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -529,9 +518,9 @@ class _ItemListViewState extends State<ItemListView> {
                       },
                     );
                   }
-                  return SizedBox.shrink();
+                  return const SizedBox.shrink();
                 },
-                separatorBuilder: (context, index) => Divider(),
+                separatorBuilder: (context, index) => const Divider(),
                 itemCount: items.length,
               ),
             ),

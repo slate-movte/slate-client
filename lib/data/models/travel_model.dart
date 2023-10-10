@@ -1,9 +1,10 @@
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:slate/core/utils/enums.dart';
-import 'package:slate/domain/entities/travel.dart';
+
+import '../../core/utils/enums.dart';
+import '../../domain/entities/travel.dart';
 
 class TravelModel extends Travel {
-  TravelModel({
+  const TravelModel({
     required super.id,
     required super.title,
     required super.images,
@@ -34,7 +35,7 @@ class TravelModel extends Travel {
 }
 
 class RestaurantModel extends Restaurant {
-  RestaurantModel({
+  const RestaurantModel({
     required super.id,
     required super.title,
     required super.images,
@@ -53,7 +54,8 @@ class RestaurantModel extends Restaurant {
       id: json['id'],
       title: json['title'],
       images: List<String>.from(json['images']),
-      location: LatLng(json['location']['latitude'] ?? 0, json['location']['longitude'] ?? 0),
+      location: LatLng(json['location']['latitude'] ?? 0,
+          json['location']['longitude'] ?? 0),
       menus: List<String>.from(json['menus']),
       tel: json['tel'],
       homepage: json['homepage'],
@@ -66,7 +68,7 @@ class RestaurantModel extends Restaurant {
 }
 
 class AccommodationModel extends Accommodation {
-  AccommodationModel({
+  const AccommodationModel({
     required super.id,
     required super.title,
     required super.images,
@@ -82,7 +84,8 @@ class AccommodationModel extends Accommodation {
       id: json['id'],
       title: json['title'],
       images: List<String>.from(json['images']),
-      location: LatLng(json['location']['latitude'] ?? 0, json['location']['longitude'] ?? 0),
+      location: LatLng(json['location']['latitude'] ?? 0,
+          json['location']['longitude'] ?? 0),
       homepage: json['homepage'],
       overview: json['overview'],
       tel: json['tel'],
@@ -92,7 +95,7 @@ class AccommodationModel extends Accommodation {
 }
 
 class AttractionModel extends Attraction {
-  AttractionModel({
+  const AttractionModel({
     required super.id,
     required super.title,
     required super.images,
@@ -110,7 +113,8 @@ class AttractionModel extends Attraction {
       id: json['id'],
       title: json['title'],
       images: List<String>.from(json['images']),
-      location: LatLng(json['location']['latitude'] ?? 0, json['location']['longitude'] ?? 0),
+      location: LatLng(json['location']['latitude'] ?? 0,
+          json['location']['longitude'] ?? 0),
       homepage: json['homepage'],
       overview: json['overview'],
       tel: json['tel'],
@@ -122,7 +126,7 @@ class AttractionModel extends Attraction {
 }
 
 class MovieLocationModel extends MovieLocation {
-  MovieLocationModel({
+  const MovieLocationModel({
     required super.id,
     required super.title,
     required super.sceneLocation,

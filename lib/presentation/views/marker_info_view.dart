@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:slate/domain/entities/travel.dart';
-import 'package:slate/presentation/bloc/search/travel/travel_bloc.dart';
-import 'package:slate/presentation/bloc/search/travel/travel_event.dart';
-import 'package:slate/presentation/bloc/search/travel/travel_state.dart';
 
 import '../../core/utils/enums.dart';
+import '../../domain/entities/travel.dart';
 import '../../injection.dart';
+import '../bloc/search/travel/travel_bloc.dart';
+import '../bloc/search/travel/travel_event.dart';
+import '../bloc/search/travel/travel_state.dart';
 import '../widgets/item_table.dart';
 
 class MarkerInfoView extends StatefulWidget {
@@ -100,7 +101,7 @@ class _MarkerInfoViewState extends State<MarkerInfoView> {
             centerTitle: false,
           ),
           body: state is TravelDataLoading && !isDataLoaded
-              ? Center(
+              ? const Center(
                   child: CircularProgressIndicator(),
                 )
               : Column(

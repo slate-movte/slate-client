@@ -1,8 +1,5 @@
 import 'package:equatable/equatable.dart';
 
-import 'package:slate/domain/entities/movie.dart';
-import 'package:slate/domain/entities/travel.dart';
-
 class SearchState extends Equatable {
   @override
   List<Object?> get props => [];

@@ -1,12 +1,12 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:slate/core/utils/themes.dart';
-import 'package:slate/presentation/bloc/search/keyword/search_bloc.dart';
-import 'package:slate/presentation/bloc/search/keyword/search_event.dart';
-import 'package:slate/presentation/views/searched_item_view.dart';
+
+import '../../core/utils/themes.dart';
+import '../bloc/search/keyword/search_bloc.dart';
+import '../bloc/search/keyword/search_event.dart';
+import 'searched_item_view.dart';
 
 class SearchView extends StatefulWidget {
   const SearchView({super.key});
@@ -45,7 +45,6 @@ class _SearchViewState extends State<SearchView> {
                 width: 314.w,
                 child: TextField(
                   onEditingComplete: () {
-                    log(controller.text);
                     context.read<SearchBloc>().add(
                           KeywordSearchEvent(
                             keyword: controller.text,
@@ -59,7 +58,9 @@ class _SearchViewState extends State<SearchView> {
                   decoration: const InputDecoration(
                     suffixIcon: Icon(Icons.search),
                     labelText: '검색어를 입력해주세요.',
+                    counterText: "",
                   ),
+                  maxLength: 20,
                 ),
               ),
             ),
@@ -70,7 +71,7 @@ class _SearchViewState extends State<SearchView> {
           child: const SizedBox(),
         ),
       ),
-      body: ItemListView(),
+      body: const ItemListView(),
     );
   }
 }

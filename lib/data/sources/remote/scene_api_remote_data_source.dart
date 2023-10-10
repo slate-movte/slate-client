@@ -1,12 +1,11 @@
 import 'dart:convert';
-import 'dart:developer';
 import 'dart:io';
 
-import 'package:slate/core/errors/exceptions.dart';
-import 'package:slate/core/utils/apis.dart';
-import 'package:slate/data/models/movie_model.dart';
-import 'package:slate/data/models/scene_model.dart';
 import 'package:http/http.dart' as http;
+
+import '../../../core/errors/exceptions.dart';
+import '../../../core/utils/apis.dart';
+import '../../models/movie_model.dart';
 
 abstract class SceneApiRemoteDataSource {
   Future<List<MovieModel>> getScenesWithMovieTitle(String title);

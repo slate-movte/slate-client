@@ -8,12 +8,11 @@ abstract class CourseEvent extends Equatable {
 }
 
 class UpdateAllCourseEvent extends CourseEvent {
-
-  UpdateAllCourseEvent();
+  const UpdateAllCourseEvent();
 }
 
-class getInfoCourseEvent extends CourseEvent {
+class GetCourseInfoEvent extends CourseEvent {
   final int id;
 
-  getInfoCourseEvent({required this.id});
+  const GetCourseInfoEvent({required this.id});
 }

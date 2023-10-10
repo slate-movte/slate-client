@@ -1,6 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:slate/core/utils/enums.dart';
+
+import '../../core/utils/enums.dart';
 
 class Travel extends Equatable {
   final int id;
@@ -40,7 +41,6 @@ class Travel extends Equatable {
 }
 
 class Attraction extends Travel {
-  final String? openTime;
   final String? restDate;
 
   const Attraction({
@@ -52,14 +52,13 @@ class Attraction extends Travel {
     super.homepage,
     super.overview,
     super.type = TravelType.ATTRACTION,
-    this.openTime,
+    super.openTime,
     this.restDate,
     required super.address,
   });
 }
 
 class Restaurant extends Travel {
-  final String? openTime;
   final String? restDate;
 
   const Restaurant({
@@ -69,7 +68,7 @@ class Restaurant extends Travel {
     required super.location,
     super.type = TravelType.RESTAURANT,
     super.menus = const [],
-    this.openTime,
+    super.openTime,
     this.restDate,
     super.homepage,
     super.overview,

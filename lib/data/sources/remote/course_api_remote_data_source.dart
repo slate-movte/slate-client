@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+
 import 'package:http/http.dart' as http;
 
 import '../../../core/errors/exceptions.dart';
@@ -11,7 +12,6 @@ abstract class CourseApiRemoteDataSource {
 }
 
 class CourseApiRemoteDataSourceImpl implements CourseApiRemoteDataSource {
-
   @override
   Future<List> getCourseAllResult() async {
     try {
@@ -53,5 +53,4 @@ class CourseApiRemoteDataSourceImpl implements CourseApiRemoteDataSource {
       throw ApiException();
     }
   }
-
 }

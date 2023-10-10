@@ -1,11 +1,10 @@
-import 'dart:developer';
-
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:slate/domain/entities/movie.dart';
-import 'package:slate/domain/entities/travel.dart';
-import 'package:slate/domain/usecases/search_usecase.dart';
-import 'package:slate/presentation/bloc/search/keyword/search_event.dart';
-import 'package:slate/presentation/bloc/search/keyword/search_state.dart';
+
+import '../../../../domain/entities/movie.dart';
+import '../../../../domain/entities/travel.dart';
+import '../../../../domain/usecases/search_usecase.dart';
+import 'search_event.dart';
+import 'search_state.dart';
 
 class SearchBloc extends Bloc<SearchEvent, SearchState> {
   KeywordSearch keywordSearch;
@@ -25,7 +24,6 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
     Emitter<SearchState> emit,
   ) async {
     keyword = event.keyword ?? "";
-    print(keyword);
 
     if (event.refresh) {
       movieLastId = 0;
@@ -46,7 +44,6 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
         emit(SearchError(message: 'ERROR'));
       },
       (list) {
-        log(list.toString());
         List items = [];
         items.addAll(List<Movie>.from(list['movie']!));
         items.addAll(List<Travel>.from(list['attraction']!));
