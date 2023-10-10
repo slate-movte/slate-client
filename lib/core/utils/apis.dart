@@ -1,7 +1,7 @@
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 abstract class Api {
-  static String hosts = "https://dev.movte.cloud/";
+  static String hosts = "https://dev.movte.cloudfdfdfdfdf/";
 }
 
 class SearchAPI extends Api {
