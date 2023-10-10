@@ -13,7 +13,6 @@ import 'presentation/bloc/scene/scene_bloc.dart';
 import 'presentation/bloc/search/keyword/search_bloc.dart';
 import 'presentation/bloc/search/movie/movie_bloc.dart';
 import 'presentation/bloc/search/travel/travel_bloc.dart';
-import 'presentation/views/sign_in_view.dart';
 import 'core/utils/themes.dart';
 
 import 'injection.dart';
