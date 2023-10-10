@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -311,7 +312,8 @@ class _ItemTableGridState extends State<ItemTableGrid> {
               mainAxisSpacing: SizeOf.w_sm / 4,
               crossAxisSpacing: SizeOf.w_sm / 4,
               children: List.generate(widget.items.length, (index) {
-                final imageProvider = NetworkImage(widget.items[index]);
+                final imageProvider =
+                    CachedNetworkImageProvider(widget.items[index]);
 
                 return ClipRRect(
                   borderRadius: BorderRadius.all(Radius.circular(SizeOf.r)),

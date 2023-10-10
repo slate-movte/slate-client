@@ -345,6 +345,7 @@ class _ItemMapViewState extends State<ItemMapView> {
       Navigator.pop(context);
       _open = false;
     }
+    context.read<SceneBloc>().add(RefreshEvent());
   }
 
   Future<LatLng> calculateCenter() async {
@@ -362,6 +363,7 @@ class _ItemMapViewState extends State<ItemMapView> {
 
   Future openModalDailog(BuildContext context, Travel item) async {
     showBottomSheet(
+      enableDrag: false,
       backgroundColor: Colors.white.withOpacity(0.0),
       context: context,
       builder: (context) => Container(

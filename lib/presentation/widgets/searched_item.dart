@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -208,24 +209,19 @@ class SearchedItem extends StatelessWidget {
               visible: imageUrl != null && imageUrl != "",
               child: ClipRRect(
                 borderRadius: BorderRadius.all(Radius.circular(SizeOf.r)),
-                child: Image.network(
-                  imageUrl ??
+                child: CachedNetworkImage(
+                  imageUrl: imageUrl ??
                       "http://tong.visitkorea.or.kr/cms/resource/43/2903043_image2_1.JPG",
+                  progressIndicatorBuilder: (context, url, downloadProgress) =>
+                      Center(
+                    child: CircularProgressIndicator(
+                      value: downloadProgress.progress,
+                    ),
+                  ),
+                  errorWidget: (context, url, error) => const Icon(Icons.error),
                   width: 80.w,
                   height: type == TravelType.MOVIE_LOCATION ? 100.h : 80.h,
                   fit: BoxFit.fill,
-                  errorBuilder: (context, error, stackTrace) =>
-                      const SizedBox.shrink(),
-                  loadingBuilder: (context, child, loadingProgress) {
-                    if (loadingProgress == null) {
-                      return child;
-                    }
-                    return Center(
-                        child: Padding(
-                      padding: EdgeInsets.all(SizeOf.w_sm),
-                      child: const CircularProgressIndicator(),
-                    ));
-                  },
                 ),
               ),
             ),
