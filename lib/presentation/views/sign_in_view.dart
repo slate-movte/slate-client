@@ -21,24 +21,20 @@ class SignInView extends StatelessWidget {
               width: 212.w,
               height: 85.h,
             ),
-            Column(
-              children: [
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: SizeOf.w_lg),
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: ColorOf.black.light,
-                    ),
-                    onPressed: () async {
-                      Navigator.of(context).pushReplacement(
-                        MaterialPageRoute(
-                            builder: (context) => const MainView()),
-                      );
-                    },
-                    child: const Text('비회원으로 둘러보기'),
-                  ),
+            SizedBox(height: 170.h),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: SizeOf.w_lg),
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: ColorOf.black.light,
                 ),
-              ],
+                onPressed: () async {
+                  Navigator.of(context).pushReplacement(
+                    MaterialPageRoute(builder: (context) => const MainView()),
+                  );
+                },
+                child: const Text('비회원으로 둘러보기'),
+              ),
             ),
           ],
         ),

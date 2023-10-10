@@ -16,8 +16,11 @@ import '../widgets/item_table.dart';
 import 'display_picture_view.dart';
 
 class CameraView extends StatefulWidget {
+  final String? selectedMovieTitle;
+
   const CameraView({
     super.key,
+    this.selectedMovieTitle,
   });
 
   @override
@@ -31,6 +34,9 @@ class _CameraViewState extends State<CameraView> {
   @override
   void initState() {
     context.read<CameraBloc>().add(CameraOnEvent());
+    if (widget.selectedMovieTitle != null) {
+      controller.text = widget.selectedMovieTitle!;
+    }
     super.initState();
   }
 
@@ -95,6 +101,12 @@ class _CameraViewState extends State<CameraView> {
                                 ),
                                 child: InkWell(
                                   onTap: () {
+                                    if (controller.text != "") {
+                                      context.read<SceneBloc>().add(
+                                            GetScenesEvent(
+                                                input: controller.text),
+                                          );
+                                    }
                                     openBottomSheet(context);
                                   },
                                   child: Container(
@@ -143,6 +155,11 @@ class _CameraViewState extends State<CameraView> {
                         FloatingActionButton(
                           heroTag: null,
                           onPressed: () {
+                            if (controller.text != "") {
+                              context.read<SceneBloc>().add(
+                                    GetScenesEvent(input: controller.text),
+                                  );
+                            }
                             openBottomSheet(context);
                           },
                           elevation: 0,

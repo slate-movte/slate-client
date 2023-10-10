@@ -28,6 +28,7 @@ class SceneBloc extends Bloc<SceneEvent, SceneState> {
   ) async {
     emit(SceneSelected(
       sceneUrl: event.sceneUrl,
+      movieTitle: event.movieTitle,
     ));
   }
 

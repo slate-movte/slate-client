@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:slate/core/utils/themes.dart';
+import 'package:slate/presentation/bloc/scene/scene_bloc.dart';
+import 'package:slate/presentation/bloc/scene/scene_state.dart';
 
 import 'camera_view.dart';
 import 'course_view.dart';
@@ -60,17 +64,28 @@ class _MainViewState extends State<MainView> {
               label: 'Home',
             ),
             BottomNavigationBarItem(
-              icon: FloatingActionButton(
-                elevation: 0,
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const CameraView(),
-                    ),
+              icon: BlocBuilder<SceneBloc, SceneState>(
+                builder: (context, state) {
+                  return FloatingActionButton(
+                    elevation: 0,
+                    backgroundColor: state is SceneSelected
+                        ? ColorOf.point.light
+                        : ColorOf.black.light,
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => CameraView(
+                            selectedMovieTitle: state is SceneSelected
+                                ? state.movieTitle
+                                : null,
+                          ),
+                        ),
+                      );
+                    },
+                    child: const Icon(Icons.camera_alt_outlined),
                   );
                 },
-                child: const Icon(Icons.camera_alt_outlined),
               ),
               label: '',
             ),

@@ -15,6 +15,7 @@ class RefreshEvent extends SceneEvent {}
 
 class SelectedSceneEvent extends SceneEvent {
   final String sceneUrl;
+  final String? movieTitle;
 
-  SelectedSceneEvent({required this.sceneUrl});
+  SelectedSceneEvent({required this.sceneUrl, this.movieTitle});
 }

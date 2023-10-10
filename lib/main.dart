@@ -4,6 +4,7 @@ import 'package:camera/camera.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:slate/presentation/views/main_view.dart';
 
 import 'presentation/bloc/camera/camera_bloc.dart';
 import 'presentation/bloc/course/course_bloc.dart';
@@ -74,7 +75,7 @@ class Slate extends StatelessWidget {
         child: MaterialApp(
           theme: Themes.lite,
           debugShowCheckedModeBanner: false,
-          home: const SignInView(),
+          home: const MainView(),
         ),
       ),
     );

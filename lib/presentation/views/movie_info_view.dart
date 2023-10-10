@@ -34,14 +34,25 @@ class _MovieInfoViewState extends State<MovieInfoView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: ColorOf.point.light,
-        child: const Icon(Icons.camera_alt_outlined),
-        onPressed: () {
-          Navigator.push(context,
-              MaterialPageRoute(builder: (context) => const CameraView()));
-        },
-      ),
+      floatingActionButton:
+          BlocBuilder<MovieBloc, MovieState>(builder: (context, state) {
+        return state is MovieDataLoaded
+            ? FloatingActionButton(
+                backgroundColor: ColorOf.point.light,
+                child: const Icon(Icons.camera_alt_outlined),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => CameraView(
+                        selectedMovieTitle: state.movie.title,
+                      ),
+                    ),
+                  );
+                },
+              )
+            : const SizedBox.shrink();
+      }),
       body: BlocBuilder<MovieBloc, MovieState>(
         builder: (context, state) {
           if (state is MovieDataLoaded) {
@@ -189,6 +200,7 @@ class _MovieInfoViewState extends State<MovieInfoView> {
                         ..image = ItemTableGrid(
                           title: '스틸컷',
                           items: imageUrl,
+                          inCameraUse: false,
                         ),
                     ),
                 ],

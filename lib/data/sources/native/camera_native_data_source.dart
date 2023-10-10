@@ -1,4 +1,3 @@
-import 'dart:developer';
 import 'dart:typed_data';
 
 import 'package:camera/camera.dart';
@@ -24,7 +23,6 @@ class CameraNativeDataSourceImpl implements CameraNativeDataSource {
     try {
       if (cameras == null) {
         cameras = await availableCameras();
-        log(cameras.toString());
         if (cameras!.isEmpty) {
           throw CameraNotFoundException();
         }
@@ -42,8 +40,6 @@ class CameraNativeDataSourceImpl implements CameraNativeDataSource {
 
     try {
       if (controller == null) {
-        log('message2');
-
         await checkAvailableCamera();
         direction = CameraLensDirection.back;
       } else {
@@ -71,7 +67,6 @@ class CameraNativeDataSourceImpl implements CameraNativeDataSource {
 
       return controller!;
     } catch (e) {
-      log('dfd');
       throw CameraControlException();
     }
   }

@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:developer';
 import 'dart:io';
 
 import 'package:http/http.dart' as http;
@@ -74,8 +73,6 @@ class SearchApiRemoteDataSourceImpl implements SearchApiRemoteDataSource {
 
       if (response.statusCode == 200) {
         var json = jsonDecode(utf8.decode(response.bodyBytes)) as Map;
-
-        log(json.toString());
 
         return MovieModel.fromJson(
           Map<String, dynamic>.from(json['data']),

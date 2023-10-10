@@ -24,8 +24,9 @@ class SceneInit extends SceneState {}
 
 class SceneSelected extends SceneState {
   final String sceneUrl;
+  final String? movieTitle;
 
-  SceneSelected({required this.sceneUrl});
+  SceneSelected({required this.sceneUrl, this.movieTitle});
 }
 
 class SceneError extends SceneState {}
