@@ -1,6 +1,7 @@
 import 'package:dartz/dartz.dart';
-import 'package:slate/core/errors/failures.dart';
-import 'package:slate/core/usecases/usecase.dart';
+
+import '../../core/errors/failures.dart';
+import '../../core/usecases/usecase.dart';
 
 abstract class AuthUseCase {}
 

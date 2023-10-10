@@ -1,19 +1,24 @@
 import 'package:flutter/material.dart';
+
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:slate/core/utils/enums.dart';
-import 'package:slate/core/utils/themes.dart';
+
+import '../../core/utils/enums.dart';
+import '../../core/utils/themes.dart';
+import '../../domain/entities/movie.dart';
+import '../../domain/entities/travel.dart';
 
 class SearchedItem extends StatelessWidget {
-  TravelType type;
-  String title;
-  String? movieInfo;
-  String? subTitle;
-  String? phone;
-  List<String> tag;
-  String? actors;
+  final TravelType type;
+  final String title;
+  final String? movieInfo;
+  final String? subTitle;
+  final String? phone;
+  final List<String> tag;
+  final List<String>? actors;
+  final String? imageUrl;
   final Function()? function;
 
-  SearchedItem({
+  const SearchedItem({
     super.key,
     this.function,
     required this.type,
@@ -22,8 +27,45 @@ class SearchedItem extends StatelessWidget {
     this.movieInfo,
     this.subTitle,
     this.phone,
-    this.tag = const ['수훈비빔밥', '수훈쌈밥'],
+    this.imageUrl,
+    this.tag = const [],
   });
+
+  factory SearchedItem.movie({
+    required Movie movie,
+    required Function() function,
+  }) {
+    return SearchedItem(
+      type: TravelType.MOVIE_LOCATION,
+      title: movie.title,
+      movieInfo:
+          '개봉일 ${movie.openDate!.year}.${movie.openDate!.month}.${movie.openDate!.day}',
+      imageUrl: movie.posterUrl,
+      function: function,
+      actors: movie.movieCastList.length > 4
+          ? movie.movieCastList.sublist(0, 3)
+          : movie.movieCastList,
+    );
+  }
+
+  factory SearchedItem.travel({
+    required Travel travel,
+    required Function() function,
+  }) {
+    return SearchedItem(
+      type: travel.type,
+      title: travel.title,
+      phone: travel.tel,
+      tag: travel.menus == null
+          ? []
+          : travel.menus!.length > 4
+              ? travel.menus!.sublist(0, 3)
+              : travel.menus!,
+      subTitle: travel.address,
+      imageUrl: travel.imageUrl,
+      function: function,
+    );
+  }
 
   String _typeConvertor() {
     switch (type) {
@@ -56,11 +98,14 @@ class SearchedItem extends StatelessWidget {
                 children: [
                   Row(
                     children: [
-                      Text(
-                        title,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: Theme.of(context).textTheme.titleSmall,
+                      ConstrainedBox(
+                        constraints: BoxConstraints(maxWidth: 140.w),
+                        child: Text(
+                          title,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: Theme.of(context).textTheme.titleSmall,
+                        ),
                       ),
                       SizedBox(
                         width: SizeOf.w_sm,
@@ -78,20 +123,26 @@ class SearchedItem extends StatelessWidget {
                   ),
                   Visibility(
                     visible: subTitle != null,
-                    child: Text(
-                      subTitle ?? '',
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: Theme.of(context).textTheme.bodyLarge,
+                    child: SizedBox(
+                      width: 170.w,
+                      child: Text(
+                        subTitle ?? '',
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: Theme.of(context).textTheme.bodyLarge,
+                      ),
                     ),
                   ),
                   Visibility(
                     visible: movieInfo != null,
-                    child: Text(
-                      movieInfo ?? '',
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: Theme.of(context).textTheme.labelLarge,
+                    child: SizedBox(
+                      width: 170.w,
+                      child: Text(
+                        movieInfo ?? '',
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: Theme.of(context).textTheme.labelLarge,
+                      ),
                     ),
                   ),
                   SizedBox(
@@ -99,38 +150,40 @@ class SearchedItem extends StatelessWidget {
                   ),
                   Visibility(
                     visible: actors != null,
-                    child: Text(
-                      actors ?? '',
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: Theme.of(context).textTheme.labelLarge,
+                    child: Row(
+                      children: (actors ?? [])
+                          .map((actor) => Text('$actor '))
+                          .toList(),
                     ),
                   ),
                   Visibility(
                     visible: type == TravelType.RESTAURANT,
-                    child: Row(
-                      children: tag
-                          .map(
-                            (tag) => Padding(
-                              padding: EdgeInsets.only(right: SizeOf.w_sm),
-                              child: Chip(
-                                label: Text(tag),
-                                labelPadding: EdgeInsets.all(0),
-                                visualDensity: VisualDensity(
-                                  horizontal: 0.0,
-                                  vertical: -4,
+                    child: SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: Row(
+                        children: tag
+                            .map(
+                              (tag) => Padding(
+                                padding: EdgeInsets.only(right: SizeOf.w_sm),
+                                child: Chip(
+                                  label: Text(tag),
+                                  labelPadding: const EdgeInsets.all(0),
+                                  visualDensity: const VisualDensity(
+                                    horizontal: 0.0,
+                                    vertical: -4,
+                                  ),
                                 ),
                               ),
-                            ),
-                          )
-                          .toList(),
+                            )
+                            .toList(),
+                      ),
                     ),
                   ),
                   SizedBox(
                     height: SizeOf.h_sm,
                   ),
                   Visibility(
-                    visible: phone != null,
+                    visible: phone != null && phone != "",
                     child: Row(
                       children: [
                         Icon(
@@ -151,12 +204,31 @@ class SearchedItem extends StatelessWidget {
                 ],
               ),
             ),
-            // Placeholder(
-            //   child: SizedBox(
-            //     height: 83.h,
-            //     width: 83.w,
-            //   ),
-            // ),
+            Visibility(
+              visible: imageUrl != null && imageUrl != "",
+              child: ClipRRect(
+                borderRadius: BorderRadius.all(Radius.circular(SizeOf.r)),
+                child: Image.network(
+                  imageUrl ??
+                      "http://tong.visitkorea.or.kr/cms/resource/43/2903043_image2_1.JPG",
+                  width: 80.w,
+                  height: type == TravelType.MOVIE_LOCATION ? 100.h : 80.h,
+                  fit: BoxFit.fill,
+                  errorBuilder: (context, error, stackTrace) =>
+                      const SizedBox.shrink(),
+                  loadingBuilder: (context, child, loadingProgress) {
+                    if (loadingProgress == null) {
+                      return child;
+                    }
+                    return Center(
+                        child: Padding(
+                      padding: EdgeInsets.all(SizeOf.w_sm),
+                      child: const CircularProgressIndicator(),
+                    ));
+                  },
+                ),
+              ),
+            ),
           ],
         ),
       ),

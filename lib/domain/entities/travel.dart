@@ -1,26 +1,39 @@
 import 'package:equatable/equatable.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:slate/core/utils/enums.dart';
 
-abstract class Travel extends Equatable {
+import '../../core/utils/enums.dart';
+
+class Travel extends Equatable {
   final int id;
   final String title;
   final String? tel;
-  final List<String> images;
+  final List<String>? images;
   final String? homepage;
   final String? overview;
   final TravelType type;
   final LatLng location;
+  final String address;
+  final List<String>? menus;
+  final String? imageUrl;
+  final String? sceneLocation;
+  final int? movieId;
+  final String? openTime;
 
   const Travel({
     required this.id,
     required this.title,
-    required this.images,
+    this.images,
     required this.type,
     required this.location,
+    required this.address,
+    this.imageUrl,
+    this.menus,
     this.tel,
     this.homepage,
     this.overview,
+    this.sceneLocation,
+    this.movieId,
+    this.openTime,
   });
 
   @override
@@ -28,7 +41,6 @@ abstract class Travel extends Equatable {
 }
 
 class Attraction extends Travel {
-  final String? openTime;
   final String? restDate;
 
   const Attraction({
@@ -36,15 +48,17 @@ class Attraction extends Travel {
     required super.title,
     required super.images,
     required super.location,
+    super.tel,
+    super.homepage,
+    super.overview,
     super.type = TravelType.ATTRACTION,
-    this.openTime,
+    super.openTime,
     this.restDate,
+    required super.address,
   });
 }
 
 class Restaurant extends Travel {
-  final String? treatMenu;
-  final String? openTime;
   final String? restDate;
 
   const Restaurant({
@@ -53,9 +67,13 @@ class Restaurant extends Travel {
     required super.images,
     required super.location,
     super.type = TravelType.RESTAURANT,
-    this.treatMenu,
-    this.openTime,
+    super.menus = const [],
+    super.openTime,
     this.restDate,
+    super.homepage,
+    super.overview,
+    super.tel,
+    required super.address,
   });
 }
 
@@ -66,5 +84,22 @@ class Accommodation extends Travel {
     required super.images,
     required super.location,
     super.type = TravelType.ACCOMMODATION,
+    super.homepage,
+    super.overview,
+    super.tel,
+    required super.address,
+  });
+}
+
+class MovieLocation extends Travel {
+  const MovieLocation({
+    required super.id,
+    required super.title,
+    required super.sceneLocation,
+    required super.imageUrl,
+    required super.location,
+    required super.movieId,
+    super.type = TravelType.MOVIE_LOCATION,
+    required super.address,
   });
 }

@@ -1,6 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:slate/domain/entities/map_item.dart';
+
+import '../../../domain/entities/map_item.dart';
 
 abstract class MapState extends Equatable {
   const MapState();
@@ -33,7 +34,7 @@ class CameraMovingError extends MapState {}
 class MarkerLoading extends MapState {}
 
 class MarkerLoaded extends MapState {
-  final Set<MapItem> markers;
+  final List<MapItem> markers;
 
   const MarkerLoaded({required this.markers});
 

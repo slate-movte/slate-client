@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:slate/presentation/views/course_view.dart';
-import 'package:slate/presentation/views/home_view.dart';
-import 'package:slate/presentation/views/camera_view.dart';
+import 'package:slate/core/utils/themes.dart';
+import 'package:slate/presentation/bloc/scene/scene_bloc.dart';
+import 'package:slate/presentation/bloc/scene/scene_state.dart';
+
+import 'camera_view.dart';
+import 'course_view.dart';
+import 'home_view.dart';
 
 class MainView extends StatefulWidget {
   const MainView({super.key});
@@ -35,6 +40,7 @@ class _MainViewState extends State<MainView> {
         child: _viewList.elementAt(_selectedIndex),
       ),
       bottomNavigationBar: Container(
+        height: 125.h,
         decoration: const BoxDecoration(
           color: Colors.white,
           boxShadow: [
@@ -58,17 +64,28 @@ class _MainViewState extends State<MainView> {
               label: 'Home',
             ),
             BottomNavigationBarItem(
-              icon: FloatingActionButton(
-                elevation: 0,
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const CameraView(),
-                    ),
+              icon: BlocBuilder<SceneBloc, SceneState>(
+                builder: (context, state) {
+                  return FloatingActionButton(
+                    elevation: 0,
+                    backgroundColor: state is SceneSelected
+                        ? ColorOf.point.light
+                        : ColorOf.black.light,
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => CameraView(
+                            selectedMovieTitle: state is SceneSelected
+                                ? state.movieTitle
+                                : null,
+                          ),
+                        ),
+                      );
+                    },
+                    child: const Icon(Icons.camera_alt_outlined),
                   );
                 },
-                child: const Icon(Icons.camera_alt_outlined),
               ),
               label: '',
             ),

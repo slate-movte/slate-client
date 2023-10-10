@@ -1,10 +1,10 @@
 import 'dart:async';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:slate/domain/usecases/map_usecase.dart';
 
-import 'package:slate/presentation/bloc/map/map_event.dart';
-import 'package:slate/presentation/bloc/map/map_state.dart';
+import '../../../domain/usecases/map_usecase.dart';
+import 'map_event.dart';
+import 'map_state.dart';
 
 class MapBloc extends Bloc<MapEvent, MapState> {
   GetCameraPosition getCameraPosition;
@@ -68,7 +68,7 @@ class MapBloc extends Bloc<MapEvent, MapState> {
         final result = await getMarkersWithType((event.type, event.latLng));
         result.fold(
           (failure) {
-            emit(MarkerError(message: '와우'));
+            emit(const MarkerError(message: 'MAP ERROR'));
           },
           (markers) {
             emit(MarkerLoaded(markers: markers));

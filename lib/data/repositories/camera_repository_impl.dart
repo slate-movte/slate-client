@@ -1,10 +1,11 @@
 import 'package:camera/camera.dart';
 import 'package:dartz/dartz.dart';
-import 'package:slate/core/errors/exceptions.dart';
-import 'package:slate/core/errors/failures.dart';
-import 'package:slate/core/usecases/usecase.dart';
-import 'package:slate/data/sources/native/camera_native_data_source.dart';
-import 'package:slate/domain/repositories/camera_repository.dart';
+
+import '../../core/errors/exceptions.dart';
+import '../../core/errors/failures.dart';
+import '../../core/usecases/usecase.dart';
+import '../../domain/repositories/camera_repository.dart';
+import '../sources/native/camera_native_data_source.dart';
 
 class CameraRepositoryImpl implements CameraRepository {
   CameraNativeDataSource cameraDataSource;

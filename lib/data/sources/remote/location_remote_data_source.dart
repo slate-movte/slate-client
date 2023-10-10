@@ -1,10 +1,9 @@
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-
 import 'package:permission_handler/permission_handler.dart';
-import 'package:slate/injection.dart';
 
 import '../../../core/errors/exceptions.dart';
+import '../../../injection.dart';
 
 abstract class LocationRemoteDataSource {
   Future<LatLng> getCurrentLocation();

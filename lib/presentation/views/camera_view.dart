@@ -1,18 +1,27 @@
-import 'package:camera/camera.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
+
+import 'package:camera/camera.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:slate/core/utils/assets.dart';
-import 'package:slate/core/utils/themes.dart';
-import 'package:slate/presentation/bloc/camera/camera_bloc.dart';
-import 'package:slate/presentation/bloc/camera/camera_event.dart';
-import 'package:slate/presentation/bloc/camera/camera_state.dart';
-import 'package:slate/presentation/views/display_picture_view.dart';
-import 'package:slate/presentation/widgets/item_table.dart';
+
+import '../../core/utils/themes.dart';
+import '../bloc/camera/camera_bloc.dart';
+import '../bloc/camera/camera_event.dart';
+import '../bloc/camera/camera_state.dart';
+import '../bloc/scene/scene_bloc.dart';
+import '../bloc/scene/scene_event.dart';
+import '../bloc/scene/scene_state.dart';
+import '../widgets/item_table.dart';
+import 'display_picture_view.dart';
 
 class CameraView extends StatefulWidget {
-  const CameraView({super.key});
+  final String? selectedMovieTitle;
+
+  const CameraView({
+    super.key,
+    this.selectedMovieTitle,
+  });
 
   @override
   State<CameraView> createState() => _CameraViewState();
@@ -20,10 +29,14 @@ class CameraView extends StatefulWidget {
 
 class _CameraViewState extends State<CameraView> {
   bool pipVisible = true;
+  TextEditingController controller = TextEditingController();
 
   @override
   void initState() {
     context.read<CameraBloc>().add(CameraOnEvent());
+    if (widget.selectedMovieTitle != null) {
+      controller.text = widget.selectedMovieTitle!;
+    }
     super.initState();
   }
 
@@ -31,14 +44,7 @@ class _CameraViewState extends State<CameraView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        // automaticallyImplyLeading: false,
-        // leading: IconButton(
-        //   onPressed: () {
-        //     context.read<CameraBloc>().add(DisposeEvent(context: context));
-        //   },
-        //   icon: Icon(Icons.arrow_back_ios),
-        // ),
-        title: Text('촬영하기'),
+        title: const Text('촬영하기'),
         actions: [
           IconButton(
             onPressed: () {
@@ -71,7 +77,7 @@ class _CameraViewState extends State<CameraView> {
         },
         builder: (context, state) {
           if (state is CameraGetReady) {
-            return Center(
+            return const Center(
               child: CircularProgressIndicator(),
             );
           } else if (state is CameraOn) {
@@ -93,47 +99,47 @@ class _CameraViewState extends State<CameraView> {
                                   horizontal: SizeOf.w_md,
                                   vertical: SizeOf.h_md,
                                 ),
-                                child: Container(
-                                  width: 169.w,
-                                  height: 113.h,
-                                  decoration: ShapeDecoration(
-                                    image: DecorationImage(
-                                      image: AssetImage(Images.TEST.path),
-                                      fit: BoxFit.fill,
+                                child: InkWell(
+                                  onTap: () {
+                                    if (controller.text != "") {
+                                      context.read<SceneBloc>().add(
+                                            GetScenesEvent(
+                                                input: controller.text),
+                                          );
+                                    }
+                                    openBottomSheet(context);
+                                  },
+                                  child: Container(
+                                    width: 169.w,
+                                    height: 113.h,
+                                    decoration: ShapeDecoration(
+                                      color: ColorOf.black.light,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(SizeOf.r),
+                                      ),
                                     ),
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius:
-                                          BorderRadius.circular(SizeOf.r),
+                                    child: BlocBuilder<SceneBloc, SceneState>(
+                                      builder: (context, state) {
+                                        if (state is SceneSelected) {
+                                          return ClipRRect(
+                                            borderRadius:
+                                                const BorderRadius.all(
+                                                    Radius.circular(8)),
+                                            child:
+                                                Image.network(state.sceneUrl),
+                                          );
+                                        }
+                                        return const Center(
+                                          child: Text("영화씬을 선택하세요."),
+                                        );
+                                      },
                                     ),
                                   ),
                                 ),
                               ),
                             ),
                           ),
-                          // Align(
-                          //   alignment: Alignment.bottomCenter,
-                          //   child: Padding(
-                          //     padding: EdgeInsets.only(bottom: SizeOf.h_md),
-                          //     child: Opacity(
-                          //       opacity: 0.7,
-                          //       child: ActionChip(
-                          //         label: const Text('스틸컷 찾기'),
-                          //         backgroundColor: ColorOf.white.light,
-                          //         labelStyle:
-                          //             Theme.of(context).textTheme.bodyLarge,
-                          //         shape: const StadiumBorder(),
-                          //         padding: EdgeInsets.symmetric(
-                          //           horizontal: SizeOf.w_md,
-                          //           vertical: SizeOf.h_sm,
-                          //         ),
-                          //         elevation: 0,
-                          //         onPressed: () {
-                          //           openBottomSheet(context);
-                          //         },
-                          //       ),
-                          //     ),
-                          //   ),
-                          // ),
                         ],
                       ),
                     ),
@@ -148,13 +154,20 @@ class _CameraViewState extends State<CameraView> {
                       children: [
                         FloatingActionButton(
                           heroTag: null,
-                          onPressed: () {},
+                          onPressed: () {
+                            if (controller.text != "") {
+                              context.read<SceneBloc>().add(
+                                    GetScenesEvent(input: controller.text),
+                                  );
+                            }
+                            openBottomSheet(context);
+                          },
+                          elevation: 0,
+                          backgroundColor: ColorOf.lightGrey.light,
                           child: Icon(
                             Icons.image,
                             color: ColorOf.black.light,
                           ),
-                          elevation: 0,
-                          backgroundColor: ColorOf.lightGrey.light,
                         ),
                         FloatingActionButton.large(
                           onPressed: () {
@@ -176,12 +189,12 @@ class _CameraViewState extends State<CameraView> {
                                 .read<CameraBloc>()
                                 .add(DirectionChangeEvent());
                           },
+                          backgroundColor: ColorOf.lightGrey.light,
+                          elevation: 0,
                           child: Icon(
                             Icons.flip_camera_android,
                             color: ColorOf.black.light,
                           ),
-                          backgroundColor: ColorOf.lightGrey.light,
-                          elevation: 0,
                         ),
                       ],
                     ),
@@ -198,14 +211,14 @@ class _CameraViewState extends State<CameraView> {
                     onPressed: () {
                       setState(() {});
                     },
-                    icon: Icon(Icons.refresh),
+                    icon: const Icon(Icons.refresh),
                   ),
                   Text(state.message),
                 ],
               ),
             );
           }
-          return Center(
+          return const Center(
             child: CircularProgressIndicator(),
           );
         },
@@ -223,7 +236,7 @@ class _CameraViewState extends State<CameraView> {
       builder: (context) {
         return Container(
           color: ColorOf.white.light,
-          height: 500.h,
+          height: 700.h,
           child: Column(
             children: [
               Padding(
@@ -234,9 +247,11 @@ class _CameraViewState extends State<CameraView> {
                 child: SizedBox(
                   width: double.infinity,
                   child: TextField(
+                    maxLength: 20,
                     style: Theme.of(context).textTheme.bodyLarge,
                     cursorColor: ColorOf.grey.light,
                     decoration: InputDecoration(
+                      counterText: "",
                       border: OutlineInputBorder(
                         borderSide: BorderSide.none,
                         borderRadius: BorderRadius.circular(50),
@@ -269,33 +284,72 @@ class _CameraViewState extends State<CameraView> {
                         vertical: 8.h,
                       ),
                       suffixIcon: IconButton(
-                        onPressed: () {},
-                        icon: Icon(CupertinoIcons.xmark_circle_fill),
+                        onPressed: () {
+                          controller.clear();
+                          context.read<SceneBloc>().add(RefreshEvent());
+                        },
+                        icon: const Icon(CupertinoIcons.xmark_circle_fill),
                       ),
                       prefixIconColor: ColorOf.grey.light,
-                      prefixIcon: Icon(Icons.search),
+                      prefixIcon: const Icon(Icons.search),
                       labelText: '영화 이름을 검색해주세요.',
                     ),
-                    onTap: () {},
+                    onEditingComplete: () {
+                      context.read<SceneBloc>().add(
+                            GetScenesEvent(input: controller.text),
+                          );
+                      FocusScope.of(context).unfocus();
+                    },
+                    controller: controller,
                   ),
                 ),
               ),
-              Flexible(
-                child: ItemTable(
-                  sections: [
-                    ItemSection(
-                      builder: ItemSectionBuilder()
-                        ..image = ItemTableGrid(
-                          title: '해운대',
-                          titleStyle: Theme.of(context).textTheme.headlineSmall,
-                        ),
-                    ),
-                  ],
-                ),
+              BlocBuilder<SceneBloc, SceneState>(
+                builder: (context, state) {
+                  if (state is SceneIsEmpty) {
+                    return const Text('해당 영화의 씬이 없습니다.');
+                  } else if (state is SceneError) {
+                    return const Center(
+                      child: Text('다시 검색해주세요.'),
+                    );
+                  } else if (state is SceneLoading) {
+                    return const Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  } else if (state is SceneLoaded) {
+                    return Flexible(
+                      child: ItemTable(
+                        sections: state.list
+                            .map(
+                              (movie) => ItemSection(
+                                builder: ItemSectionBuilder()
+                                  ..image = ItemTableGrid(
+                                    title: movie.title,
+                                    titleStyle: Theme.of(context)
+                                        .textTheme
+                                        .headlineSmall,
+                                    items: movie.sceneImages
+                                        .map((scene) => scene.imageUrl)
+                                        .toList(),
+                                  ),
+                              ),
+                            )
+                            .toList(),
+                      ),
+                    );
+                  }
+                  return const Center(
+                    child: Text("검색어를 입력해주세요."),
+                  );
+                },
               ),
             ],
           ),
         );
+      },
+    ).whenComplete(
+      () {
+        controller.clear();
       },
     );
   }

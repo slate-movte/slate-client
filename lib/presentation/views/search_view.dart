@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
+
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:slate/core/utils/themes.dart';
-import 'package:slate/presentation/views/searched_item_view.dart';
+
+import '../../core/utils/themes.dart';
+import '../bloc/search/keyword/search_bloc.dart';
+import '../bloc/search/keyword/search_event.dart';
+import 'searched_item_view.dart';
 
 class SearchView extends StatefulWidget {
   const SearchView({super.key});
@@ -13,6 +18,17 @@ class SearchView extends StatefulWidget {
 class _SearchViewState extends State<SearchView> {
   bool viewOption = true;
   TextEditingController controller = TextEditingController();
+
+  @override
+  void initState() {
+    context.read<SearchBloc>().add(
+          KeywordSearchEvent(
+            keyword: "",
+            refresh: true,
+          ),
+        );
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -28,16 +44,24 @@ class _SearchViewState extends State<SearchView> {
                 height: 48.h,
                 width: 314.w,
                 child: TextField(
+                  autofocus: false,
                   onEditingComplete: () {
+                    context.read<SearchBloc>().add(
+                          KeywordSearchEvent(
+                            keyword: controller.text,
+                            refresh: true,
+                          ),
+                        );
                     FocusScope.of(context).unfocus();
                   },
                   controller: controller,
-                  autofocus: true,
                   style: Theme.of(context).textTheme.bodyLarge,
                   decoration: const InputDecoration(
                     suffixIcon: Icon(Icons.search),
                     labelText: '검색어를 입력해주세요.',
+                    counterText: "",
                   ),
+                  maxLength: 20,
                 ),
               ),
             ),
