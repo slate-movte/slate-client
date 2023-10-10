@@ -45,3 +45,6 @@ app.*.map.json
 
 /android/local.properties
 **/ios/Runner/Storage.swift
+
+# Etc.
+/lib/core/utils/apis.dart

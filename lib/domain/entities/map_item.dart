@@ -18,4 +18,9 @@ class MapItem extends Equatable {
 
   @override
   List<Object?> get props => [markerId];
+
+  @override
+  String toString() {
+    return "id : $markerId, title : $title, type : $type";
+  }
 }

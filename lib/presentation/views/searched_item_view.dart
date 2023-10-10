@@ -312,13 +312,14 @@ class _ItemMapViewState extends State<ItemMapView> {
                               Navigator.pop(context);
                               _open = false;
                             }
-                            setState(() {
-                              onTapedTag = element.$3;
-                            });
                             LatLng centerLocation = await calculateCenter();
                             setState(() {
+                              onTapedTag = element.$3;
                               _position = CameraPosition(
-                                  target: centerLocation, zoom: 15);
+                                target: centerLocation,
+                                zoom: 15,
+                              );
+                              _markers.clear();
                             });
                             context.read<MapBloc>().add(
                                   GetMarkersEvent(
@@ -382,7 +383,7 @@ class _ItemMapViewState extends State<ItemMapView> {
               MaterialPageRoute(
                 builder: (context) => item.type == TravelType.MOVIE_LOCATION
                     ? MovieInfoView(
-                        movieId: item.id,
+                        movieId: item.movieId!,
                       )
                     : MarkerInfoView(
                         id: item.id,

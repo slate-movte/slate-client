@@ -38,8 +38,12 @@ class MapRepositoryImpl implements MapRepository {
   ) async {
     try {
       latLng ??= await locationRemoteDataSource.getCurrentLocation();
-      final markers =
-          await mapRemoteDataSource.getMarkersWithMapAPI(latLng, type, 15);//기본 15로 설정해둔 상태
+      final markers = await mapRemoteDataSource.getMarkersWithMapAPI(
+        latLng,
+        type,
+        15,
+      ); //기본 15로 설정해둔 상태
+
       return Right(markers);
     } on MapException {
       return Left(MapFailure());
