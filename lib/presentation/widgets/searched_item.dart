@@ -216,6 +216,16 @@ class SearchedItem extends StatelessWidget {
                   fit: BoxFit.fill,
                   errorBuilder: (context, error, stackTrace) =>
                       const SizedBox.shrink(),
+                  loadingBuilder: (context, child, loadingProgress) {
+                    if (loadingProgress == null) {
+                      return child;
+                    }
+                    return Center(
+                        child: Padding(
+                      padding: EdgeInsets.all(SizeOf.w_sm),
+                      child: const CircularProgressIndicator(),
+                    ));
+                  },
                 ),
               ),
             ),

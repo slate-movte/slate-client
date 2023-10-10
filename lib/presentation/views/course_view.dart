@@ -5,6 +5,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../core/utils/assets.dart';
 import '../../core/utils/themes.dart';
+import '../../domain/entities/course.dart';
 import '../bloc/course/course_bloc.dart';
 import '../bloc/course/course_event.dart';
 import '../bloc/course/course_state.dart';
@@ -18,9 +19,11 @@ class CourseView extends StatefulWidget {
 }
 
 class _CourseViewState extends State<CourseView> {
+  List<Course> courses = [];
+
   @override
   void initState() {
-    context.read<CourseBloc>().add(const UpdateAllCourseEvent());
+    context.read<CourseBloc>().add(GetAllCourseInfoEvent());
     super.initState();
   }
 
@@ -38,33 +41,45 @@ class _CourseViewState extends State<CourseView> {
         ),
       ),
       body: BlocConsumer<CourseBloc, CourseState>(
-        listener: (context, state) {},
-        builder: (context, state) {
+        listener: (context, state) {
           if (state is AllCourseLoaded) {
-            return ListView.builder(
-              itemBuilder: (context, index) {
-                // print(state.course[index].toString());
-                return contentBox(
-                  state.course[index]['courseId'],
-                  state.course[index]['thumbnailImageUrl'],
-                  state.course[index]['subTitle'],
-                  state.course[index]['title'],
-                );
-              },
-              itemCount: state.course.length,
-            );
-          } else {
+            setState(() {
+              courses = state.courses;
+            });
+          }
+        },
+        builder: (context, state) {
+          if (state is InitCourse) {
             return const Center(
               child: CircularProgressIndicator(),
             );
+          } else if (state is CourseError) {
+            return Center(
+              child: Text(state.message),
+            );
           }
+          return ListView.builder(
+            itemBuilder: (context, index) {
+              return contentBox(
+                courses[index].id,
+                courses[index].thumbnail,
+                courses[index].subTitle,
+                courses[index].title,
+              );
+            },
+            itemCount: courses.length,
+          );
         },
       ),
     );
   }
 
   Widget contentBox(
-      int courseId, String imagePath, String subTitle, String mainTitle) {
+    int courseId,
+    String imagePath,
+    String subTitle,
+    String mainTitle,
+  ) {
     return InkWell(
       onTap: () {
         Navigator.push(

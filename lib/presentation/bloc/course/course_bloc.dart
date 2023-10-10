@@ -6,28 +6,31 @@ import 'course_event.dart';
 import 'course_state.dart';
 
 class CourseBloc extends Bloc<CourseEvent, CourseState> {
-  AllCourse allCourse;
-  InfoCourse infoCourse;
+  GetAllCourseInfo getAllCourseInfo;
+  GetCourseWithId getCourseWithId;
 
   CourseBloc({
-    required this.allCourse,
-    required this.infoCourse,
+    required this.getAllCourseInfo,
+    required this.getCourseWithId,
   }) : super(InitCourse()) {
-    on<UpdateAllCourseEvent>(_getAllCourseEvent);
+    on<GetAllCourseInfoEvent>(_getAllCourseEvent);
     on<GetCourseInfoEvent>(_getInfoCourseEvent);
   }
 
   Future _getAllCourseEvent(
-    UpdateAllCourseEvent event,
+    GetAllCourseInfoEvent event,
     Emitter<CourseState> emit,
   ) async {
     emit(InitCourse());
-    final result = await allCourse(NoParams());
-    result.fold((failure) {
-      emit(CourseError(message: '추천 코스 정보가 없습니다.'));
-    }, (result) {
-      emit(AllCourseLoaded(course: result));
-    });
+    final result = await getAllCourseInfo(NoParams());
+    result.fold(
+      (failure) {
+        emit(CourseError(message: '추천 코스 정보가 없습니다.'));
+      },
+      (result) {
+        emit(AllCourseLoaded(courses: result));
+      },
+    );
   }
 
   Future _getInfoCourseEvent(
@@ -35,11 +38,11 @@ class CourseBloc extends Bloc<CourseEvent, CourseState> {
     Emitter<CourseState> emit,
   ) async {
     emit(InitCourse());
-    final result = await infoCourse(event.id);
+    final result = await getCourseWithId(event.id);
     result.fold((failure) {
       emit(CourseError(message: '추천 코스 정보가 없습니다.'));
     }, (result) {
-      emit(InfoCourseLoaded(info: result));
+      emit(CourseLoaded(course: result));
     });
   }
 }

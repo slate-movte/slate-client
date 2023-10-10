@@ -1,8 +1,9 @@
 import 'package:dartz/dartz.dart';
 
 import '../../core/errors/failures.dart';
+import '../entities/course.dart';
 
 abstract class CourseRepository {
-  Future<Either<Failure, List>> getCourseAllResults();
-  Future<Either<Failure, List>> getCourseInfoResults(int id);
+  Future<Either<Failure, List<Course>>> getCourseAllResults();
+  Future<Either<Failure, Course>> getCourseInfoResults(int id);
 }

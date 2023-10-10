@@ -2,33 +2,36 @@ import '../../domain/entities/course.dart';
 
 class CourseModel extends Course {
   const CourseModel({
-    required super.courseId,
+    required super.id,
     required super.title,
     required super.subTitle,
-    required super.thumbnailImageUrl,
+    required super.thumbnail,
     super.courseImages,
   });
 
-  factory CourseModel.getAllContentsApi(Map<String, dynamic> json) {
+  factory CourseModel.getAllContents(Map<String, dynamic> json) {
     return CourseModel(
-      courseId: json['courseId'] as int,
+      id: json['courseId'] as int,
       title: json['title'] as String,
       subTitle: json['subTitle'] as String,
-      thumbnailImageUrl: json['subTitle'] as String,
+      thumbnail: json['thumbnailImageUrl'] as String,
     );
   }
 
   factory CourseModel.fromJson(Map<String, dynamic> json) {
     return CourseModel(
-      courseId: json['courseId'] as int,
+      id: json['courseId'] as int,
       title: json['title'] as String,
       subTitle: json['subTitle'] as String,
-      thumbnailImageUrl: json['subTitle'] as String,
+      thumbnail: json['thumbnailImageUrl'] as String,
       courseImages:
           List<Map<String, dynamic>>.from(json['courseImageResponses'])
               .map(
                 (data) => CourseContentModel.fromJson(
-                    data, json['imageUrl'], json['order']),
+                  json['courseId'] as int,
+                  data['imageUrl'] as String,
+                  data['order'] as int,
+                ),
               )
               .toList(),
     );
@@ -42,10 +45,9 @@ class CourseContentModel extends CourseContent {
     required super.order,
   });
 
-  factory CourseContentModel.fromJson(
-      Map<String, dynamic> json, String imageurl, int order) {
+  factory CourseContentModel.fromJson(int id, String imageurl, int order) {
     return CourseContentModel(
-      courseId: json['courseId'] as int,
+      courseId: id,
       imageUrl: imageurl,
       order: order,
     );

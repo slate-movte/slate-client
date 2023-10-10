@@ -1,30 +1,28 @@
 import 'package:equatable/equatable.dart';
 
+import '../../../domain/entities/course.dart';
+
 class CourseState extends Equatable {
   @override
   List<Object?> get props => [];
 }
 
 class AllCourseLoaded extends CourseState {
+  final List<Course> courses;
 
-  final List course;
-
-  AllCourseLoaded({required this.course});
+  AllCourseLoaded({required this.courses});
 
   @override
-  List<Object?> get props => course;
-
+  List<Object?> get props => courses;
 }
 
-class InfoCourseLoaded extends CourseState {
+class CourseLoaded extends CourseState {
+  final Course course;
 
-  final List info;
-
-  InfoCourseLoaded({required this.info});
+  CourseLoaded({required this.course});
 
   @override
-  List<Object?> get props => info;
-
+  List<Object?> get props => [course];
 }
 
 class InitCourse extends CourseState {}

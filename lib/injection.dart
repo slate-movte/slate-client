@@ -115,8 +115,8 @@ Future<void> init() async {
 
   DI.registerLazySingleton<CourseBloc>(
     () => CourseBloc(
-      allCourse: DI(instanceName: USECASE_GET_ALLCOURSE),
-      infoCourse: DI(instanceName: USECASE_GET_INFOCOURSE),
+      getAllCourseInfo: DI(instanceName: USECASE_GET_ALLCOURSE),
+      getCourseWithId: DI(instanceName: USECASE_GET_INFOCOURSE),
     ),
     instanceName: BLOC_COURSE,
   );
@@ -245,15 +245,15 @@ Future<void> init() async {
     instanceName: USECASE_TAKE_PICTURE,
   );
 
-  DI.registerLazySingleton<AllCourse>(
-    () => AllCourse(
+  DI.registerLazySingleton<GetAllCourseInfo>(
+    () => GetAllCourseInfo(
       repository: DI(instanceName: REPO_COURSE),
     ),
     instanceName: USECASE_GET_ALLCOURSE,
   );
 
-  DI.registerLazySingleton<InfoCourse>(
-    () => InfoCourse(
+  DI.registerLazySingleton<GetCourseWithId>(
+    () => GetCourseWithId(
       repository: DI(instanceName: REPO_COURSE),
     ),
     instanceName: USECASE_GET_INFOCOURSE,

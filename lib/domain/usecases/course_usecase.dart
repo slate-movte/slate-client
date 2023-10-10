@@ -2,6 +2,7 @@ import 'package:dartz/dartz.dart';
 
 import '../../core/errors/failures.dart';
 import '../../core/usecases/usecase.dart';
+import '../entities/course.dart';
 import '../repositories/course_repository.dart';
 
 abstract class CourseUseCase {
@@ -10,20 +11,21 @@ abstract class CourseUseCase {
   CourseUseCase({required this.repository});
 }
 
-class AllCourse extends CourseUseCase implements UseCase<List, NoParams> {
-  AllCourse({required super.repository});
+class GetAllCourseInfo extends CourseUseCase
+    implements UseCase<List<Course>, NoParams> {
+  GetAllCourseInfo({required super.repository});
 
   @override
-  Future<Either<Failure, List>> call(NoParams params) async {
+  Future<Either<Failure, List<Course>>> call(NoParams params) async {
     return await super.repository.getCourseAllResults();
   }
 }
 
-class InfoCourse extends CourseUseCase implements UseCase<List, int> {
-  InfoCourse({required super.repository});
+class GetCourseWithId extends CourseUseCase implements UseCase<Course, int> {
+  GetCourseWithId({required super.repository});
 
   @override
-  Future<Either<Failure, List>> call(int params) async {
+  Future<Either<Failure, Course>> call(int params) async {
     return await super.repository.getCourseInfoResults(params);
   }
 }
