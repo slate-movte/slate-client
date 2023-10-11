@@ -2,7 +2,6 @@
 
 enum Images {
   APP_LOGO(path: 'lib/assets/images/slate_logo.png'),
-  DEFAULT_PROFILE(path: 'lib/assets/images/default_profile.jpg'),
   FILM_ICON(path: 'lib/assets/images/film.png'),
   FOOD_ICON(path: 'lib/assets/images/food.png'),
   SITE_ICON(path: 'lib/assets/images/flag.png'),

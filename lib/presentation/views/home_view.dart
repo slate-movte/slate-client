@@ -4,7 +4,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../core/utils/assets.dart';
 import '../../core/utils/themes.dart';
-import 'profile_view.dart';
 import 'search_view.dart';
 import 'searched_item_view.dart';
 
@@ -28,26 +27,6 @@ class _HomeViewState extends State<HomeView> {
           fit: BoxFit.contain,
           height: 32.h,
         ),
-        actions: [
-          InkWell(
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const ProfileView(),
-                ),
-              );
-            },
-            child: Padding(
-              padding: EdgeInsets.only(right: SizeOf.w_md),
-              child: CircleAvatar(
-                radius: 26.r,
-                backgroundColor: ColorOf.grey.light,
-                backgroundImage: AssetImage(Images.DEFAULT_PROFILE.path),
-              ),
-            ),
-          ),
-        ],
         bottom: PreferredSize(
           preferredSize: Size(double.infinity, 70.h),
           child: Padding(
